@@ -496,7 +496,7 @@ set (HUMOTO_SHARED_GNU_LINKER_FLAGS
 
 humoto_identify_git_commit()
 
-configure_file("cmake/HumotoConfig.cmake.in"    "${PROJECT_BINARY_DIR}/HumotoConfig.cmake")
+configure_file("cmake/humotoConfig.cmake.in"    "${PROJECT_BINARY_DIR}/humotoConfig.cmake")
 
 
 # The following is similar to
@@ -548,7 +548,7 @@ if (HUMOTO_USE_CONFIG)
              DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/config")
 endif(HUMOTO_USE_CONFIG)
 
-install (FILES "${PROJECT_BINARY_DIR}/HumotoConfig.cmake"
+install (FILES "${PROJECT_BINARY_DIR}/humotoConfig.cmake"
          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/")
 
 install (FILES "${HUMOTO_CORE_DIR}/share/gnu_ld_version_script.map"
