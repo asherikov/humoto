@@ -502,7 +502,7 @@ configure_file("cmake/humotoConfig.cmake.in"    "${PROJECT_BINARY_DIR}/humotoCon
 # The following is similar to
 #   configure_file("cmake/build_config.h.in"        "${HUMOTO_INCLUDE_DIR}/build_config.h")
 # but more flexible -- no need to know all possible variables in advance
-#
+#----
 set(HUMOTO_BUILD_CONFIG
 "// __func__ ?
 #cmakedefine HUMOTO_COMPILER_SUPPORTS_FUNC_
@@ -533,7 +533,29 @@ endforeach(HUMOTO_MODULE)
 
 string(CONFIGURE "${HUMOTO_BUILD_CONFIG}" HUMOTO_BUILD_CONFIG)
 file(WRITE "${HUMOTO_INCLUDE_DIR}/build_config.h" "${HUMOTO_BUILD_CONFIG}")
+#---
 
+
+# Linker version script generation
+#---
+set(HUMOTO_GNU_LINKER_VERSION_SCRIPT
+"{
+    global: *;
+    local:
+        extern "C++"
+        {
+            Eigen::*;
+            *Eigen::internal::*;
+            *::checkTransposeAliasing*;\n")
+
+foreach(HUMOTO_BRIDGE ${HUMOTO_BRIDGES})
+    set(HUMOTO_GNU_LINKER_VERSION_SCRIPT "${HUMOTO_GNU_LINKER_VERSION_SCRIPT}            *${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_NAMESPACE}::*;\n")
+endforeach(HUMOTO_BRIDGE)
+set(HUMOTO_GNU_LINKER_VERSION_SCRIPT
+"${HUMOTO_GNU_LINKER_VERSION_SCRIPT}        };\n};\n")
+
+file(WRITE "${CMAKE_BINARY_DIR}/gnu_ld_version_script.map" "${HUMOTO_GNU_LINKER_VERSION_SCRIPT}")
+#---
 
 
 #####################################
@@ -551,5 +573,5 @@ endif(HUMOTO_USE_CONFIG)
 install (FILES "${PROJECT_BINARY_DIR}/humotoConfig.cmake"
          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/")
 
-install (FILES "${HUMOTO_CORE_DIR}/share/gnu_ld_version_script.map"
+install (FILES "${CMAKE_BINARY_DIR}/gnu_ld_version_script.map"
          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/")

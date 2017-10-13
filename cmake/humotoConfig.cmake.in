@@ -1,12 +1,17 @@
 set (HUMOTO_LIBRARIES "@HUMOTO_LIBRARIES@")
-set (HUMOTO_INCLUDES "@HUMOTO_INCLUDES@")
+set (HUMOTO_INCLUDE_DIRS "@HUMOTO_INCLUDES@;@CMAKE_INSTALL_PREFIX@/include/")
 
-#set (HUMOTO_SHARED_GNU_LINKER_FLAGS "-Wl,--exclude-libs,ALL
-#   -Wl,--version-script=@CMAKE_INSTALL_PREFIX@/share/humoto/gnu_ld_version_script.map")
+#------------------
+# The following defines can be used to hide humoto related stuff when compiling
+# shared libraries.
+# This is highly recommended to avoid conflicts with other libs.
+
+# Specifies version script
 set (HUMOTO_SHARED_GNU_LINKER_FLAGS "@HUMOTO_SHARED_GNU_LINKER_FLAGS@")
 
-# hide HOMOTO_LOCAL definitions
+# This define hides HOMOTO_LOCAL definitions
 set (HUMOTO_SHARED_LIB_DEFINES      "-DHUMOTO_COMPILE_SHARED_LIB")
+#------------------
 
 #  -fvisibility-inlines-hidden
 # set CMAKE_VISIBILITY_INLINES_HIDDEN or VISIBILITY_INLINES_HIDDEN target property

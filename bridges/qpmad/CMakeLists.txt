@@ -27,5 +27,6 @@ humoto_copy_dir_if_exists(  TGT_humoto_copy_headers                     "qpmad_d
                             "${QPMAD_INTERFACE_DIR}/qpmad"    "${HUMOTO_INCLUDE_DIR}/qpmad")
 
 
+set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_NAMESPACE "qpmad" PARENT_SCOPE)
 set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_INCLUDES "" PARENT_SCOPE)
 set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_LIBS "" PARENT_SCOPE)

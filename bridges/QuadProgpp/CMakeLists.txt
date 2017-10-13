@@ -27,6 +27,7 @@ humoto_copy_dir_if_exists(  TGT_humoto_copy_headers                     "quadpro
                             "${QUADPROGPP_INTERFACE_DIR}/quadprogpp"    "${HUMOTO_INCLUDE_DIR}/quadprogpp")
 
 
+set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_NAMESPACE "QuadProgpp" PARENT_SCOPE)
 set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_INCLUDES "" PARENT_SCOPE)
 set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_LIBS
     "${HUMOTO_BRIDGES_LIBDIR}/${CMAKE_SHARED_MODULE_PREFIX}quadprog${CMAKE_STATIC_LIBRARY_SUFFIX}" PARENT_SCOPE)
