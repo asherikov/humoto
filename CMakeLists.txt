@@ -542,7 +542,7 @@ set(HUMOTO_GNU_LINKER_VERSION_SCRIPT
 "{
     global: *;
     local:
-        extern "C++"
+        extern \"C++\"
         {
             Eigen::*;
             *Eigen::internal::*;
