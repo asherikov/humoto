@@ -201,7 +201,7 @@ namespace humoto
     /**
      * @brief QP constraints container
      */
-    class QPConstraints_ILU_ALU
+    class HUMOTO_LOCAL QPConstraints_ILU_ALU
     {
         public:
             humoto::constraints::ContainerALU     general_constraints_;
@@ -299,7 +299,7 @@ namespace humoto
     /**
      * @brief QP constraints container
      */
-    class QPConstraints_AB_AL
+    class HUMOTO_LOCAL QPConstraints_AB_AL
     {
         protected:
             humoto::constraints::ContainerAL     inequality_constraints_;
@@ -364,7 +364,7 @@ namespace humoto
     /**
      * @brief QP constraints container
      */
-    class QPConstraints_AB
+    class HUMOTO_LOCAL QPConstraints_AB
     {
         protected:
             humoto::constraints::ContainerAB     equality_constraints_;
@@ -421,7 +421,7 @@ namespace humoto
      * @tparam t_Constraints    Constraints container type.
      */
     template<class t_Constraints>
-        class QPProblemBase : public QPObjective, public t_Constraints
+        class HUMOTO_LOCAL QPProblemBase : public QPObjective, public t_Constraints
     {
         public:
             /**
@@ -447,21 +447,21 @@ namespace humoto
     /**
      * @brief A QP problem with constraints of a specific type
      */
-    class QPProblem_ILU_ALU : public QPProblemBase<QPConstraints_ILU_ALU>
+    class HUMOTO_LOCAL QPProblem_ILU_ALU : public QPProblemBase<QPConstraints_ILU_ALU>
     {
     };
 
     /**
      * @brief A QP problem with constraints of a specific type
      */
-    class QPProblem_AB_AL : public QPProblemBase<QPConstraints_AB_AL>
+    class HUMOTO_LOCAL QPProblem_AB_AL : public QPProblemBase<QPConstraints_AB_AL>
     {
     };
 
     /**
      * @brief A QP problem with constraints of a specific type
      */
-    class QPProblem_AB : public QPProblemBase<QPConstraints_AB>
+    class HUMOTO_LOCAL QPProblem_AB : public QPProblemBase<QPConstraints_AB>
     {
     };
 }
