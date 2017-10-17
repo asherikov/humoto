@@ -42,7 +42,7 @@ namespace humoto
         class HUMOTO_LOCAL RobotFootParameters : public humoto::config::ConfigurableBase
         {
             #define HUMOTO_CONFIG_SECTION_ID "RobotFootParameters"
-            #define HUMOTO_CONFIG_CONSTRUCTOR RobotFootParameters 
+            #define HUMOTO_CONFIG_CONSTRUCTOR RobotFootParameters
             #define HUMOTO_CONFIG_ENTRIES \
                 HUMOTO_CONFIG_SCALAR_(max_step_len) \
                 HUMOTO_CONFIG_SCALAR_(min_feet_dist) \
@@ -144,19 +144,6 @@ namespace humoto
             private:
                 /// @{
                 /**
-                 * Various parameters of the feet and steps
-                 */
-                double max_step_len_;
-                double min_feet_dist_;
-                double max_feet_dist_;
-                double feet_dist_default_;
-                double foot_length_;
-                double foot_width_;
-                /// @}
-
-
-                /// @{
-                /**
                  * CoP bounds in single supports and aligned double supports.
                  */
                 etools::Matrix2 ss_cop_bounds_;
@@ -221,6 +208,21 @@ namespace humoto
                          0.,                         0.,
                         -half_feet_dist_default,    -half_feet_dist_default;
                 }
+
+
+            public:
+                /// @{
+                /**
+                 * Various parameters of the feet and steps
+                 */
+                double max_step_len_;
+                double min_feet_dist_;
+                double max_feet_dist_;
+                double feet_dist_default_;
+                double foot_length_;
+                double foot_width_;
+                /// @}
+
 
             public:
                 /**
