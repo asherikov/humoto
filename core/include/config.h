@@ -350,7 +350,7 @@ namespace humoto
 
 
             /// Default configurable base is strict
-            class ConfigurableBase : public humoto::config::CommonConfigurableBase<true>
+            class HUMOTO_LOCAL ConfigurableBase : public humoto::config::CommonConfigurableBase<true>
             {
                 protected:
                     /**
@@ -362,7 +362,7 @@ namespace humoto
             };
 
 
-            class StrictConfigurableBase : public humoto::config::CommonConfigurableBase<true>
+            class HUMOTO_LOCAL StrictConfigurableBase : public humoto::config::CommonConfigurableBase<true>
             {
                 protected:
                     /**
@@ -374,7 +374,7 @@ namespace humoto
             };
 
 
-            class RelaxedConfigurableBase : public humoto::config::CommonConfigurableBase<false>
+            class HUMOTO_LOCAL RelaxedConfigurableBase : public humoto::config::CommonConfigurableBase<false>
             {
                 protected:
                     /**
