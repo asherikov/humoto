@@ -83,7 +83,7 @@ namespace etools
     typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(9, 9)  Matrix9;
     typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(10, 10)  Matrix10;
 
-    typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(1, 1)  Matrix1x2;
+    typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(1, 2)  Matrix1x2;
     typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(1, 3)  Matrix1x3;
     typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(1, 4)  Matrix1x4;
     typedef EIGENTOOLS_CONSTANT_SIZE_MATRIX(1, 5)  Matrix1x5;
