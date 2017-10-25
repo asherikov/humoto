@@ -1,5 +1,6 @@
 /**
     @file
+    @author Alexander Sherikov
     @author Jan Michalczyk
     @copyright 2014-2017 INRIA. Licensed under the Apache License, Version 2.0.
     (see @ref LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
@@ -12,6 +13,101 @@ namespace humoto
 {
     namespace walking
     {
+        /**
+         * @brief Class implementing foot trajectory generation.
+         *        trajectory along z is composed of two separate trajectories.
+         *
+         * @todo Merge with Simple3DFootTrajectory, add rotations.
+         */
+        class HUMOTO_LOCAL FootTranslationTrajectory
+        {
+            private:
+                humoto::rigidbody::CubicPolynomial1D x_axis_;
+                humoto::rigidbody::CubicPolynomial1D y_axis_;
+                humoto::rigidbody::CubicPolynomial1D z_axis_;
+
+                double  axes_xy_interpolation_time_;
+                double  axis_z_interpolation_time_;
+
+
+            public:
+                /**
+                 * @brief Constructor.
+                 */
+                FootTranslationTrajectory()
+                {
+                    axes_xy_interpolation_time_ = 0.0;
+                    axis_z_interpolation_time_ = 0.0;
+                }
+
+
+                /**
+                 * @brief Initialize
+                 *
+                 * @param[in] start     initial state
+                 * @param[in] end       final state
+                 * @param[in] step_height
+                 * @param[in] step_duration
+                 * @param[in] step_time_left
+                 * @param[in] control_dt
+                 */
+                void initialize(const humoto::rigidbody::PointMassState & start,
+                                const humoto::rigidbody::PointMassState & end,
+                                const double step_height,
+                                const double step_duration,
+                                const double step_time_left,
+                                const double control_dt)
+                {
+
+                    HUMOTO_ASSERT(step_time_left <= step_duration, "Step is supposed to be finished by now.");
+                    double step_time_passed = step_duration - step_time_left;
+
+
+                    axes_xy_interpolation_time_ = step_time_left;
+                    double  axis_z_end_value = 0.0;
+
+                    if ( step_time_left - step_duration/2 >= control_dt )
+                    {
+                        axis_z_interpolation_time_ = step_duration/2 - step_time_passed;
+                        axis_z_end_value = end.position_.z() + step_height;
+                    }
+                    else
+                    {
+                        axis_z_interpolation_time_ = step_time_left;
+                        axis_z_end_value = end.position_.z();
+                    }
+
+
+                    x_axis_.initialize( start.position_.x(), start.velocity_.x(), end.position_.x(), 0.0);
+                    y_axis_.initialize( start.position_.y(), start.velocity_.y(), end.position_.y(), 0.0);
+                    z_axis_.initialize( start.position_.z(), start.velocity_.z(), axis_z_end_value, 0.0);
+                }
+
+
+                /**
+                 * @brief Find state at time t
+                 *
+                 * @param[out] state
+                 * @param[in] t
+                 */
+                void evaluate(humoto::rigidbody::PointMassState & state, const double t) const
+                {
+                    state.position_.x()     = x_axis_.getPosition(t/axes_xy_interpolation_time_);
+                    state.velocity_.x()     = x_axis_.getVelocity(t/axes_xy_interpolation_time_);
+                    state.acceleration_.x() = x_axis_.getAcceleration(t/axes_xy_interpolation_time_);
+
+                    state.position_.y()     = y_axis_.getPosition(t/axes_xy_interpolation_time_);
+                    state.velocity_.y()     = y_axis_.getVelocity(t/axes_xy_interpolation_time_);
+                    state.acceleration_.y() = y_axis_.getAcceleration(t/axes_xy_interpolation_time_);
+
+                    state.position_.z()     = z_axis_.getPosition(t/axis_z_interpolation_time_);
+                    state.velocity_.z()     = z_axis_.getVelocity(t/axis_z_interpolation_time_);
+                    state.acceleration_.z() = z_axis_.getAcceleration(t/axis_z_interpolation_time_);
+                }
+        };
+
+
+
         /**
          * @brief Class implementing simple example foot trajectory
          *        between two 3D points.

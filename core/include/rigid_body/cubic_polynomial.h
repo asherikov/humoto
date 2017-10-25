@@ -40,6 +40,11 @@ namespace humoto
          */
         class HUMOTO_LOCAL CubicPolynomial1D
         {
+            private:
+                etools::Vector4 coeff_;
+
+
+
             public:
                 /**
                  * @brief Constructor.
@@ -59,10 +64,10 @@ namespace humoto
                  */
                 void initialize(const double a, const double b)
                 {
-                    a0_ = a;
-                    a1_ = 0.0;
-                    a2_ = 3.0*(b - a);
-                    a3_ = -2.0*(b - a);
+                    coeff_ <<   a,
+                                0.0,
+                                3.0*(b - a),
+                                -2.0*(b - a);
                 }
 
 
@@ -80,10 +85,10 @@ namespace humoto
                                 const double b,
                                 const double bdot)
                 {
-                    a0_ = a;
-                    a1_ = adot;
-                    a2_ =  3.0*(b - a) - 2.0*(adot - bdot);
-                    a3_ = -2.0*(b - a) + 1.0*(bdot - adot);
+                    coeff_ <<   a,
+                                adot,
+                                 3.0*(b - a) - 2.0*(adot - bdot),
+                                -2.0*(b - a) + 1.0*(bdot - adot);
                 }
 
 
@@ -96,8 +101,8 @@ namespace humoto
                  */
                 double getPosition(const double t) const
                 {
-                    HUMOTO_ASSERT((t >= 0.0) && (t <= 1.0), "time value not between 0 and 1." )
-                    return (a0_ + a1_*t + a2_*t*t + a3_*t*t*t);
+                    HUMOTO_ASSERT((t >= 0.0) && (t <= 1.0), "time value not between 0 and 1." );
+                    return (coeff_(0) + coeff_(1)*t + coeff_(2)*t*t + coeff_(3)*t*t*t);
                 }
 
 
@@ -110,8 +115,8 @@ namespace humoto
                  */
                 double getVelocity(const double t) const
                 {
-                    HUMOTO_ASSERT((t >= 0.0) && (t <= 1.0), "time value not between 0 and 1." )
-                    return (a1_ + 2.0*a2_*t + 3.0*a3_*t*t);
+                    HUMOTO_ASSERT((t >= 0.0) && (t <= 1.0), "time value not between 0 and 1." );
+                    return (coeff_(1) + 2.0*coeff_(2)*t + 3.0*coeff_(3)*t*t);
                 }
 
 
@@ -124,8 +129,8 @@ namespace humoto
                  */
                 double getAcceleration(const double t) const
                 {
-                    HUMOTO_ASSERT((t >= 0.0) && (t <= 1.0), "time value not between 0 and 1." )
-                    return (2.0*a2_ + 6.0*a3_*t);
+                    HUMOTO_ASSERT((t >= 0.0) && (t <= 1.0), "time value not between 0 and 1." );
+                    return (2.0*coeff_(2) + 6.0*coeff_(3)*t);
                 }
 
 
@@ -136,7 +141,7 @@ namespace humoto
                  */
                 double getJerk() const
                 {
-                    return (6.0*a3_);
+                    return (6.0*coeff_(3));
                 }
 
 
@@ -205,13 +210,6 @@ namespace humoto
 
                     return result;
                 }
-
-
-            private:
-                double a0_;
-                double a1_;
-                double a2_;
-                double a3_;
         };
     }
 }
