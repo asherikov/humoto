@@ -107,38 +107,6 @@ namespace humoto
                 double tds_sampling_time_;
 
 
-            protected:
-                /**
-                 * @brief Compute some derived variables.
-                 */
-                void finalize()
-                {
-                    if (sampling_time_ms_ % subsampling_time_ms_ == 0)
-                    {
-                        subsamples_num_ = sampling_time_ms_ / subsampling_time_ms_;
-                    }
-                    else
-                    {
-                        HUMOTO_THROW_MSG("Sampling time should be a multiple of subsampling time.");
-                    }
-
-
-                    if (tds_sampling_time_ms_ % subsampling_time_ms_ == 0)
-                    {
-                        tds_subsamples_num_ = tds_sampling_time_ms_ / subsampling_time_ms_;
-                    }
-                    else
-                    {
-                        HUMOTO_THROW_MSG("Transitional double support sampling time should be a multiple of subsampling time.");
-                    }
-
-                    // convert milliseconds to seconds
-                    sampling_time_      = convertMillisecondToSecond(sampling_time_ms_);
-                    subsampling_time_   = convertMillisecondToSecond(subsampling_time_ms_);
-                    tds_sampling_time_  = convertMillisecondToSecond(tds_sampling_time_ms_);
-                }
-
-
             public:
                 /// Length of the preview horizon (N)
                 std::size_t preview_horizon_length_;
@@ -188,6 +156,37 @@ namespace humoto
                     tds_sampling_time_ms_           = tds_sampling_time_ms;
 
                     finalize();
+                }
+
+
+                /**
+                 * @brief Compute some derived variables.
+                 */
+                void finalize()
+                {
+                    if (sampling_time_ms_ % subsampling_time_ms_ == 0)
+                    {
+                        subsamples_num_ = sampling_time_ms_ / subsampling_time_ms_;
+                    }
+                    else
+                    {
+                        HUMOTO_THROW_MSG("Sampling time should be a multiple of subsampling time.");
+                    }
+
+
+                    if (tds_sampling_time_ms_ % subsampling_time_ms_ == 0)
+                    {
+                        tds_subsamples_num_ = tds_sampling_time_ms_ / subsampling_time_ms_;
+                    }
+                    else
+                    {
+                        HUMOTO_THROW_MSG("Transitional double support sampling time should be a multiple of subsampling time.");
+                    }
+
+                    // convert milliseconds to seconds
+                    sampling_time_      = convertMillisecondToSecond(sampling_time_ms_);
+                    subsampling_time_   = convertMillisecondToSecond(subsampling_time_ms_);
+                    tds_sampling_time_  = convertMillisecondToSecond(tds_sampling_time_ms_);
                 }
 
 

@@ -145,6 +145,14 @@ namespace humoto
                 }
 
 
+                /**
+                 * @brief Call this after updating parameters
+                 */
+                void finalize()
+                {
+                    humoto::walking::RobotFootParameters::finalize();
+                }
+
 
                 /**
                  * @brief Update model state.
