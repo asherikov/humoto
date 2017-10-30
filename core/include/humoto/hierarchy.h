@@ -292,10 +292,10 @@ namespace humoto
              */
             void    log(   humoto::Logger &logger HUMOTO_GLOBAL_LOGGER_IF_DEFINED,
                            const LogEntryName & parent = LogEntryName(),
-                           const std::string & name = "") const
+                           const std::string & name = "hierarchy") const
             {
                 LogEntryName subname = parent;
-                subname.add("tasks");
+                subname.add(name).add("tasks");
 
                 for (std::size_t i = 0; i < getNumberOfLevels(); ++i)
                 {
