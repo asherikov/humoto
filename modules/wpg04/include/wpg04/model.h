@@ -197,6 +197,7 @@ namespace humoto
                                     break;
 
                                 case humoto::walking::StanceType::DS:
+                                case humoto::walking::StanceType::TDS:
                                     // no need to update positions of the feet (they must not change)
                                     break;
 

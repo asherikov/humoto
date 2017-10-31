@@ -107,7 +107,7 @@ namespace humoto
                                                             T,
                                                             com_height,
                                                             model.getCState(),
-                                                            cop_profile.segment(0, model.Nu_));
+                                                            cop_profile_.segment(0, model.Nu_));
 
                     model_state.stance_type_        = stance_fsm.current_stance_.type_;
 
@@ -196,7 +196,7 @@ namespace humoto
                     {
                         case humoto::walking::StanceType::RSS:
                         case humoto::walking::StanceType::LSS:
-                            position_xy = footpos_profile.segment(0, 2);
+                            position_xy = footpos_profile_.segment(0, 2);
                             break;
 
                         case humoto::walking::StanceType::DS:
@@ -205,7 +205,7 @@ namespace humoto
                             {
                                 position_xy = model.getFootPositionFromADS( landing_foot,
                                                                             walk_state.rotation_,
-                                                                            footpos_profile.segment(0, 2));
+                                                                            footpos_profile_.segment(0, 2));
                             }
                             else
                             {
@@ -248,10 +248,10 @@ namespace humoto
                 Eigen::MatrixXd                 sdz_;
 
 
-                Eigen::VectorXd                 cop_profile;
-                Eigen::VectorXd                 dcop_profile;
-                Eigen::VectorXd                 cstate_profile;
-                Eigen::VectorXd                 footpos_profile;
+                Eigen::VectorXd                 cop_profile_;
+                Eigen::VectorXd                 dcop_profile_;
+                Eigen::VectorXd                 cstate_profile_;
+                Eigen::VectorXd                 footpos_profile_;
 
 
             public:
@@ -319,8 +319,11 @@ namespace humoto
 
 
                         // Initialize matrices
-                        formRotationMatrices();
-                        formFootPosMatrices(model);
+                        if (mpc_parameters_.sampling_time_ms_ == preview_horizon_.intervals_[0].T_ms_)
+                        {
+                            formRotationMatrices();
+                            formFootPosMatrices(model);
+                        }
 
 
                         // condensing
@@ -409,11 +412,11 @@ namespace humoto
                     mpc_variables.resize(cop_local.rows() + footpos_local.rows());
                     mpc_variables << cop_local, footpos_local;
 
-                    cop_profile.noalias() = Rh_ * cop_local + V_ * footpos_local + V0_;
-                    dcop_profile.noalias() = Sdz_ * mpc_variables + sdz_;
-                    cstate_profile.noalias() = S_ * mpc_variables + s_;
+                    cop_profile_.noalias() = Rh_ * cop_local + V_ * footpos_local + V0_;
+                    dcop_profile_.noalias() = Sdz_ * mpc_variables + sdz_;
+                    cstate_profile_.noalias() = S_ * mpc_variables + s_;
 
-                    footpos_profile.noalias() = Vfp_ * footpos_local + vfp_;
+                    footpos_profile_.noalias() = Vfp_ * footpos_local + vfp_;
 
                     solution_is_parsed_ = true;
                 }
@@ -589,9 +592,9 @@ namespace humoto
                     }
                     else
                     {
-                        preceding_cstate = cstate_profile.segment((interval_index - 1)*model.Ns_, model.Ns_);
+                        preceding_cstate = cstate_profile_.segment((interval_index - 1)*model.Ns_, model.Ns_);
                     }
-                    control = cop_profile.segment(interval_index*2, 2);
+                    control = cop_profile_.segment(interval_index*2, 2);
 
                     humoto::rigidbody::PointMassState com_state;
 
@@ -648,10 +651,10 @@ namespace humoto
                     logger.log(LogEntryName(subname).add("sdz"), sdz_);
 
 
-                    logger.log(LogEntryName(subname).add("cop_profile")    , cop_profile);
-                    logger.log(LogEntryName(subname).add("dcop_profile")   , dcop_profile);
-                    logger.log(LogEntryName(subname).add("cstate_profile") , cstate_profile);
-                    logger.log(LogEntryName(subname).add("footpos_profile"), footpos_profile);
+                    logger.log(LogEntryName(subname).add("cop_profile")    , cop_profile_);
+                    logger.log(LogEntryName(subname).add("dcop_profile")   , dcop_profile_);
+                    logger.log(LogEntryName(subname).add("cstate_profile") , cstate_profile_);
+                    logger.log(LogEntryName(subname).add("footpos_profile"), footpos_profile_);
                 }
         };
     }

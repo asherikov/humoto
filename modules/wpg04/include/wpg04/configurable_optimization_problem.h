@@ -51,6 +51,10 @@ namespace humoto
                     {
                         return (humoto::TaskSharedPointer(new humoto::wpg04::TaskTerminalConstraint));
                     }
+                    if (string_id == "TaskReferenceSolution")
+                    {
+                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskReferenceSolution));
+                    }
 
                     return(humoto::ConfigurableOptimizationProblem::getTask(string_id));
                 }
