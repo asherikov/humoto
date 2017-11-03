@@ -78,6 +78,9 @@ namespace humoto
 
 
             public:
+                using   humoto::walking::PointMassModel6z::getCoP;
+
+
                 /**
                  * @brief Default constructor
                  */
@@ -142,6 +145,17 @@ namespace humoto
                 double getCoMHeight() const
                 {
                     return (state_.com_state_.position_.z());
+                }
+
+
+                /**
+                 * @brief Compute current CoP position
+                 *
+                 * @return CoP position
+                 */
+                etools::Vector2 getCoP() const
+                {
+                    return(getCoP(state_.com_state_));
                 }
 
 

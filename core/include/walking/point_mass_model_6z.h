@@ -164,6 +164,17 @@ namespace humoto
 
 
                 /**
+                 * @brief Compute CoP position for the state
+                 *
+                 * @return CoP position
+                 */
+                static etools::Vector2 getCoP(const humoto::rigidbody::PointMassState & com_state)
+                {
+                    return(getDdz6(com_state.position_.z()) * convertCoMState(com_state));
+                }
+
+
+                /**
                  * @brief Create A matrix of final model
                  */
                 static etools::Matrix3 getA3(const double T, const double omega, const double Tsample)
