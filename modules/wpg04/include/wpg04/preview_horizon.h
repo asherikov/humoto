@@ -52,20 +52,6 @@ namespace humoto
 
 
                 /**
-                 * @brief Copy stance info
-                 *
-                 * @param[in] stance
-                 *
-                 * @return this
-                 */
-                WalkState& operator=(const humoto::walking::Stance & stance)
-                {
-                    humoto::walking::Stance::operator=(stance);
-                    return (*this);
-                }
-
-
-                /**
                  * @brief Log
                  *
                  * @param[in,out] logger logger
@@ -238,19 +224,15 @@ namespace humoto
                                            const WalkParameters                            &walk_parameters,
                                            const std::size_t                               preview_duration)
         {
-            std::vector<humoto::walking::Stance> stances;
-
-            stances = stance_fsm.previewStances(preview_duration);
+            walk_states_ = stance_fsm.previewStances<humoto::wpg04::WalkState>(preview_duration);
 
             double lss_theta = model.getFootState(humoto::LeftOrRight::LEFT).rpy_(humoto::AngleIndex::YAW);
             double rss_theta = model.getFootState(humoto::LeftOrRight::RIGHT).rpy_(humoto::AngleIndex::YAW);
             double ds_theta  = (lss_theta + rss_theta) / 2.;
 
-            walk_states_.resize(stances.size());
-            for(std::size_t i = 0; i < stances.size(); ++i)
+            for(std::size_t i = 0; i < walk_states_.size(); ++i)
             {
-                WalkState state;
-                state = stances.at(i);
+                WalkState &state = walk_states_.at(i);
 
                 switch(state.type_)
                 {
@@ -283,26 +265,26 @@ namespace humoto
                     case humoto::walking::StanceType::TDS:
                         state.cvel_ref_ = walk_parameters.com_velocity_;
                         state.theta_ = ds_theta;
-                        if((stances.at(i + 1).type_ == humoto::walking::StanceType::RSS) &&
+                        if((walk_states_.at(i + 1).type_ == humoto::walking::StanceType::RSS) &&
                            (state.previous_nontds_stance_type_ != humoto::walking::StanceType::DS))
                         {
                             rss_theta = lss_theta + walk_parameters.theta_increment_;
                             state.theta_ = rss_theta;
                         }
-                        if((stances.at(i + 1).type_ == humoto::walking::StanceType::LSS) &&
+                        if((walk_states_.at(i + 1).type_ == humoto::walking::StanceType::LSS) &&
                            (state.previous_nontds_stance_type_ != humoto::walking::StanceType::DS))
                         {
                             lss_theta = rss_theta + walk_parameters.theta_increment_;
                             state.theta_ = lss_theta;
                         }
-                        if((stances.at(i + 1).type_ == humoto::walking::StanceType::DS) &&
+                        if((walk_states_.at(i + 1).type_ == humoto::walking::StanceType::DS) &&
                            (state.previous_nontds_stance_type_ != humoto::walking::StanceType::LSS))
                         {
                             state.cvel_ref_ = walk_parameters.last_stance_com_velocity_;
                             state.theta_    = rss_theta;
                             ds_theta        = rss_theta;
                         }
-                        if((stances.at(i + 1).type_ == humoto::walking::StanceType::DS) &&
+                        if((walk_states_.at(i + 1).type_ == humoto::walking::StanceType::DS) &&
                            (state.previous_nontds_stance_type_ != humoto::walking::StanceType::RSS))
                         {
                             state.cvel_ref_ = walk_parameters.last_stance_com_velocity_;
@@ -323,7 +305,6 @@ namespace humoto
                 {
                     getConstraints(state, model);
                 }
-                walk_states_[i] = state;
             }
         }
 

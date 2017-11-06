@@ -289,7 +289,9 @@ namespace humoto
                 void                        shiftTime(const std::size_t shift_time_ms);
                 void                        shiftStance();
                 Stance                      getNextStance() const;
-                std::vector<Stance>         previewStances(const std::size_t preview_duration_ms) const;
+
+                template<class t_Stance>
+                    std::vector<t_Stance>   previewStances(const std::size_t preview_duration_ms) const;
 
                 StanceFiniteStateMachine()
                 {
@@ -315,24 +317,26 @@ namespace humoto
          *
          * @return
          */
-        std::vector<Stance> StanceFiniteStateMachine::previewStances(const std::size_t preview_duration_ms) const
+        template <class t_Stance>
+            std::vector<t_Stance> StanceFiniteStateMachine::previewStances(const std::size_t preview_duration_ms) const
         {
             bool not_enough_states = false;
 
-            std::vector<Stance> stance_types;
-            Stance stance_type;
+            std::vector<t_Stance> stances;
+            t_Stance    stance;
+            Stance *stance_ptr = static_cast<Stance*>(&stance);
 
             StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
 
 
             for (std::size_t duration_ms = preview_duration_ms; duration_ms > 0; )
             {
-                stance_type.type_        = stance_fsm.current_stance_.type_;
-                stance_type.subtype_     = stance_fsm.current_stance_.subtype_;
-                stance_type.duration_ms_ = std::min(stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_, duration_ms);
-                stance_type.total_duration_ms_           = stance_fsm.current_stance_.duration_ms_;
-                stance_type.previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
-                stance_type.previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
+                stance_ptr->type_        = stance_fsm.current_stance_.type_;
+                stance_ptr->subtype_     = stance_fsm.current_stance_.subtype_;
+                stance_ptr->duration_ms_ = std::min(stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_, duration_ms);
+                stance_ptr->total_duration_ms_           = stance_fsm.current_stance_.duration_ms_;
+                stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
+                stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
 
                 if(stance_fsm.current_time_ms_ + duration_ms <= stance_fsm.current_stance_.duration_ms_)
                 {
@@ -354,28 +358,28 @@ namespace humoto
                     }
                 }
 
-                stance_types.push_back(stance_type);
+                stances.push_back(stance);
             }
 
             //always add one state afted TDS
-            if((not_enough_states == false) && (stance_types.back().type_ == StanceType::TDS))
+            if((not_enough_states == false) && (stances.back().type_ == StanceType::TDS))
             {
                 if(stance_fsm.current_stance_.type_ == StanceType::TDS)
                 {
                     stance_fsm.shiftStance();
                 }
 
-                stance_type.type_                        = stance_fsm.current_stance_.type_;
-                stance_type.subtype_                     = stance_fsm.current_stance_.subtype_;
-                stance_type.duration_ms_                 = 0;
-                stance_type.total_duration_ms_           = 0;
-                stance_type.previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
-                stance_type.previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
+                stance_ptr->type_                        = stance_fsm.current_stance_.type_;
+                stance_ptr->subtype_                     = stance_fsm.current_stance_.subtype_;
+                stance_ptr->duration_ms_                 = 0;
+                stance_ptr->total_duration_ms_           = 0;
+                stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
+                stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
 
-                stance_types.push_back(stance_type);
+                stances.push_back(stance);
             }
 
-            return stance_types;
+            return (stances);
         }
 
 
