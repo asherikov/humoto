@@ -26,46 +26,16 @@ namespace humoto
                  */
                 humoto::TaskSharedPointer getTask(const std::string &string_id) const
                 {
-                    if (string_id == "TaskBaseAccelerationBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBaseAccelerationBounds));
-                    }
-                    if (string_id == "TaskBaseJerkMinimization")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBaseJerkMinimization));
-                    }
-                    if (string_id == "TaskBasePositionReference")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBasePositionReference));
-                    }
-                    if (string_id == "TaskBaseVelocityBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBaseVelocityBounds));
-                    }
-                    if (string_id == "TaskBaseVelocityReference")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBaseVelocityReference));
-                    }
-                    if (string_id == "TaskBodyJerkMinimization")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBodyJerkMinimization));
-                    }
-                    if (string_id == "TaskBodyPositionBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBodyPositionBounds));
-                    }
-                    if (string_id == "TaskBodyPositionReference")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskBodyPositionReference));
-                    }
-                    if (string_id == "TaskCoPCentering")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskCoPCentering));
-                    }
-                    if (string_id == "TaskCoPPositionBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_mpc::TaskCoPPositionBounds));
-                    }
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBaseAccelerationBounds, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBaseJerkMinimization, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBasePositionReference, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBaseVelocityBounds, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBaseVelocityReference, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBodyJerkMinimization, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBodyPositionBounds, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskBodyPositionReference, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPCentering, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPPositionBounds, string_id);
 
                     return(humoto::ConfigurableOptimizationProblem::getTask(string_id));
                 }

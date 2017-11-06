@@ -27,34 +27,13 @@ namespace humoto
                  */
                 humoto::TaskSharedPointer getTask(const std::string &string_id) const
                 {
-                    if (string_id == "TaskCoMVelocity")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskCoMVelocity));
-                    }
-                    if (string_id == "TaskCoPPosition")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskCoPPosition));
-                    }
-                    if (string_id == "TaskCoPVelocity")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskCoPVelocity));
-                    }
-                    if (string_id == "TaskFootstepBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskFootstepBounds));
-                    }
-                    if (string_id == "TaskCoPBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskCoPBounds));
-                    }
-                    if (string_id == "TaskTerminalConstraint")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskTerminalConstraint));
-                    }
-                    if (string_id == "TaskReferenceSolution")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::wpg04::TaskReferenceSolution));
-                    }
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoMVelocity, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPPosition, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPVelocity, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskFootstepBounds, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPBounds, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskTerminalConstraint, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskReferenceSolution, string_id);
 
                     return(humoto::ConfigurableOptimizationProblem::getTask(string_id));
                 }

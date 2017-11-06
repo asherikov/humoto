@@ -10,6 +10,12 @@
 
 #pragma once
 
+#define HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(task_name, id)\
+                if (#task_name == id) \
+                {\
+                    return (humoto::TaskSharedPointer(new task_name<t_features>)); \
+                }
+
 namespace humoto
 {
     namespace pepper_ik
@@ -27,54 +33,18 @@ namespace humoto
                  */
                 humoto::TaskSharedPointer getTask(const std::string &string_id) const
                 {
-                    if (string_id == "TaskBaseCoMTracking")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskBaseCoMTracking<t_features>));
-                    }
-                    if (string_id == "TaskBaseOrientation")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskBaseOrientation<t_features>));
-                    }
-                    if (string_id == "TaskBodyCoMTracking")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskBodyCoMTracking<t_features>));
-                    }
-                    if (string_id == "TaskFixArms")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskFixArms<t_features>));
-                    }
-                    if (string_id == "TaskFixHead")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskFixHead<t_features>));
-                    }
-                    if (string_id == "TaskJointsBounds")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskJointsBounds<t_features>));
-                    }
-                    if (string_id == "TaskJointsReference")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskJointsReference<t_features>));
-                    }
-                    if (string_id == "TaskTagOrientation")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskTagOrientation<t_features>));
-                    }
-                    if (string_id == "TaskTagAngularVelocity")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskTagAngularVelocity<t_features>));
-                    }
-                    if (string_id == "TaskTagCompleteVelocity")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskTagCompleteVelocity<t_features>));
-                    }
-                    if (string_id == "TaskTagPose")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskTagPose<t_features>));
-                    }
-                    if (string_id == "TaskTagPose3Dof")
-                    {
-                        return (humoto::TaskSharedPointer(new humoto::pepper_ik::TaskTagPose3Dof<t_features>));
-                    }
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskBaseCoMTracking, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskBaseOrientation, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskBodyCoMTracking, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskFixArms, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskFixHead, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskJointsBounds, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskJointsReference, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskTagOrientation, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskTagAngularVelocity, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskTagCompleteVelocity, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskTagPose, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_PEPPER_IK_TASK_IF_ID_MATCHES(TaskTagPose3Dof, string_id);
 
                     return(humoto::ConfigurableOptimizationProblem::getTask(string_id));
                 }

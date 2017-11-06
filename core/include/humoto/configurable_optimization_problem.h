@@ -10,6 +10,12 @@
 
 #pragma once
 
+#define HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(task_name, id)\
+                if (#task_name == id) \
+                {\
+                    return (humoto::TaskSharedPointer(new task_name)); \
+                }
+
 
 namespace humoto
 {
@@ -92,14 +98,9 @@ namespace humoto
              */
             virtual humoto::TaskSharedPointer getTask(const std::string &string_id) const
             {
-                if (string_id == "TaskInfeasibleInequality")
-                {
-                    return (humoto::TaskSharedPointer(new humoto::TaskInfeasibleInequality));
-                }
-                if (string_id == "TaskZeroVariables")
-                {
-                    return (humoto::TaskSharedPointer(new humoto::TaskZeroVariables));
-                }
+                HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskInfeasibleInequality, string_id);
+                HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskZeroVariables, string_id);
+
                 if (string_id == "TaskZeroSelectedVariables")
                 {
                     humoto::IndexVector index_vector;
