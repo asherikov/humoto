@@ -16,6 +16,8 @@ namespace humoto
 
         /**
          * @brief Possible stance types of the model
+         *
+         * @todo Consider declaration of this enum in Stance class.
          */
         class StanceType
         {

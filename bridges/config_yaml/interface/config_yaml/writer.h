@@ -65,6 +65,11 @@ namespace humoto
                     explicit Writer(const std::string& file_name) :
                         config_ofs_(file_name.c_str())
                     {
+                        if (!config_ofs_.good())
+                        {
+                            HUMOTO_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
+                        }
+
                         initEmitter();
                     }
 
