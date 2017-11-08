@@ -105,6 +105,7 @@ namespace humoto
             MPC() {}
 
 
+        public:
             /**
              * @brief Condense output of the system.
              *

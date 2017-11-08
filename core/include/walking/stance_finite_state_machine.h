@@ -291,7 +291,9 @@ namespace humoto
                 Stance                      getNextStance() const;
 
                 template<class t_Stance>
-                    std::vector<t_Stance>   previewStances(const std::size_t preview_duration_ms) const;
+                    std::vector<t_Stance>   previewStances(const std::size_t ) const;
+                template<class t_Stance>
+                    std::vector<t_Stance>   previewNStances(const std::size_t ) const;
 
                 StanceFiniteStateMachine()
                 {
@@ -375,6 +377,38 @@ namespace humoto
                 stance_ptr->total_duration_ms_           = 0;
                 stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
                 stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
+
+                stances.push_back(stance);
+            }
+
+            return (stances);
+        }
+
+
+        /**
+         * @brief Preview sequence of Stances of the FSM
+         *
+         * @param[in] N
+         *
+         * @return
+         */
+        template <class t_Stance>
+            std::vector<t_Stance> StanceFiniteStateMachine::previewNStances(const std::size_t N) const
+        {
+            bool not_enough_states = false;
+
+            std::vector<t_Stance> stances;
+            t_Stance    stance;
+            Stance *stance_ptr = static_cast<Stance*>(&stance);
+
+            StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
+
+
+            for (std::size_t i = 0; i < N; ++i)
+            {
+                *stance_ptr = stance_fsm.current_stance_;
+
+                stance_fsm.shiftStance();
 
                 stances.push_back(stance);
             }
