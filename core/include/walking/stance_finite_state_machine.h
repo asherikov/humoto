@@ -407,6 +407,10 @@ namespace humoto
             for (std::size_t i = 0; i < N; ++i)
             {
                 *stance_ptr = stance_fsm.current_stance_;
+                if(0 == i)
+                {
+                    stance_ptr->duration_ms_ = stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_;
+                }
 
                 stance_fsm.shiftStance();
 
