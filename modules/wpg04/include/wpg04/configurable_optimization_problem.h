@@ -34,6 +34,7 @@ namespace humoto
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPBounds, string_id);
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskTerminalConstraint, string_id);
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskReferenceSolution, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskFootstepPenalize, string_id);
 
                     return(humoto::ConfigurableOptimizationProblem::getTask(string_id));
                 }

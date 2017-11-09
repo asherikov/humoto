@@ -43,6 +43,7 @@ namespace humoto
 #include "wpg04/task_footstepbounds.h"
 #include "wpg04/task_terminalconstraint.h"
 #include "wpg04/task_referencesolution.h"
+#include "wpg04/task_footsteppenalize.h"
 
 
 #ifdef HUMOTO_USE_CONFIG
