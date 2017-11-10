@@ -449,6 +449,51 @@ namespace etools
             }
 
 
+            /**
+             * @brief this * Vector
+             *
+             * @tparam  t_DerivedOutput     Eigen template parameter
+             * @tparam  t_Scalar            Eigen template parameter
+             * @tparam  t_vector_size       Eigen template parameter
+             * @tparam  t_vector_options    Eigen template parameter
+             *
+             * @param[out] result result of multiplication
+             * @param[in] vector
+             */
+            template<   class t_DerivedOutput,
+                        typename t_Scalar,
+                        int t_vector_size,
+                        int t_vector_options>
+                void multiplyRight( Eigen::PlainObjectBase<t_DerivedOutput>      &result,
+                                    const Eigen::Matrix<t_Scalar, t_vector_size, 1, t_vector_options> & vector) const
+            {
+                EIGENTOOLS_DYNAMIC_VECTOR(typename Eigen::PlainObjectBase<t_DerivedOutput>::Scalar)  result_part;
+                EIGENTOOLS_DYNAMIC_VECTOR(typename Eigen::PlainObjectBase<t_DerivedOutput>::Scalar)  vector_part;
+
+
+                result.resize(identity_size_ * matrix_.rows());
+
+                vector_part.resize(matrix_.cols());
+
+                for (std::ptrdiff_t i = 0; i < identity_size_; ++i)
+                {
+                    for (std::ptrdiff_t j = 0; j < num_blocks_hor_; ++j)
+                    {
+                        vector_part.segment(j*EIGENTOOLS_BLOCKMATRIX_BLOCK_COLS_NUM, EIGENTOOLS_BLOCKMATRIX_BLOCK_COLS_NUM) =
+                            vector.segment(j*EIGENTOOLS_BLOCKMATRIX_BLOCK_COLS_NUM*identity_size_ + i*EIGENTOOLS_BLOCKMATRIX_BLOCK_COLS_NUM, EIGENTOOLS_BLOCKMATRIX_BLOCK_COLS_NUM);
+                    }
+
+                    result_part.noalias() = matrix_ * vector_part;
+
+                    for (std::ptrdiff_t j = 0; j < num_blocks_vert_; ++j)
+                    {
+                        result.segment(j*EIGENTOOLS_BLOCKMATRIX_BLOCK_ROWS_NUM*identity_size_ + i*EIGENTOOLS_BLOCKMATRIX_BLOCK_ROWS_NUM, EIGENTOOLS_BLOCKMATRIX_BLOCK_ROWS_NUM) =
+                            result_part.segment(j*EIGENTOOLS_BLOCKMATRIX_BLOCK_ROWS_NUM, EIGENTOOLS_BLOCKMATRIX_BLOCK_ROWS_NUM);
+                    }
+                }
+            }
+
+
 
             /**
              * @brief Conversion to Matrix
