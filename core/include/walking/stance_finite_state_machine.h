@@ -412,6 +412,11 @@ namespace humoto
                     stance_ptr->duration_ms_ = stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_;
                 }
 
+                if((stance_fsm.ss_states_to_termination_ == 0) && (stance_fsm.current_stance_.type_ == StanceType::DS))
+                {
+                    break;
+                }
+
                 stance_fsm.shiftStance();
 
                 stances.push_back(stance);
