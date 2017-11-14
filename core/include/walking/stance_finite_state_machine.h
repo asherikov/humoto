@@ -73,7 +73,7 @@ namespace humoto
          *
          * @return Left or right.
          */
-        humoto::LeftOrRight::Type     determineSupportFoot(const StanceType::Type & stance_type)
+        inline humoto::LeftOrRight::Type     determineSupportFoot(const StanceType::Type & stance_type)
         {
             switch(stance_type)
             {

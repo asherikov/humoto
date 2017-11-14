@@ -191,6 +191,19 @@ namespace humoto
 
 
                 /**
+                 * @brief Compute cposition of the capture point
+                 *
+                 * @param[in] cstate
+                 *
+                 * @return CP position
+                 */
+                static etools::Vector2  getCapturePoint(const humoto::rigidbody::PointMassState & com_state)
+                {
+                    return(getDcp6(getOmega(com_state.position_.z())) * convertCoMState(com_state));
+                }
+
+
+                /**
                  * @brief Create A matrix of final model
                  */
                 static etools::Matrix3 getA3(const double T, const double omega, const double Tsample)
