@@ -174,6 +174,22 @@ namespace humoto
                 }
 
 
+
+                /**
+                 * @brief Compute cposition of the capture point
+                 *
+                 * @param[in] cstate
+                 * @param[in] omega
+                 *
+                 * @return CP position
+                 */
+                static etools::Vector2  getCapturePoint(const etools::Vector6   & cstate,
+                                                        const double omega)
+                {
+                    return(getDcp6(omega) * cstate);
+                }
+
+
                 /**
                  * @brief Create A matrix of final model
                  */
@@ -320,6 +336,34 @@ namespace humoto
                             0.,  0.,  0.,     1.,   0.,  -hg;
                     return out;
                 }
+
+
+                /**
+                 * @brief Create D matrix
+                 */
+                static etools::Matrix1x3 getDcp3(const double omega)
+                {
+                    etools::Matrix1x3 Dcp3;
+                    Dcp3 << 1.0, 1/omega, 0.0;
+
+                    return(Dcp3);
+                }
+
+
+                /**
+                 * @brief Create D matrix
+                 */
+                static etools::Matrix2x6 getDcp6(const double omega)
+                {
+                    etools::Matrix1x3 Dcp3 = getDcp3(omega);
+
+                    etools::Matrix2x6 out;
+                    out << Dcp3, etools::Matrix1x3::Zero(),
+                           etools::Matrix1x3::Zero(), Dcp3;
+
+                    return out;
+                }
+
 
 
                 /**

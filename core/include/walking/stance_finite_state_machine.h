@@ -414,10 +414,27 @@ namespace humoto
 
                 if((stance_fsm.ss_states_to_termination_ == 0) && (stance_fsm.current_stance_.type_ == StanceType::DS))
                 {
+                    not_enough_states = true;
                     break;
                 }
 
                 stance_fsm.shiftStance();
+
+                stances.push_back(stance);
+            }
+
+
+            //always add one state afted TDS
+            if((not_enough_states == false) && (stances.back().type_ == StanceType::TDS))
+            {
+                if(stance_fsm.current_stance_.type_ == StanceType::TDS)
+                {
+                    stance_fsm.shiftStance();
+                }
+                *stance_ptr = stance_fsm.current_stance_;
+
+                stance_ptr->duration_ms_                 = 0;
+                stance_ptr->total_duration_ms_           = 0;
 
                 stances.push_back(stance);
             }
