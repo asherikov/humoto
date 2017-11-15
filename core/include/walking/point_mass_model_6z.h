@@ -163,6 +163,24 @@ namespace humoto
                 }
 
 
+                static humoto::rigidbody::PointMassState   evaluate(
+                        const double Ts,
+                        const double T,
+                        const humoto::rigidbody::PointMassState init_state,
+                        const etools::Vector2 & control)
+                {
+                    humoto::rigidbody::PointMassState com_state;
+
+
+                    etools::Matrix6    A = getA6(Ts, getOmega(init_state.position_.z()), T);
+                    etools::Matrix6x2  B = getB6(Ts, getOmega(init_state.position_.z()), T);
+
+                    com_state = convertCoMState(A * convertCoMState(init_state) + B * control, init_state.position_.z());
+
+                    return (com_state);
+                }
+
+
                 /**
                  * @brief Compute CoP position for the state
                  *
