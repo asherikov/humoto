@@ -213,8 +213,8 @@ set (HUMOTO_DEFINES   "")
 ## Dependencies
 #####################################
 
-add_custom_target( fetch-bridges )
-set(HUMOTO_TARGET_FETCH_BRIDGES    fetch-bridges CACHE INTERNAL "")
+add_custom_target( TGT_fetch_bridges )
+set(HUMOTO_TARGET_FETCH_BRIDGES    TGT_fetch_bridges CACHE INTERNAL "")
 add_custom_target( TGT_humoto_copy_headers ALL )
 add_custom_target( TGT_humoto_copy_config ALL )
 

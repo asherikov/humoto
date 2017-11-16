@@ -65,6 +65,7 @@ function(humoto_add_external_git_project)
     endif()
 
 
+    add_dependencies(${HUMOTO_TARGET_NAME}    TGT_fetch_bridges)
     add_dependencies(${HUMOTO_TARGET_FETCH_BRIDGES}    ${HUMOTO_TARGET_NAME}-download)
     set(HUMOTO_TARGET_FETCH_BRIDGES    "${HUMOTO_TARGET_NAME}-download"  CACHE INTERNAL "")
 endfunction(humoto_add_external_git_project)
