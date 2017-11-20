@@ -286,21 +286,11 @@ namespace humoto
 
 
             public:
-                void                        shiftTime(const std::size_t shift_time_ms);
-                void                        shiftStance();
-                Stance                      getNextStance() const;
-
-                template<class t_Stance>
-                    std::vector<t_Stance>   previewStances(const std::size_t ) const;
-                template<class t_Stance>
-                    std::vector<t_Stance>   previewNStances(const std::size_t ) const;
 
                 StanceFiniteStateMachine()
                 {
                     finalize();
                 }
-
-                explicit StanceFiniteStateMachine(const StanceFSMParameters &sfsm_params);
 
                 void setParameters(const StanceFSMParameters &sfsm_params)
                 {
@@ -308,294 +298,291 @@ namespace humoto
                     finalize();
                 }
 
-                void log(humoto::Logger &, const LogEntryName &, const std::string &) const;
-        };
 
-
-        /**
-         * @brief Preview sequence of Stances of the FSM
-         *
-         * @param[in] preview_duration_ms
-         *
-         * @return
-         */
-        template <class t_Stance>
-            std::vector<t_Stance> StanceFiniteStateMachine::previewStances(const std::size_t preview_duration_ms) const
-        {
-            bool not_enough_states = false;
-
-            std::vector<t_Stance> stances;
-            t_Stance    stance;
-            Stance *stance_ptr = static_cast<Stance*>(&stance);
-
-            StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
-
-
-            for (std::size_t duration_ms = preview_duration_ms; duration_ms > 0; )
-            {
-                stance_ptr->type_        = stance_fsm.current_stance_.type_;
-                stance_ptr->subtype_     = stance_fsm.current_stance_.subtype_;
-                stance_ptr->duration_ms_ = std::min(stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_, duration_ms);
-                stance_ptr->total_duration_ms_           = stance_fsm.current_stance_.duration_ms_;
-                stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
-                stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
-
-                if(stance_fsm.current_time_ms_ + duration_ms <= stance_fsm.current_stance_.duration_ms_)
+                /**
+                 * @brief Preview sequence of Stances of the FSM
+                 *
+                 * @param[in] preview_duration_ms
+                 *
+                 * @return
+                 */
+                template <class t_Stance>
+                    std::vector<t_Stance> previewStances(const std::size_t preview_duration_ms) const
                 {
-                    duration_ms = 0;
-                    stance_fsm.current_time_ms_ = stance_fsm.current_time_ms_ + duration_ms;
-                }
-                else
-                {
-                    duration_ms -= (stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_);
+                    bool not_enough_states = false;
 
-                    if((stance_fsm.ss_states_to_termination_ == 0) && (stance_fsm.current_stance_.type_ == StanceType::DS))
+                    std::vector<t_Stance> stances;
+                    t_Stance    stance;
+                    Stance *stance_ptr = static_cast<Stance*>(&stance);
+
+                    StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
+
+
+                    for (std::size_t duration_ms = preview_duration_ms; duration_ms > 0; )
                     {
-                        not_enough_states = true;
-                        break;
-                    }
-                    else
-                    {
-                        stance_fsm.shiftStance();
-                    }
-                }
+                        stance_ptr->type_        = stance_fsm.current_stance_.type_;
+                        stance_ptr->subtype_     = stance_fsm.current_stance_.subtype_;
+                        stance_ptr->duration_ms_ = std::min(stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_, duration_ms);
+                        stance_ptr->total_duration_ms_           = stance_fsm.current_stance_.duration_ms_;
+                        stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
+                        stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
 
-                stances.push_back(stance);
-            }
-
-            //always add one state afted TDS
-            if((not_enough_states == false) && (stances.back().type_ == StanceType::TDS))
-            {
-                if(stance_fsm.current_stance_.type_ == StanceType::TDS)
-                {
-                    stance_fsm.shiftStance();
-                }
-
-                stance_ptr->type_                        = stance_fsm.current_stance_.type_;
-                stance_ptr->subtype_                     = stance_fsm.current_stance_.subtype_;
-                stance_ptr->duration_ms_                 = 0;
-                stance_ptr->total_duration_ms_           = 0;
-                stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
-                stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
-
-                stances.push_back(stance);
-            }
-
-            return (stances);
-        }
-
-
-        /**
-         * @brief Preview sequence of Stances of the FSM
-         *
-         * @param[in] N
-         *
-         * @return
-         */
-        template <class t_Stance>
-            std::vector<t_Stance> StanceFiniteStateMachine::previewNStances(const std::size_t N) const
-        {
-            bool not_enough_states = false;
-
-            std::vector<t_Stance> stances;
-            t_Stance    stance;
-            Stance *stance_ptr = static_cast<Stance*>(&stance);
-
-            StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
-
-
-            for (std::size_t i = 0; i < N; ++i)
-            {
-                *stance_ptr = stance_fsm.current_stance_;
-                if(0 == i)
-                {
-                    stance_ptr->duration_ms_ = stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_;
-                }
-
-                if((stance_fsm.ss_states_to_termination_ == 0) && (stance_fsm.current_stance_.type_ == StanceType::DS))
-                {
-                    not_enough_states = true;
-                    break;
-                }
-
-                stance_fsm.shiftStance();
-
-                stances.push_back(stance);
-            }
-
-
-            //always add one state afted TDS
-            if((not_enough_states == false) && (stances.back().type_ == StanceType::TDS))
-            {
-                if(stance_fsm.current_stance_.type_ == StanceType::TDS)
-                {
-                    stance_fsm.shiftStance();
-                }
-                *stance_ptr = stance_fsm.current_stance_;
-
-                stance_ptr->duration_ms_                 = 0;
-                stance_ptr->total_duration_ms_           = 0;
-
-                stances.push_back(stance);
-            }
-
-            return (stances);
-        }
-
-
-        /**
-         * @brief Preview next walk state of the FSM
-         */
-        Stance StanceFiniteStateMachine::getNextStance() const
-        {
-            StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
-            stance_fsm.shiftStance();
-            return stance_fsm.current_stance_;
-        }
-
-
-        /**
-         * @brief Constructor
-         *
-         * @param[in] sfsm_params
-         */
-        StanceFiniteStateMachine::StanceFiniteStateMachine(const StanceFSMParameters &sfsm_params)
-        {
-            sfsm_params_ = sfsm_params;
-            finalize();
-        }
-
-
-        /**
-         * @brief Shift time
-         *
-         * @param[in] shift_time_ms
-         */
-        void StanceFiniteStateMachine::shiftTime(const std::size_t shift_time_ms)
-        {
-            for (std::size_t time_ms = shift_time_ms; time_ms > 0; )
-            {
-                is_tds_started_ = false;
-
-                if(current_time_ms_ + time_ms < current_stance_.duration_ms_)
-                {
-                    current_time_ms_ = current_time_ms_ + time_ms;
-                    time_ms = 0;
-                }
-                else
-                {
-                    time_ms -= (current_stance_.duration_ms_ - current_time_ms_);
-                    shiftStance();
-                }
-            }
-        }
-
-
-        /**
-         * @brief Shift state of the model
-         */
-        void StanceFiniteStateMachine::shiftStance()
-        {
-            is_tds_started_ = true;
-
-            current_stance_.subtype_ = StanceSubType::INTERMEDIATE;
-
-            switch(current_stance_.type_)
-            {
-                case StanceType::LSS:
-                    current_stance_.previous_nonds_stance_type_  = current_stance_.type_;
-                    current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
-                    current_stance_.type_        = StanceType::TDS;
-                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
-                    current_time_ms_ = 0;
-                    break;
-
-                case StanceType::RSS:
-                    current_stance_.previous_nonds_stance_type_  = current_stance_.type_;
-                    current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
-                    current_stance_.type_        = StanceType::TDS;
-                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
-                    current_time_ms_ = 0;
-                    break;
-
-                case StanceType::TDS:
-                    is_tds_started_ = false;
-
-                    if(ss_states_to_termination_ == 0)
-                    {
-                        current_stance_.subtype_     = StanceSubType::LAST;
-                        current_stance_.type_        = StanceType::DS;
-                        current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::DS);
-                        current_time_ms_ = 0;
-                    }
-                    else
-                    {
-                        if(ss_states_to_termination_ > 0)
+                        if(stance_fsm.current_time_ms_ + duration_ms <= stance_fsm.current_stance_.duration_ms_)
                         {
-                            ss_states_to_termination_ = ss_states_to_termination_ - 1;
-                        }
-
-                        if(current_stance_.previous_nonds_stance_type_ == StanceType::LSS)
-                        {
-                            current_stance_.type_        = StanceType::RSS;
-                            current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::RSS);
-                            current_time_ms_ = 0;
-                        }
-                        else if(current_stance_.previous_nonds_stance_type_ == StanceType::RSS)
-                        {
-                            current_stance_.type_        = StanceType::LSS;
-                            current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::LSS);
-                            current_time_ms_ = 0;
+                            duration_ms = 0;
+                            stance_fsm.current_time_ms_ = stance_fsm.current_time_ms_ + duration_ms;
                         }
                         else
                         {
-                            HUMOTO_THROW_MSG("FSM is in an incorrect state.");
+                            duration_ms -= (stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_);
+
+                            if((stance_fsm.ss_states_to_termination_ == 0) && (stance_fsm.current_stance_.type_ == StanceType::DS))
+                            {
+                                not_enough_states = true;
+                                break;
+                            }
+                            else
+                            {
+                                stance_fsm.shiftStance();
+                            }
+                        }
+
+                        stances.push_back(stance);
+                    }
+
+                    //always add one state afted TDS
+                    if((not_enough_states == false) && (stances.back().type_ == StanceType::TDS))
+                    {
+                        if(stance_fsm.current_stance_.type_ == StanceType::TDS)
+                        {
+                            stance_fsm.shiftStance();
+                        }
+
+                        stance_ptr->type_                        = stance_fsm.current_stance_.type_;
+                        stance_ptr->subtype_                     = stance_fsm.current_stance_.subtype_;
+                        stance_ptr->duration_ms_                 = 0;
+                        stance_ptr->total_duration_ms_           = 0;
+                        stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
+                        stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
+
+                        stances.push_back(stance);
+                    }
+
+                    return (stances);
+                }
+
+
+                /**
+                 * @brief Preview sequence of Stances of the FSM
+                 *
+                 * @param[in] N
+                 *
+                 * @return
+                 */
+                template <class t_Stance>
+                    std::vector<t_Stance> previewNStances(const std::size_t N) const
+                {
+                    bool not_enough_states = false;
+
+                    std::vector<t_Stance> stances;
+                    t_Stance    stance;
+                    Stance *stance_ptr = static_cast<Stance*>(&stance);
+
+                    StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
+
+
+                    for (std::size_t i = 0; i < N; ++i)
+                    {
+                        *stance_ptr = stance_fsm.current_stance_;
+                        if(0 == i)
+                        {
+                            stance_ptr->duration_ms_ = stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_;
+                        }
+
+                        if((stance_fsm.ss_states_to_termination_ == 0) && (stance_fsm.current_stance_.type_ == StanceType::DS))
+                        {
+                            not_enough_states = true;
+                            break;
+                        }
+
+                        stance_fsm.shiftStance();
+
+                        stances.push_back(stance);
+                    }
+
+
+                    //always add one state afted TDS
+                    if((not_enough_states == false) && (stances.back().type_ == StanceType::TDS))
+                    {
+                        if(stance_fsm.current_stance_.type_ == StanceType::TDS)
+                        {
+                            stance_fsm.shiftStance();
+                        }
+                        *stance_ptr = stance_fsm.current_stance_;
+
+                        stance_ptr->duration_ms_                 = 0;
+                        stance_ptr->total_duration_ms_           = 0;
+
+                        stances.push_back(stance);
+                    }
+
+                    return (stances);
+                }
+
+
+                /**
+                 * @brief Preview next walk state of the FSM
+                 */
+                Stance getNextStance() const
+                {
+                    StanceFiniteStateMachine stance_fsm = StanceFiniteStateMachine(*this);
+                    stance_fsm.shiftStance();
+                    return stance_fsm.current_stance_;
+                }
+
+
+                /**
+                 * @brief Constructor
+                 *
+                 * @param[in] sfsm_params
+                 */
+                StanceFiniteStateMachine(const StanceFSMParameters &sfsm_params)
+                {
+                    sfsm_params_ = sfsm_params;
+                    finalize();
+                }
+
+
+                /**
+                 * @brief Shift time
+                 *
+                 * @param[in] shift_time_ms
+                 */
+                void shiftTime(const std::size_t shift_time_ms)
+                {
+                    for (std::size_t time_ms = shift_time_ms; time_ms > 0; )
+                    {
+                        is_tds_started_ = false;
+
+                        if(current_time_ms_ + time_ms < current_stance_.duration_ms_)
+                        {
+                            current_time_ms_ = current_time_ms_ + time_ms;
+                            time_ms = 0;
+                        }
+                        else
+                        {
+                            time_ms -= (current_stance_.duration_ms_ - current_time_ms_);
+                            shiftStance();
                         }
                     }
-                    break;
+                }
 
-                case StanceType::DS:
-                    current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
 
-                    if(ss_states_to_termination_ == 0)
+                /**
+                 * @brief Shift state of the model
+                 */
+                void shiftStance()
+                {
+                    is_tds_started_ = true;
+
+                    current_stance_.subtype_ = StanceSubType::INTERMEDIATE;
+
+                    switch(current_stance_.type_)
                     {
-                        current_stance_.type_        = StanceType::DS;
-                        current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::DS);
-                        current_time_ms_ = 0;
+                        case StanceType::LSS:
+                            current_stance_.previous_nonds_stance_type_  = current_stance_.type_;
+                            current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
+                            current_stance_.type_        = StanceType::TDS;
+                            current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
+                            current_time_ms_ = 0;
+                            break;
+
+                        case StanceType::RSS:
+                            current_stance_.previous_nonds_stance_type_  = current_stance_.type_;
+                            current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
+                            current_stance_.type_        = StanceType::TDS;
+                            current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
+                            current_time_ms_ = 0;
+                            break;
+
+                        case StanceType::TDS:
+                            is_tds_started_ = false;
+
+                            if(ss_states_to_termination_ == 0)
+                            {
+                                current_stance_.subtype_     = StanceSubType::LAST;
+                                current_stance_.type_        = StanceType::DS;
+                                current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::DS);
+                                current_time_ms_ = 0;
+                            }
+                            else
+                            {
+                                if(ss_states_to_termination_ > 0)
+                                {
+                                    ss_states_to_termination_ = ss_states_to_termination_ - 1;
+                                }
+
+                                if(current_stance_.previous_nonds_stance_type_ == StanceType::LSS)
+                                {
+                                    current_stance_.type_        = StanceType::RSS;
+                                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::RSS);
+                                    current_time_ms_ = 0;
+                                }
+                                else if(current_stance_.previous_nonds_stance_type_ == StanceType::RSS)
+                                {
+                                    current_stance_.type_        = StanceType::LSS;
+                                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::LSS);
+                                    current_time_ms_ = 0;
+                                }
+                                else
+                                {
+                                    HUMOTO_THROW_MSG("FSM is in an incorrect state.");
+                                }
+                            }
+                            break;
+
+                        case StanceType::DS:
+                            current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
+
+                            if(ss_states_to_termination_ == 0)
+                            {
+                                current_stance_.type_        = StanceType::DS;
+                                current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::DS);
+                                current_time_ms_ = 0;
+                            }
+                            else
+                            {
+                                current_stance_.type_        = StanceType::TDS;
+                                current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
+                                current_time_ms_ = 0;
+                            }
+                            break;
+
+                        default:
+                            HUMOTO_THROW_MSG("FSM is in an incorrect state.");
                     }
-                    else
-                    {
-                        current_stance_.type_        = StanceType::TDS;
-                        current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
-                        current_time_ms_ = 0;
-                    }
-                    break;
-
-                default:
-                    HUMOTO_THROW_MSG("FSM is in an incorrect state.");
-            }
-        }
+                }
 
 
-        /**
-         * @brief Log
-         *
-         * @param[in,out] logger logger
-         * @param[in] parent parent
-         * @param[in] name name
-         */
-        void StanceFiniteStateMachine::log( humoto::Logger & logger HUMOTO_GLOBAL_LOGGER_IF_DEFINED,
-                                            const LogEntryName &parent = LogEntryName(),
-                                            const std::string &name = "stance_fsm") const
-        {
-            LogEntryName subname = parent; subname.add(name);
+                /**
+                 * @brief Log
+                 *
+                 * @param[in,out] logger logger
+                 * @param[in] parent parent
+                 * @param[in] name name
+                 */
+                void log(   humoto::Logger & logger HUMOTO_GLOBAL_LOGGER_IF_DEFINED,
+                            const LogEntryName &parent = LogEntryName(),
+                            const std::string &name = "stance_fsm") const
+                {
+                    LogEntryName subname = parent; subname.add(name);
 
-            current_stance_.log(logger, subname, "current_stance");
-            logger.log(LogEntryName(subname).add("ss_states_to_termination"), ss_states_to_termination_);
-            logger.log(LogEntryName(subname).add("current_time")            , current_time_ms_         );
-            logger.log(LogEntryName(subname).add("is_tds_started")          , is_tds_started_          );
-        }
-
+                    current_stance_.log(logger, subname, "current_stance");
+                    logger.log(LogEntryName(subname).add("ss_states_to_termination"), ss_states_to_termination_);
+                    logger.log(LogEntryName(subname).add("current_time")            , current_time_ms_         );
+                    logger.log(LogEntryName(subname).add("is_tds_started")          , is_tds_started_          );
+                }
+        };
     }//end namespace walking
 }//end namespace humoto
 

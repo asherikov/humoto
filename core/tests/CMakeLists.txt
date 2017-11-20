@@ -1,6 +1,9 @@
 if (HUMOTO_BUILD_TESTS)
     # Simple demo
     humoto_define_test(${HUMOTO_MODULE} "000" "config_yaml")
+
+    # Two translation units
+    humoto_define_test(${HUMOTO_MODULE} "001;test_001_unit_0.cpp;test_001_unit_1.cpp" "" "config_yaml;config_msgpack;rbdl;QuadProgpp;qpOASES;qpmad")
 endif()
 
 

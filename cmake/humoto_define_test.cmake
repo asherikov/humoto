@@ -1,12 +1,25 @@
 # parameters
 #   HUMOTO_MODULE               module
-#   REGRESSION_TEST_ID          test id, number starting from 000
+#   TEST_ID                     test id, number starting from 000
 #   DEPENDENCIES                list of dependencies
 #   [OPTIONAL_DEPENDENCIES]     list of optional dependencies, can be omitted
 #
-function(humoto_define_test HUMOTO_MODULE TEST_ID DEPENDENCIES)
+function(humoto_define_test HUMOTO_MODULE TEST_ID_SOURCES DEPENDENCIES)
+    # pop test id
+    list(GET TEST_ID_SOURCES 0 TEST_ID)
+    list(REMOVE_AT TEST_ID_SOURCES 0)
+
     set(TEST_NAME test_${TEST_ID})
     set(TGT_NAME "${HUMOTO_MODULE}_${TEST_NAME}")
+
+    list(LENGTH TEST_ID_SOURCES NUM_SOURCE_FILES)
+    if (NUM_SOURCE_FILES GREATER "0")
+        set (SOURCES    ${TEST_ID_SOURCES})
+    else()
+        set (SOURCES    "${TEST_NAME}.cpp")
+    endif()
+
+
 
     include_directories("${HUMOTO_CORE_DIR}/tests_include/")
 
@@ -27,12 +40,11 @@ function(humoto_define_test HUMOTO_MODULE TEST_ID DEPENDENCIES)
 
     if(HUMOTO_BUILD_WITH_QI)
         #qibuild modif
-        qi_create_bin(${TGT_NAME} "${TEST_NAME}.cpp" SUBFOLDER ${HUMOTO_MODULE})
+        qi_create_bin(${TGT_NAME} ${SOURCES} SUBFOLDER ${HUMOTO_MODULE})
     else()
-        add_executable(${TGT_NAME} "${TEST_NAME}.cpp")
+        add_executable(${TGT_NAME} ${SOURCES})
     endif()
     add_dependencies("${HUMOTO_MODULE}" "${TGT_NAME}")
-
 
 
     set_target_properties(${TGT_NAME} PROPERTIES OUTPUT_NAME "${TEST_NAME}")
