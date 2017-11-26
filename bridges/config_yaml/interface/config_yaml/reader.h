@@ -133,7 +133,7 @@ namespace humoto
             };
 
 
-            class Reader : public ReaderMixin<ReaderBase>
+            class HUMOTO_LOCAL Reader : public ReaderMixin<ReaderBase>
             {
                 public:
                     /**

@@ -387,8 +387,6 @@ namespace humoto
         }
     }
 
-    #include "config/reader.h"
-
 #else
 
     namespace humoto

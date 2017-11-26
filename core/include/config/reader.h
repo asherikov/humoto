@@ -15,7 +15,7 @@ namespace humoto
     namespace config
     {
         template <class t_ReaderBase>
-            class ReaderMixin : public t_ReaderBase
+            class HUMOTO_LOCAL ReaderMixin : public t_ReaderBase
         {
             protected:
                 using t_ReaderBase::isArray;
