@@ -15,8 +15,10 @@
 #ifdef HUMOTO_CONFIG_DISABLED
     #error "This header must be included before humoto.h"
 #else
-
     #include "humoto_helpers.h"
+
+    #include "config/reader.h"
+    #include "config/writer.h"
 
     #include "yaml-cpp/yaml.h"
 
@@ -73,8 +75,8 @@
                 readConfigEntriesTemplate(reader, crash_flag);\
             }
 
-
     #ifndef HUMOTO_USE_CONFIG
         #define HUMOTO_USE_CONFIG
     #endif
+
 #endif

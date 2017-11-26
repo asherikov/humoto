@@ -18,9 +18,9 @@ namespace humoto
             /**
              * @brief Configuration reader class
              */
-            class HUMOTO_LOCAL Reader
+            class HUMOTO_LOCAL ReaderBase
             {
-                private:
+                protected:
                     std::string     buffer_;
 
                     std::vector< boost::shared_ptr< ::msgpack::object_handle >  >           handles_;
@@ -29,7 +29,11 @@ namespace humoto
                     std::stack< const ::msgpack::object * >      node_stack_;
 
 
-                private:
+                protected:
+                    ReaderBase() {};
+                    ~ReaderBase() {};
+
+
                     /**
                      * @brief open configuration file
                      *
@@ -86,27 +90,31 @@ namespace humoto
                     }
 
 
+                    bool isArray() const
+                    {
+                        return(::msgpack::type::ARRAY == getCurrentNode()->type);
+                    }
+
+                    std::size_t getArraySize() const
+                    {
+                        return(getCurrentNode()->via.array.size);
+                    }
+
+                    template<class t_ElementType>
+                        void readArrayElement(t_ElementType &element, const std::size_t index) const
+                    {
+                        getCurrentNode()->via.array.ptr[index] >> element;
+                    }
+
+
+                    template<class t_ElementType>
+                        void readElement(t_ElementType &element) const
+                    {
+                        *getCurrentNode() >> element;
+                    }
+
+
                 public:
-                    /**
-                     * @brief Constructor
-                     *
-                     * @param[in] file_name
-                     */
-                    explicit Reader(const std::string& file_name) 
-                    {
-                        openFile(file_name);
-                    }
-
-
-                    /**
-                     * @brief Default constructor
-                     */
-                    Reader()
-                    {
-                    }
-
-
-
                     /**
                      * @brief Descend to the entry with the given name
                      *
@@ -159,213 +167,28 @@ namespace humoto
                     {
                         node_stack_.pop();
                     }
+            };
 
 
+            class Reader : public ReaderMixin<ReaderBase>
+            {
+                public:
                     /**
-                     * @brief Read configuration entry (vector)
+                     * @brief Constructor
                      *
-                     * @tparam t_Scalar Eigen template parameter
-                     * @tparam t_rows   Eigen template parameter
-                     * @tparam t_flags  Eigen template parameter
-                     *
-                     * @param[out] entry     configuration parameter
-                     * @param[in] entry_name name of the configuration parameter
-                     * @param[in] crash_on_missing_entry
+                     * @param[in] file_name
                      */
-                    template <  typename t_Scalar,
-                                int t_rows,
-                                int t_flags>
-                        void readCompound(Eigen::Matrix<t_Scalar, t_rows, 1, t_flags> &entry,
-                                          const std::string & entry_name,
-                                          const bool crash_on_missing_entry = false)
+                    explicit Reader(const std::string& file_name)
                     {
-                        if (descend(entry_name))
-                        {
-                            HUMOTO_ASSERT(  (::msgpack::type::ARRAY == getCurrentNode()->type),
-                                            "[Config] Entry is not an array.");
-
-                            if (Eigen::Dynamic == t_rows)
-                            {
-                                entry.resize(getCurrentNode()->via.array.size);
-                            }
-                            else
-                            {
-                                HUMOTO_ASSERT(  (static_cast<int>(getCurrentNode()->via.array.size) == t_rows),
-                                                "[Config] Wrong entry sequence size.");
-                            }
-
-                            for(humoto::EigenIndex i = 0; i < (Eigen::Dynamic == t_rows ? entry.rows() : t_rows); ++i)
-                            {
-                                getCurrentNode()->via.array.ptr[i] >> entry[i];
-                            }
-
-                            ascend();
-                        }
-                        else
-                        {
-                            if (crash_on_missing_entry)
-                            {
-                                HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
-                            }
-                        }
-                    }
-
-
-
-                    /**
-                     * @brief Read a configuration entry (matrix)
-                     *
-                     * @tparam t_Scalar Eigen template parameter
-                     * @tparam t_rows   Eigen template parameter
-                     * @tparam t_cols   Eigen template parameter
-                     * @tparam t_flags  Eigen template parameter
-                     *
-                     * @param[out] entry      data
-                     * @param[in]  entry_name name
-                     * @param[in] crash_on_missing_entry
-                     */
-                    template <  typename t_Scalar,
-                                int t_rows,
-                                int t_cols,
-                                int t_flags>
-                        void readCompound(  Eigen::Matrix<t_Scalar, t_rows, t_cols, t_flags> &entry,
-                                            const std::string& entry_name,
-                                            const bool crash_on_missing_entry = false)
-                    {
-                        if (descend(entry_name))
-                        {
-                            humoto::EigenIndex num_rows;
-                            humoto::EigenIndex num_cols;
-
-                            readScalar(num_rows, "rows", true);
-                            readScalar(num_cols, "cols", true);
-
-
-                            Eigen::VectorXd v;
-                            readCompound(v, "data", true);
-
-                            HUMOTO_ASSERT(  v.rows() == num_rows*num_cols,
-                                            std::string("Inconsistent configuration file entry: ") + entry_name);
-
-                            Eigen::Map< Eigen::Matrix<  double,
-                                                        Eigen::Dynamic,
-                                                        Eigen::Dynamic,
-                                                        Eigen::RowMajor> >  map(v.data(),
-                                                                                num_rows,
-                                                                                num_cols);
-                            entry = map;
-
-                            ascend();
-                        }
-                        else
-                        {
-                            if (crash_on_missing_entry)
-                            {
-                                HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
-                            }
-                        }
+                        openFile(file_name);
                     }
 
 
                     /**
-                     * @brief Read configuration entry (std::vector)
-                     *
-                     * @tparam t_VectorEntryType type of the entry of std::vector
-                     *
-                     * @param[out] entry      configuration parameter
-                     * @param[in]  entry_name name of the configuration parameter
-                     * @param[in]  crash_on_missing_entry
+                     * @brief Default constructor
                      */
-                    template <typename t_VectorEntryType>
-                        void readCompound(  std::vector<t_VectorEntryType> & entry,
-                                            const std::string              & entry_name,
-                                            const bool crash_on_missing_entry = false)
+                    Reader()
                     {
-                        if (descend(entry_name))
-                        {
-                            HUMOTO_ASSERT(  (::msgpack::type::ARRAY == getCurrentNode()->type),
-                                            "[Config] Entry is not an array.");
-
-                            entry.resize(getCurrentNode()->via.array.size);
-
-                            for(std::size_t i = 0; i < entry.size(); ++i)
-                            {
-                                getCurrentNode()->via.array.ptr[i] >> entry[i];
-                            }
-
-                            ascend();
-                        }
-                        else
-                        {
-                            if (crash_on_missing_entry)
-                            {
-                                HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
-                            }
-                        }
-                    }
-
-
-
-                    /**
-                     * @brief Read configuration entry (scalar template)
-                     *
-                     * @tparam t_EntryType type of the entry
-                     *
-                     * @param[out] entry     configuration parameter
-                     * @param[in] entry_name name of the configuration parameter
-                     * @param[in] crash_on_missing_entry
-                     */
-                    template <typename t_EntryType>
-                        void readScalar(t_EntryType        & entry,
-                                        const std::string  & entry_name,
-                                        const bool crash_on_missing_entry = false)
-                    {
-                        if (descend(entry_name))
-                        {
-                            *getCurrentNode() >> entry;
-                            ascend();
-                        }
-                        else
-                        {
-                            if (crash_on_missing_entry)
-                            {
-                                HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
-                            }
-                        }
-                    }
-
-
-                    /**
-                     * @brief Read configuration entry (an enum). This method
-                     * is added since an explicit casting to integer is needed.
-                     *
-                     * @tparam t_EnumerationType enumeration type
-                     *
-                     * @param[out] entry     configuration parameter
-                     * @param[in] entry_name name of the configuration parameter
-                     * @param[in] crash_on_missing_entry
-                     */
-                    template <typename t_EnumerationType>
-                        void readEnum(  t_EnumerationType  & entry,
-                                        const std::string  & entry_name,
-                                        const bool crash_on_missing_entry = false)
-                    {
-                        if (descend(entry_name))
-                        {
-                            int tmp_value = 0;
-                            *getCurrentNode() >> tmp_value;
-
-                            entry = static_cast<t_EnumerationType> (tmp_value);
-
-                            ascend();
-                        }
-                        else
-                        {
-                            if (crash_on_missing_entry)
-                            {
-                                HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
-                            }
-                        }
                     }
             };
         }
