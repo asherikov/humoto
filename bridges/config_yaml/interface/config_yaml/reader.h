@@ -22,6 +22,14 @@ namespace humoto
             class HUMOTO_LOCAL ReaderBase
             {
                 protected:
+                    enum Status
+                    {
+                        UNDEFINED = 0,
+                        IN_ARRAY = 1
+                    };
+
+
+                protected:
                     /// input file stream
                     std::ifstream config_ifs_;
 
@@ -34,10 +42,35 @@ namespace humoto
                     /// Stack of nodes.
                     std::stack<const YAML::Node *>    node_stack_;
 
+                    std::vector< std::size_t >        array_counters_;
+                    Status      status_;
+
 
                 protected:
                     ReaderBase() {};
                     ~ReaderBase() {};
+
+
+                    std::size_t startArray()
+                    {
+                        status_ = IN_ARRAY;
+                        array_counters_.push_back(0);
+
+                        return(getArraySize(*getCurrentNode(), 0));
+                    }
+
+                    void endArray()
+                    {
+                        array_counters_.pop_back();
+                        if (0 == array_counters_.size())
+                        {
+                            status_ = UNDEFINED;
+                        }
+                        else
+                        {
+                            ++array_counters_.back();
+                        }
+                    }
 
 
                     /**
@@ -80,22 +113,49 @@ namespace humoto
                         return(YAML::NodeType::Sequence == getCurrentNode()->Type());
                     }
 
-                    std::size_t getArraySize()
+                    template<class t_Node>
+                    std::size_t getArraySize(t_Node & node, const std::size_t depth)
                     {
-                        return(getCurrentNode()->size());
+                        if ( depth == array_counters_.size()-1 )
+                        {
+                            return(node.size());
+                        }
+                        else
+                        {
+                            return(getArraySize(node[ array_counters_[depth] ], depth + 1));
+                        }
                     }
 
-                    template<class t_ElementType>
-                        void readArrayElement(t_ElementType &element, const std::size_t index)
+
+                    template<   class t_ElementType,
+                                class t_NodeType>
+                        void readArrayElement(  t_ElementType &element,
+                                                t_NodeType &node,
+                                                const std::size_t depth)
                     {
-                        (*getCurrentNode())[index] >> element;
+                        if ( depth == array_counters_.size()-1 )
+                        {
+                            node[ array_counters_[depth] ] >> element;
+                            ++array_counters_[depth];
+                        }
+                        else
+                        {
+                            readArrayElement(element, node[ array_counters_[depth] ], depth + 1);
+                        }
                     }
 
 
                     template<class t_ElementType>
                         void readElement(t_ElementType &element)
                     {
-                        *getCurrentNode() >> element;
+                        if (IN_ARRAY == status_)
+                        {
+                            readArrayElement(element, *getCurrentNode(), 0);
+                        }
+                        else
+                        {
+                            *getCurrentNode() >> element;
+                        }
                     }
 
 

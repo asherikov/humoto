@@ -21,17 +21,50 @@ namespace humoto
             class HUMOTO_LOCAL ReaderBase
             {
                 protected:
+                    enum Status
+                    {
+                        UNDEFINED = 0,
+                        IN_ARRAY = 1
+                    };
+
+
+                protected:
                     std::string     buffer_;
 
                     std::vector< boost::shared_ptr< ::msgpack::object_handle >  >           handles_;
 
                     /// Stack of nodes.
-                    std::stack< const ::msgpack::object * >      node_stack_;
+                    std::stack< const ::msgpack::object * >     node_stack_;
+
+                    std::vector< std::size_t >             array_counters_;
+                    Status      status_;
 
 
                 protected:
                     ReaderBase() {};
                     ~ReaderBase() {};
+
+
+                    std::size_t startArray()
+                    {
+                        status_ = IN_ARRAY;
+                        array_counters_.push_back(0);
+
+                        return(getArraySize(*getCurrentNode(), 0));
+                    }
+
+                    void endArray()
+                    {
+                        array_counters_.pop_back();
+                        if (0 == array_counters_.size())
+                        {
+                            status_ = UNDEFINED;
+                        }
+                        else
+                        {
+                            ++array_counters_.back();
+                        }
+                    }
 
 
                     /**
@@ -95,22 +128,53 @@ namespace humoto
                         return(::msgpack::type::ARRAY == getCurrentNode()->type);
                     }
 
-                    std::size_t getArraySize() const
+
+                    template<class t_Node>
+                    std::size_t getArraySize(t_Node & node, const std::size_t depth)
                     {
-                        return(getCurrentNode()->via.array.size);
+                        if ( depth == array_counters_.size()-1 )
+                        {
+                            return(node.via.array.size);
+                        }
+                        else
+                        {
+                            return(getArraySize(node.via.array.ptr[ array_counters_[depth] ], depth + 1));
+                        }
                     }
 
-                    template<class t_ElementType>
-                        void readArrayElement(t_ElementType &element, const std::size_t index) const
+
+                    template<   class t_ElementType,
+                                class t_NodeType>
+                        void readArrayElement(  t_ElementType &element,
+                                                t_NodeType &node,
+                                                const std::size_t depth)
                     {
-                        getCurrentNode()->via.array.ptr[index] >> element;
+                        if ( depth == array_counters_.size()-1 )
+                        {
+                            node.via.array.ptr[ array_counters_[depth] ] >> element;
+                            ++array_counters_[depth];
+                        }
+                        else
+                        {
+                            readArrayElement(element, node.via.array.ptr[ array_counters_[depth] ], depth + 1);
+                        }
                     }
 
 
                     template<class t_ElementType>
-                        void readElement(t_ElementType &element) const
+                        void readElement(t_ElementType &element)
                     {
-                        *getCurrentNode() >> element;
+                        if (IN_ARRAY == status_)
+                        {
+                            readArrayElement(element, *getCurrentNode(), 0);
+                            //node[ array_counters_[depth] ] >> element;
+                            //getCurrentNode()->via.array.ptr[array_counters_.top()] >> element;
+                            //++array_counters_.top();
+                        }
+                        else
+                        {
+                            *getCurrentNode() >> element;
+                        }
                     }
 
 

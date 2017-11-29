@@ -38,11 +38,11 @@ namespace humoto
     #define HUMOTO_CONFIG_READ_PARENT_CLASS(parent_class)  parent_class::readConfigEntries(reader, crash_on_missing_entry);
     #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)  member.readNestedConfig(reader, name, crash_on_missing_entry);
 
-    #define HUMOTO_CONFIG_READ_COMPOUND_(entry)     reader.readCompound(entry##_, #entry, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_COMPOUND(entry)      reader.readCompound(entry, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_COMPOUND_(entry)     reader.readEntry(entry##_, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_COMPOUND(entry)      reader.readEntry(entry, #entry, crash_on_missing_entry);
 
-    #define HUMOTO_CONFIG_READ_SCALAR_(entry)   reader.readScalar(entry##_, #entry, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_SCALAR(entry)    reader.readScalar(entry, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_SCALAR_(entry)   reader.readEntry(entry##_, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_SCALAR(entry)    reader.readEntry(entry, #entry, crash_on_missing_entry);
 
     #define HUMOTO_CONFIG_READ_ENUM_(entry)     reader.readEnum(entry##_, #entry, crash_on_missing_entry);
     #define HUMOTO_CONFIG_READ_ENUM(entry)      reader.readEnum(entry, #entry, crash_on_missing_entry);
