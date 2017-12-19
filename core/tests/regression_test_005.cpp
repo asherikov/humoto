@@ -47,16 +47,6 @@ namespace humoto
 
         protected:
             /**
-             * @brief Set defaults
-             */
-            void setDefaults()
-            {
-                etools::unsetMatrix(S_);
-                etools::unsetMatrix(U_);
-            }
-
-
-            /**
              * @brief Constructor
              */
             CondensingTestTimeInvariant() : timestep_(0.1), preview_horizon_length_(10)
@@ -70,6 +60,16 @@ namespace humoto
             // need to override to inherit from humoto::MPC
             void log(humoto::Logger&, const humoto::LogEntryName&, const std::string&) const
             {
+            }
+
+
+            /**
+             * @brief Set defaults
+             */
+            void setDefaults()
+            {
+                etools::unsetMatrix(S_);
+                etools::unsetMatrix(U_);
             }
     };
 
@@ -115,16 +115,6 @@ namespace humoto
 
         protected:
             /**
-             * @brief Set defaults
-             */
-            void setDefaults()
-            {
-                etools::unsetMatrix(S_);
-                etools::unsetMatrix(U_);
-            }
-
-
-            /**
              * @brief Constructor
              */
             CondensingTestTimeVariant()
@@ -148,6 +138,16 @@ namespace humoto
 
 
         public:
+            /**
+             * @brief Set defaults
+             */
+            void setDefaults()
+            {
+                etools::unsetMatrix(S_);
+                etools::unsetMatrix(U_);
+            }
+
+
             // need to override to inherit from humoto::MPC
             void log(humoto::Logger&, const humoto::LogEntryName&, const std::string&) const
             {

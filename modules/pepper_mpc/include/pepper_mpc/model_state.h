@@ -61,12 +61,6 @@ namespace humoto
                 }
 
 
-                void setDefaults()
-                {
-                    setParameters();
-                }
-
-
             public:
                 /// State of the base
                 humoto::rigidbody::RigidBodyState   base_state_;
@@ -85,6 +79,12 @@ namespace humoto
                 ModelState()
                 {
                     setDefaults();
+                }
+
+
+                void setDefaults()
+                {
+                    setParameters();
                 }
 
 

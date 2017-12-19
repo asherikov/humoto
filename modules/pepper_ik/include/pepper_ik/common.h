@@ -34,24 +34,6 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                /**
-                 * @brief Initialize to default values
-                 */
-                void setDefaults()
-                {
-                    control_interval_ms_            = 10;
-                    joint_angle_error_tolerance_    = 1e-2;
-                    maximal_number_of_iterations_   = 3;
-                    motion_parameters_tolerance_    = 1e-3;
-                }
-
-                void finalize()
-                {
-                    control_interval_ = convertMillisecondToSecond(control_interval_ms_);
-                }
-
-
             public:
                 double          control_interval_;
                 std::size_t     control_interval_ms_;
@@ -67,6 +49,23 @@ namespace humoto
                 {
                     setDefaults();
                     finalize();
+                }
+
+
+                /**
+                 * @brief Initialize to default values
+                 */
+                void setDefaults()
+                {
+                    control_interval_ms_            = 10;
+                    joint_angle_error_tolerance_    = 1e-2;
+                    maximal_number_of_iterations_   = 3;
+                    motion_parameters_tolerance_    = 1e-3;
+                }
+
+                void finalize()
+                {
+                    control_interval_ = convertMillisecondToSecond(control_interval_ms_);
                 }
         };
 

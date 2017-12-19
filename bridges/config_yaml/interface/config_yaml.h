@@ -43,7 +43,6 @@
                     protected:
                         #ifdef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
                             using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::writeConfigEntries;
-                            using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::readConfigEntries;
                         #endif
 
                         ///@{
@@ -52,7 +51,6 @@
                          * automatically upon inclusion of define_accessors.h.
                          */
                         virtual void writeConfigEntries(humoto::config::yaml::Writer &) const = 0;
-                        virtual void readConfigEntries(humoto::config::yaml::Reader &, const bool) = 0;
                         ///@}
                 };
 
@@ -65,15 +63,16 @@
     }
 
     #define HUMOTO_BRIDGE_config_yaml_DEFINITIONS \
-        protected: \
+        public: \
             void writeConfigEntries(humoto::config::yaml::Writer & writer) const \
             { \
                 writeConfigEntriesTemplate(writer); \
-            }\
-            void readConfigEntries(humoto::config::yaml::Reader & reader, const bool crash_flag)\
+            } \
+            virtual void readConfigEntries(humoto::config::ReaderMixin<humoto::config::yaml::ReaderBase> & reader, const bool crash_flag)\
             {\
                 readConfigEntriesTemplate(reader, crash_flag);\
             }
+
 
     #ifndef HUMOTO_USE_CONFIG
         #define HUMOTO_USE_CONFIG

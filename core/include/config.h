@@ -36,7 +36,7 @@ namespace humoto
 
 
     #define HUMOTO_CONFIG_READ_PARENT_CLASS(parent_class)  parent_class::readConfigEntries(reader, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)  member.readNestedConfig(reader, name, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)  reader.readNestedConfig(member, name, crash_on_missing_entry);
 
     #define HUMOTO_CONFIG_READ_COMPOUND_(entry)     reader.readEntry(entry##_, #entry, crash_on_missing_entry);
     #define HUMOTO_CONFIG_READ_COMPOUND(entry)      reader.readEntry(entry, #entry, crash_on_missing_entry);
@@ -60,13 +60,8 @@ namespace humoto
             /**
              * @brief Configurable base class.
              */
-            template <bool t_crash_on_missing_entry>
-                class HUMOTO_LOCAL CommonConfigurableBase : public HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
+            class HUMOTO_LOCAL CommonConfigurableBase : public HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
             {
-                protected:
-                    static const bool default_crash_on_missing_entry_ = t_crash_on_missing_entry;
-
-
                 protected:
                     /**
                      * @brief Protected destructor: prevent destruction of the child
@@ -74,12 +69,6 @@ namespace humoto
                      */
                     ~CommonConfigurableBase() {}
                     CommonConfigurableBase() {}
-
-
-                    /**
-                     * @brief Set members to their default values.
-                     */
-                    virtual void setDefaults() = 0;
 
 
                     /**
@@ -96,13 +85,6 @@ namespace humoto
 
 
                     /**
-                     * @brief This function is called automaticaly after reading
-                     * a configuration file. Does nothing by default.
-                     */
-                    virtual void finalize() {};
-
-
-                    /**
                      * @brief Get number of entries in the corresponding
                      * configuration node.
                      *
@@ -116,149 +98,23 @@ namespace humoto
                      * These functions are always defined automatically.
                      */
                     using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::writeConfigEntries;
-                    using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::readConfigEntries;
                     /// @}
 
+                    virtual bool getCrashOnMissingEntryFlag() = 0;
 
                 public:
                     /**
-                     * @brief Read nested configuration node.
-                     *
-                     * @param[in] reader
-                     * @param[in] crash_on_missing_entry
-                     * @param[in] node_name   node name, the default is used if empty
+                     * @brief This function is called automaticaly after reading
+                     * a configuration file. Does nothing by default.
                      */
-                    template <class t_Reader>
-                        void readNestedConfig(  t_Reader            & reader,
-                                                const std::string   & node_name,
-                                                const bool          crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        try
-                        {
-                            setDefaults();
-                            if (reader.descend(node_name))
-                            {
-                                readConfigEntries(reader, crash_on_missing_entry);
-                                reader.ascend();
-                            }
-                            else
-                            {
-                                if (crash_on_missing_entry)
-                                {
-                                    HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + node_name + "'.");
-                                }
-                            }
-                        }
-                        catch(const std::exception &e)
-                        {
-                            HUMOTO_THROW_MSG(std::string("Failed to parse node <") + node_name + "> in the configuration file: " + e.what());
-                        }
-                    }
+                    virtual void finalize() {};
 
 
                     /**
-                     * @brief Read configuration (assuming the configuration node
-                     * to be in the root).
-                     *
-                     * @param[in] reader configuration reader
-                     * @param[in] crash_on_missing_entry
+                     * @brief Set members to their default values.
                      */
-                    template <class t_Reader>
-                        void readConfig(t_Reader            & reader,
-                                        const bool          crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        readNestedConfig(reader, getConfigSectionID(), crash_on_missing_entry);
-                    }
+                    virtual void setDefaults() = 0;
 
-
-                    /**
-                     * @brief Read configuration (assuming the configuration node
-                     * to be in the root).
-                     *
-                     * @param[in] reader configuration reader
-                     * @param[in] crash_on_missing_entry
-                     * @param[in] node_name   node name, the default is used if empty
-                     */
-                    template <class t_Reader>
-                        void readConfig(t_Reader            & reader,
-                                        const std::string   & node_name,
-                                        const bool          crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        readNestedConfig(reader, node_name, crash_on_missing_entry);
-                    }
-
-
-                    /**
-                     * @brief Read configuration (assuming the configuration node
-                     * to be in the root).
-                     *
-                     * @param[in] reader configuration reader
-                     * @param[in] crash_on_missing_entry
-                     * @param[in] node_name   node name, the default is used if empty
-                     *
-                     * @note Intercept implicit conversion of a pointer to bool.
-                     */
-                    template <class t_Reader>
-                        void readConfig(t_Reader            & reader,
-                                        const char          * node_name,
-                                        const bool          crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        readNestedConfig(reader, node_name, crash_on_missing_entry);
-                    }
-
-
-                    /**
-                     * @brief Read configuration (assuming the configuration node
-                     * to be in the root).
-                     *
-                     * @param[in] file_name file name
-                     * @param[in] crash_on_missing_entry
-                     */
-                    template <class t_Reader>
-                        void readConfig(const std::string &file_name,
-                                        const bool        crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        t_Reader reader(file_name);
-                        readNestedConfig(reader, getConfigSectionID(), crash_on_missing_entry);
-                    }
-
-
-                    /**
-                     * @brief Read configuration (assuming the configuration node
-                     * to be in the root).
-                     *
-                     * @param[in] file_name file name
-                     * @param[in] node_name   node name, the default is used if empty
-                     * @param[in] crash_on_missing_entry
-                     */
-                    template <class t_Reader>
-                        void readConfig(const std::string &file_name,
-                                        const std::string &node_name,
-                                        const bool        crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        t_Reader reader(file_name);
-                        readNestedConfig(reader, node_name, crash_on_missing_entry);
-                    }
-
-
-                    /**
-                     * @brief Read configuration (assuming the configuration node
-                     * to be in the root).
-                     *
-                     * @param[in] file_name file name
-                     * @param[in] crash_on_missing_entry
-                     * @param[in] node_name   node name, the default is used if empty
-                     *
-                     * @note Intercept implicit conversion of a pointer to bool.
-                     */
-                    template <class t_Reader>
-                        void readConfig(const std::string &file_name,
-                                        const char        *node_name,
-                                        const bool        crash_on_missing_entry = default_crash_on_missing_entry_)
-                    {
-                        t_Reader reader(file_name);
-                        readNestedConfig(reader, node_name, crash_on_missing_entry);
-                    }
 
                     // ------------------------------------------
 
@@ -350,8 +206,12 @@ namespace humoto
 
 
             /// Default configurable base is strict
-            class HUMOTO_LOCAL ConfigurableBase : public humoto::config::CommonConfigurableBase<true>
+            class HUMOTO_LOCAL ConfigurableBase : public humoto::config::CommonConfigurableBase
             {
+                protected:
+                    bool getCrashOnMissingEntryFlag() {return (true);}
+
+
                 protected:
                     /**
                      * @brief Protected destructor: prevent destruction of the child
@@ -362,8 +222,13 @@ namespace humoto
             };
 
 
-            class HUMOTO_LOCAL StrictConfigurableBase : public humoto::config::CommonConfigurableBase<true>
+            class HUMOTO_LOCAL StrictConfigurableBase : public humoto::config::CommonConfigurableBase
             {
+                protected:
+                    bool getCrashOnMissingEntryFlag() {return (true);}
+                    static const bool default_crash_on_missing_entry_ = true;
+
+
                 protected:
                     /**
                      * @brief Protected destructor: prevent destruction of the child
@@ -374,8 +239,12 @@ namespace humoto
             };
 
 
-            class HUMOTO_LOCAL RelaxedConfigurableBase : public humoto::config::CommonConfigurableBase<false>
+            class HUMOTO_LOCAL RelaxedConfigurableBase : public humoto::config::CommonConfigurableBase
             {
+                protected:
+                    bool getCrashOnMissingEntryFlag() {return (false);}
+
+
                 protected:
                     /**
                      * @brief Protected destructor: prevent destruction of the child

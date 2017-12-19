@@ -121,7 +121,6 @@ namespace humoto
                     entry.resize(startArray());
                     for(std::size_t i = 0; i < entry.size(); ++i)
                     {
-                        std::cout << "i " << i << std::endl;
                         readBody(entry[i], crash_on_missing_entry);
                     }
                     endArray();
@@ -187,6 +186,41 @@ namespace humoto
                         {
                             HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
                         }
+                    }
+                }
+
+
+                /**
+                 * @brief Read nested configuration node.
+                 *
+                 * @param[in] reader
+                 * @param[in] crash_on_missing_entry
+                 * @param[in] node_name   node name, the default is used if empty
+                 */
+                template <class t_Entry>
+                    void readNestedConfig(  t_Entry             & entry,
+                                            const std::string   & node_name,
+                                            const bool          crash_on_missing_entry)
+                {
+                    try
+                    {
+                        entry.setDefaults();
+                        if (descend(node_name))
+                        {
+                            entry.readConfigEntries(*this, crash_on_missing_entry);
+                            ascend();
+                        }
+                        else
+                        {
+                            if (crash_on_missing_entry)
+                            {
+                                HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + node_name + "'.");
+                            }
+                        }
+                    }
+                    catch(const std::exception &e)
+                    {
+                        HUMOTO_THROW_MSG(std::string("Failed to parse node <") + node_name + "> in the configuration file: " + e.what());
                     }
                 }
 

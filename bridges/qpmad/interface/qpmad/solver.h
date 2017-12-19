@@ -38,12 +38,11 @@ namespace humoto
                         HUMOTO_CONFIG_SCALAR_(max_iter)
                     #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
-                    protected:
+                    public:
                         void setDefaults()
                         {
                         }
 
-                    public:
                         QPmadParameters()
                         {
                         }

@@ -31,15 +31,6 @@ namespace humoto
 
             protected:
                 /**
-                 * @brief Default configuration
-                 */
-                void setDefaults()
-                {
-                    ModelDescription<t_features>::getDefaultGeneralizedCoordinates(joint_angles_, root_pose_);
-                }
-
-
-                /**
                  * @brief Check length of the vector of joint angles after
                  * reading it from a configuration file.
                  */
@@ -62,6 +53,15 @@ namespace humoto
                 GeneralizedCoordinates()
                 {
                     setDefaults();
+                }
+
+
+                /**
+                 * @brief Default configuration
+                 */
+                void setDefaults()
+                {
+                    ModelDescription<t_features>::getDefaultGeneralizedCoordinates(joint_angles_, root_pose_);
                 }
 
 

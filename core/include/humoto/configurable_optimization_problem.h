@@ -41,6 +41,73 @@ namespace humoto
 
 
             /**
+             * @brief Initialize to default values
+             */
+            void setDefaults()
+            {
+                task_class_names_.clear();
+            }
+
+
+            /**
+             * @brief Read config entries
+             *
+             * @param[in] reader
+             * @param[in] crash_on_missing_entry
+             */
+            template <class t_Reader>
+                void readConfigEntriesTemplate( t_Reader& reader,
+                                                const bool crash_on_missing_entry = true)
+            {
+                HUMOTO_CONFIG_READ_COMPOUND_(task_class_names)
+                HUMOTO_CONFIG_READ_COMPOUND_(task_ids)
+
+
+                if(task_class_names_.empty())
+                {
+                    HUMOTO_THROW_MSG("Enabled tasks entry empty.");
+                }
+
+                if (task_class_names_.size() != task_ids_.size())
+                {
+                    HUMOTO_THROW_MSG("Fields 'task_class_names' and 'task_ids' do not match.");
+                }
+
+
+                // reset the optimization problem
+                humoto::OptimizationProblem::reset(task_class_names_.size());
+
+                for(std::size_t i = 0;  i < task_class_names_.size(); ++i)
+                {
+                    if (task_class_names_[i].size() != task_ids_[i].size())
+                    {
+                        HUMOTO_THROW_MSG("Fields 'task_class_names' and 'task_ids' do not match.");
+                    }
+
+                    for(std::size_t j = 0; j < task_class_names_[i].size(); ++j)
+                    {
+                        humoto::TaskSharedPointer task = getTask(task_class_names_[i][j]);
+
+                        if (task)
+                        {
+                            task->setDescription(task_ids_[i][j]);
+
+                            // configure tasks
+                            task->readConfig(reader, task_ids_[i][j], crash_on_missing_entry);
+                            // push tasks into the stack/hierarchy
+                            humoto::OptimizationProblem::pushTask(task, i);
+                        }
+                        else
+                        {
+                            HUMOTO_THROW_MSG(std::string("Unknown task name '") + task_class_names_[i][j] + "'.");
+                        }
+                    }
+                }
+                finalize();
+            }
+
+
+            /**
              * @brief Push task to the hierarchy
              *
              * @param[in,out] task_pointer  task
@@ -85,15 +152,6 @@ namespace humoto
 
 
             /**
-             * @brief Initialize to default values
-             */
-            void setDefaults()
-            {
-                task_class_names_.clear();
-            }
-
-
-            /**
              * @brief Fill map with all pointers to all tasks for given module
              */
             virtual humoto::TaskSharedPointer getTask(const std::string &string_id) const
@@ -113,63 +171,6 @@ namespace humoto
 
 
         private:
-            /**
-             * @brief Read config entries
-             *
-             * @param[in] reader
-             * @param[in] crash_on_missing_entry
-             */
-            template <class t_Reader>
-                void readConfigEntriesTemplate( t_Reader& reader,
-                                                const bool crash_on_missing_entry = true)
-            {
-                HUMOTO_CONFIG_READ_COMPOUND_(task_class_names)
-                HUMOTO_CONFIG_READ_COMPOUND_(task_ids)
-
-
-                if(task_class_names_.empty())
-                {
-                    HUMOTO_THROW_MSG("Enabled tasks entry empty.");
-                }
-
-                if (task_class_names_.size() != task_ids_.size())
-                {
-                    HUMOTO_THROW_MSG("Fields 'task_class_names' and 'task_ids' do not match.");
-                }
-
-
-                // reset the optimization problem
-                humoto::OptimizationProblem::reset(task_class_names_.size());
-
-                for(std::size_t i = 0;  i < task_class_names_.size(); ++i)
-                {
-                    if (task_class_names_[i].size() != task_ids_[i].size())
-                    {
-                        HUMOTO_THROW_MSG("Fields 'task_class_names' and 'task_ids' do not match.");
-                    }
-
-                    for(std::size_t j = 0; j < task_class_names_[i].size(); ++j)
-                    {
-                        humoto::TaskSharedPointer task = getTask(task_class_names_[i][j]);
-                        task->setDescription(task_ids_[i][j]);
-
-                        if (task)
-                        {
-                            // configure tasks
-                            task->readConfig(reader, task_ids_[i][j], crash_on_missing_entry);
-                            // push tasks into the stack/hierarchy
-                            humoto::OptimizationProblem::pushTask(task, i);
-                        }
-                        else
-                        {
-                            HUMOTO_THROW_MSG(std::string("Unknown task name '") + task_class_names_[i][j] + "'.");
-                        }
-                    }
-                }
-                finalize();
-            }
-
-
             /**
              * @brief Write config entries
              *

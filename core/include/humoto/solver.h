@@ -25,13 +25,6 @@ namespace humoto
 
 
         protected:
-            void setDefaults()
-            {
-                crash_on_any_failure_ = true;
-                solve_two_levels_as_qp_ = true;
-            }
-
-
             /**
              * @brief Protected destructor: prevent destruction of the child
              * classes through a base pointer.
@@ -41,6 +34,14 @@ namespace humoto
             SolverParametersBase()
             {
                 setDefaults();
+            }
+
+
+        public:
+            void setDefaults()
+            {
+                crash_on_any_failure_ = true;
+                solve_two_levels_as_qp_ = true;
             }
 
 

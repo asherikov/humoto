@@ -52,9 +52,6 @@ namespace humoto_tests
 
 
             protected:
-                void setDefaults() {}
-
-
                 Fixture_FixedWheelsRoot()
                 {
                     model_.loadParameters(g_config_path + "pepper_fixedwheels.urdf");
@@ -144,6 +141,9 @@ namespace humoto_tests
 
                     model_.updateState(generalized_coordinates_);
                 }
+
+            public:
+                void setDefaults() {}
         };
 
 
@@ -408,9 +408,6 @@ namespace humoto_tests
 
 
             protected:
-                void setDefaults() {}
-
-
                 Fixture_FixedWheelsRootTibiaModel()
                 {
                     model_.loadParameters(g_config_path + "pepper_fixedwheels_roottibia.urdf");
@@ -447,6 +444,9 @@ namespace humoto_tests
 
                     model_.updateState(generalized_coordinates_);
                 }
+
+            public:
+                void setDefaults() {}
         };
 
 
@@ -678,9 +678,6 @@ namespace humoto_tests
 
 
             protected:
-                void setDefaults() {}
-
-
                 Fixture_FixedWheelsRootTibiaPlanarModel()
                 {
                     model_.loadParameters(g_config_path + "pepper_fixedwheels_roottibia_planar.urdf");
@@ -717,6 +714,9 @@ namespace humoto_tests
 
                     model_.updateState(generalized_coordinates_);
                 }
+
+            public:
+                void setDefaults() {}
         };
 
 

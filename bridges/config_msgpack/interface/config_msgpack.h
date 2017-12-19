@@ -43,7 +43,6 @@
                     protected:
                         #ifdef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
                             using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::writeConfigEntries;
-                            using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::readConfigEntries;
                         #endif
 
                         ///@{
@@ -52,7 +51,6 @@
                          * automatically upon inclusion of define_accessors.h.
                          */
                         virtual void writeConfigEntries(humoto::config::msgpack::Writer &) const = 0;
-                        virtual void readConfigEntries(humoto::config::msgpack::Reader &, const bool) = 0;
                         ///@}
                 };
 
@@ -65,12 +63,12 @@
     }
 
     #define HUMOTO_BRIDGE_config_msgpack_DEFINITIONS \
-        protected: \
+        public: \
             void writeConfigEntries(humoto::config::msgpack::Writer & writer) const \
             { \
                 writeConfigEntriesTemplate(writer); \
-            }\
-            void readConfigEntries(humoto::config::msgpack::Reader & reader, const bool crash_flag)\
+            } \
+            virtual void readConfigEntries(humoto::config::ReaderMixin<humoto::config::msgpack::ReaderBase> & reader, const bool crash_flag)\
             {\
                 readConfigEntriesTemplate(reader, crash_flag);\
             }

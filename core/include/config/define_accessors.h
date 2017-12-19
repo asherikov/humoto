@@ -13,7 +13,7 @@
 
 #ifdef HUMOTO_USE_CONFIG
 // Generic stuff
-    private:
+    protected:
         // Define read and write methods
         #ifdef HUMOTO_CONFIG_ENTRIES
             #define HUMOTO_CONFIG_COMPOUND_(entry)       HUMOTO_CONFIG_WRITE_COMPOUND_(entry)
@@ -137,7 +137,7 @@
                 explicit HUMOTO_CONFIG_CONSTRUCTOR(
                         t_Reader &reader,
                         const std::string &node_name,
-                        const bool crash_on_missing_entry = default_crash_on_missing_entry_)
+                        const bool crash_on_missing_entry = true)
             {
                 readConfig(reader, node_name, crash_on_missing_entry);
             }
@@ -145,11 +145,117 @@
             template <class t_Reader>
                 explicit HUMOTO_CONFIG_CONSTRUCTOR(
                         t_Reader &reader,
-                        const bool crash_on_missing_entry = default_crash_on_missing_entry_)
+                        const bool crash_on_missing_entry = true)
             {
                 readConfig(reader, crash_on_missing_entry);
             }
         #endif
+
+
+            /**
+             * @brief Read configuration (assuming the configuration node
+             * to be in the root).
+             *
+             * @param[in] reader configuration reader
+             * @param[in] crash_on_missing_entry
+             */
+            template <class t_Reader>
+                void readConfig(t_Reader            & reader,
+                                const bool          crash_on_missing_entry = true)
+            {
+                reader.readNestedConfig(*this, this->getConfigSectionID(), crash_on_missing_entry);
+            }
+
+
+            /**
+             * @brief Read configuration (assuming the configuration node
+             * to be in the root).
+             *
+             * @param[in] reader configuration reader
+             * @param[in] crash_on_missing_entry
+             * @param[in] node_name   node name, the default is used if empty
+             */
+            template <class t_Reader>
+                void readConfig(t_Reader            & reader,
+                                const std::string   & node_name,
+                                const bool          crash_on_missing_entry = true)
+            {
+                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+            }
+
+
+            /**
+             * @brief Read configuration (assuming the configuration node
+             * to be in the root).
+             *
+             * @param[in] reader configuration reader
+             * @param[in] crash_on_missing_entry
+             * @param[in] node_name   node name, the default is used if empty
+             *
+             * @note Intercept implicit conversion of a pointer to bool.
+             */
+            template <class t_Reader>
+                void readConfig(t_Reader            & reader,
+                                const char          * node_name,
+                                const bool          crash_on_missing_entry = true)
+            {
+                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+            }
+
+
+            /**
+             * @brief Read configuration (assuming the configuration node
+             * to be in the root).
+             *
+             * @param[in] file_name file name
+             * @param[in] crash_on_missing_entry
+             */
+            template <class t_Reader>
+                void readConfig(const std::string &file_name,
+                                const bool        crash_on_missing_entry = true)
+            {
+                t_Reader reader(file_name);
+                reader.readNestedConfig(*this, this->getConfigSectionID(), crash_on_missing_entry);
+            }
+
+
+            /**
+             * @brief Read configuration (assuming the configuration node
+             * to be in the root).
+             *
+             * @param[in] file_name file name
+             * @param[in] node_name   node name, the default is used if empty
+             * @param[in] crash_on_missing_entry
+             */
+            template <class t_Reader>
+                void readConfig(const std::string &file_name,
+                                const std::string &node_name,
+                                const bool        crash_on_missing_entry = true)
+            {
+                t_Reader reader(file_name);
+                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+            }
+
+
+            /**
+             * @brief Read configuration (assuming the configuration node
+             * to be in the root).
+             *
+             * @param[in] file_name file name
+             * @param[in] crash_on_missing_entry
+             * @param[in] node_name   node name, the default is used if empty
+             *
+             * @note Intercept implicit conversion of a pointer to bool.
+             */
+            template <class t_Reader>
+                void readConfig(const std::string &file_name,
+                                const char        *node_name,
+                                const bool        crash_on_missing_entry = true)
+            {
+                t_Reader reader(file_name);
+                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+            }
+
 
 
 // Format-specific stuff

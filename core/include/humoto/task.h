@@ -125,13 +125,6 @@ namespace humoto
             }
 
 
-            virtual void setDefaults()
-            {
-                is_modified_ = true;
-                //string_description_ = "TaskBase";
-            }
-
-
 
             /**
              * @brief Initialize active set guess with defaults.
@@ -260,6 +253,13 @@ namespace humoto
             void setDescription(const std::string &description)
             {
                 string_description_ = description;
+            }
+
+
+            virtual void setDefaults()
+            {
+                is_modified_ = true;
+                //string_description_ = "TaskBase";
             }
 
 
