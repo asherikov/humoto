@@ -55,7 +55,7 @@ namespace humoto
                 /**
                  * @brief Initialize to default values
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     control_interval_ms_            = 10;
                     joint_angle_error_tolerance_    = 1e-2;
@@ -63,7 +63,7 @@ namespace humoto
                     motion_parameters_tolerance_    = 1e-3;
                 }
 
-                void finalize()
+                virtual void finalize()
                 {
                     control_interval_ = convertMillisecondToSecond(control_interval_ms_);
                 }
@@ -102,7 +102,7 @@ namespace humoto
                 /**
                  * @brief Initialize to default values
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     base_com_position_.x() = 0.002531976618098;
                     base_com_position_.y() = 0.0;

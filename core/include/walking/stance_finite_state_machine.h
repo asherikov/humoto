@@ -158,7 +158,7 @@ namespace humoto
                 /**
                  * @brief Default parameters of the finite state machine
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     first_ss_type_ = StanceType::RSS;
                     first_stance_  = StanceType::DS;
@@ -233,8 +233,28 @@ namespace humoto
          */
         class HUMOTO_LOCAL StanceFiniteStateMachine
         {
-            private:
-                void finalize()
+            public:
+                bool                is_tds_started_;
+                std::size_t         ss_states_to_termination_;
+                std::size_t         current_time_ms_;
+                Stance              current_stance_;
+                StanceFSMParameters sfsm_params_;
+
+
+            public:
+                StanceFiniteStateMachine()
+                {
+                    finalize();
+                }
+
+                void setParameters(const StanceFSMParameters &sfsm_params)
+                {
+                    sfsm_params_ = sfsm_params;
+                    finalize();
+                }
+
+
+                virtual void finalize()
                 {
                     HUMOTO_ASSERT(sfsm_params_.num_steps_ != 1, "Unsupported number of steps.");
 
@@ -274,28 +294,6 @@ namespace humoto
                             HUMOTO_THROW_MSG("Misformed walking options.");
                             break;
                     }
-                }
-
-
-            public:
-                bool                is_tds_started_;
-                std::size_t         ss_states_to_termination_;
-                std::size_t         current_time_ms_;
-                Stance              current_stance_;
-                StanceFSMParameters sfsm_params_;
-
-
-            public:
-
-                StanceFiniteStateMachine()
-                {
-                    finalize();
-                }
-
-                void setParameters(const StanceFSMParameters &sfsm_params)
-                {
-                    sfsm_params_ = sfsm_params;
-                    finalize();
                 }
 
 

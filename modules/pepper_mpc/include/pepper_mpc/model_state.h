@@ -82,12 +82,6 @@ namespace humoto
                 }
 
 
-                void setDefaults()
-                {
-                    setParameters();
-                }
-
-
                 /**
                  * @brief Construct class using given parameters.
                  *
@@ -117,6 +111,12 @@ namespace humoto
                             const etools::Vector3 & body_position)
                 {
                     set(base_mass, body_mass, base_position, body_position);
+                }
+
+
+                virtual void setDefaults()
+                {
+                    setParameters();
                 }
 
 

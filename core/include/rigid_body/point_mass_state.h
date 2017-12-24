@@ -46,7 +46,7 @@ namespace humoto
                 /**
                  * @brief Initialize state (everything is set to zeros).
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     position_.setZero();
                     velocity_.setZero();

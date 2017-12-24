@@ -143,7 +143,7 @@ namespace humoto_tests
                 }
 
             public:
-                void setDefaults() {}
+                virtual void setDefaults() {}
         };
 
 
@@ -446,7 +446,7 @@ namespace humoto_tests
                 }
 
             public:
-                void setDefaults() {}
+                virtual void setDefaults() {}
         };
 
 
@@ -716,7 +716,7 @@ namespace humoto_tests
                 }
 
             public:
-                void setDefaults() {}
+                virtual void setDefaults() {}
         };
 
 

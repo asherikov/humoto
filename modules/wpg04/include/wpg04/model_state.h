@@ -56,7 +56,6 @@ namespace humoto
                 }
 
 
-            protected:
                 void setDefaults(const humoto::walking::RobotFootParameters  &foot_param,
                                  const double com_height = 0.814)
                 {
@@ -120,7 +119,7 @@ namespace humoto
                 /**
                  * @brief Initialize to default values (HRP2)
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     humoto::walking::RobotFootParameters robot_parameters;
                     setDefaults(robot_parameters);

@@ -43,7 +43,7 @@ namespace humoto
             /**
              * @brief Initialize to default values
              */
-            void setDefaults()
+            virtual void setDefaults()
             {
                 task_class_names_.clear();
             }

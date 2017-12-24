@@ -66,7 +66,7 @@ namespace humoto
             /**
              * @brief Set defaults
              */
-            void setDefaults()
+            virtual void setDefaults()
             {
                 etools::unsetMatrix(S_);
                 etools::unsetMatrix(U_);
@@ -141,7 +141,7 @@ namespace humoto
             /**
              * @brief Set defaults
              */
-            void setDefaults()
+            virtual void setDefaults()
             {
                 etools::unsetMatrix(S_);
                 etools::unsetMatrix(U_);

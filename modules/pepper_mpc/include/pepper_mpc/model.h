@@ -20,16 +20,6 @@ namespace humoto
         class HUMOTO_LOCAL Model :  public humoto::Model,
                                     public humoto::pepper_mpc::TwoPointMassModel
         {
-            private:
-                /**
-                 * @brief Determines position of the base.
-                 */
-                void finalize()
-                {
-                    current_base_position_ = state_.base_state_.position_.head(2);
-                }
-
-
             public:
                 /// state of the model
                 humoto::pepper_mpc::ModelState          state_;
@@ -69,6 +59,14 @@ namespace humoto
                     finalize();
                 }
 
+
+                /**
+                 * @brief Determines position of the base.
+                 */
+                virtual void finalize()
+                {
+                    current_base_position_ = state_.base_state_.position_.head(2);
+                }
 
 
                 /**

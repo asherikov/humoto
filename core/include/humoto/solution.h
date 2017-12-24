@@ -203,7 +203,7 @@ namespace humoto
             /**
              * @brief No defaults
              */
-            void setDefaults() {}
+            virtual void setDefaults() {}
 
 
             /**

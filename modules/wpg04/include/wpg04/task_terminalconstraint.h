@@ -23,20 +23,6 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                void setDefaults()
-                {
-                    TaskAB::setDefaults();
-                    setGain(1.0);
-                }
-
-
-                void finalize()
-                {
-                    TaskAB::finalize();
-                }
-
-
             public:
                 explicit TaskTerminalConstraint(const double gain = 1.0)
                     : TaskAB("TaskTerminalConstraint", gain)
@@ -62,7 +48,20 @@ namespace humoto
 
                     A.noalias() =  getGain() * D * mpc.S_.block((preview_length - 1)*cstate_length, 0, cstate_length, sol_structure.getNumberOfVariables());
                     b.noalias() = -getGain() * D * mpc.s_.block((preview_length - 1)*cstate_length, 0, cstate_length, 1);
-                };
+                }
+
+
+                virtual void setDefaults()
+                {
+                    TaskAB::setDefaults();
+                    setGain(1.0);
+                }
+
+
+                virtual void finalize()
+                {
+                    TaskAB::finalize();
+                }
         };
     }
 }

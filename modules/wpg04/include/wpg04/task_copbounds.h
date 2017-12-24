@@ -22,13 +22,6 @@ namespace humoto
             #define HUMOTO_CONFIG_ENTRIES \
                 HUMOTO_CONFIG_PARENT_CLASS(TaskILU)
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
-                
-                
-            protected:
-                void setDefaults()
-                {
-                    TaskILU::setDefaults();
-                }
 
 
             public:
@@ -88,6 +81,12 @@ namespace humoto
 
                         getActiveSetGuess().shift(2, ConstraintActivationType::INACTIVE);
                     }
+                }
+                
+                
+                virtual void setDefaults()
+                {
+                    TaskILU::setDefaults();
                 }
         };
     }

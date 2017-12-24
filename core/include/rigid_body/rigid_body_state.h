@@ -16,22 +16,11 @@ namespace humoto
         class HUMOTO_LOCAL RigidBodyPose : public humoto::config::ConfigurableBase
         {
             #define HUMOTO_CONFIG_SECTION_ID "RigidBodyPose"
-            #define HUMOTO_CONFIG_CONSTRUCTOR RigidBodyPose 
+            #define HUMOTO_CONFIG_CONSTRUCTOR RigidBodyPose
             #define HUMOTO_CONFIG_ENTRIES \
                     HUMOTO_CONFIG_COMPOUND_(position) \
                     HUMOTO_CONFIG_COMPOUND_(rpy)
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
-
-
-            protected:
-                /**
-                 * @brief Set default values
-                 */
-                void setDefaults()
-                {
-                    etools::unsetMatrix(position_);
-                    etools::unsetMatrix(rpy_);
-                }
 
 
             public:
@@ -46,6 +35,16 @@ namespace humoto
                 RigidBodyPose()
                 {
                     setDefaults();
+                }
+
+
+                /**
+                 * @brief Set default values
+                 */
+                virtual void setDefaults()
+                {
+                    etools::unsetMatrix(position_);
+                    etools::unsetMatrix(rpy_);
                 }
 
 
@@ -100,7 +99,7 @@ namespace humoto
         {
             protected:
                 #define HUMOTO_CONFIG_SECTION_ID "RigidBodyState"
-                #define HUMOTO_CONFIG_CONSTRUCTOR RigidBodyState 
+                #define HUMOTO_CONFIG_CONSTRUCTOR RigidBodyState
                 #define HUMOTO_CONFIG_ENTRIES \
                         HUMOTO_CONFIG_PARENT_CLASS(PointMassState) \
                         HUMOTO_CONFIG_PARENT_CLASS(RotaryState)
@@ -120,7 +119,7 @@ namespace humoto
                 /**
                  * @brief Initialize state (everything is set to zeros).
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     PointMassState::setDefaults();
                     RotaryState::setDefaults();

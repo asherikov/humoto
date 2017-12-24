@@ -48,11 +48,41 @@ namespace humoto
                 etools::Matrix2    base_acceleration_bounds_;
 
 
-            protected:
+            public:
+                // meter
+                double base_radius_;
+                // meter / second
+                double max_nominal_base_velocity_;
+                // meter / second^2
+                double max_nominal_base_acceleration_;
+                // meter / second
+                double max_base_velocity_;
+                // meter / second^2
+                double max_base_acceleration_;
+
+                // [lb, ub] meter
+                etools::Matrix2 body_bounds_;
+
+
+            public:
+                virtual void setDefaults()
+                {
+                    base_radius_    = 0.7;
+                    max_nominal_base_velocity_      = 0.5;
+                    max_nominal_base_acceleration_  = 1.0;
+                    max_base_velocity_      = 1.4;
+                    max_base_acceleration_  = 1.7;
+
+                    body_bounds_    <<  -0.06, 0.06,
+                                        -0.03, 0.03;
+                    finalize();
+                }
+
+
                 /**
                  * @brief Finalize initialization
                  */
-                void finalize()
+                virtual void finalize()
                 {
                     double cop_bound = getEncircledSquareSide(base_radius_)/2;
 
@@ -84,37 +114,6 @@ namespace humoto
 
                     base_acceleration_bounds_ <<   -acceleration_bound, acceleration_bound,
                                                    -acceleration_bound, acceleration_bound;
-                }
-
-
-            public:
-                // meter
-                double base_radius_;
-                // meter / second
-                double max_nominal_base_velocity_;
-                // meter / second^2
-                double max_nominal_base_acceleration_;
-                // meter / second
-                double max_base_velocity_;
-                // meter / second^2
-                double max_base_acceleration_;
-
-                // [lb, ub] meter
-                etools::Matrix2 body_bounds_;
-
-
-            public:
-                void setDefaults()
-                {
-                    base_radius_    = 0.7;
-                    max_nominal_base_velocity_      = 0.5;
-                    max_nominal_base_acceleration_  = 1.0;
-                    max_base_velocity_      = 1.4;
-                    max_base_acceleration_  = 1.7;
-
-                    body_bounds_    <<  -0.06, 0.06,
-                                        -0.03, 0.03;
-                    finalize();
                 }
 
 
@@ -211,7 +210,7 @@ namespace humoto
                 /**
                  * @brief Default parameters of the walk
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     setIdle();
                 }
@@ -227,14 +226,6 @@ namespace humoto
                     base_angular_velocity_ =  0.0;
                     duration_ms_ = UNLIMITED_DURATION;
                     motion_mode_ = MotionMode::MAINTAIN_VELOCITY;
-                }
-
-
-                /**
-                 * @brief Finalize & check
-                 */
-                void finalize()
-                {
                 }
 
 
@@ -295,19 +286,6 @@ namespace humoto
                 double subsampling_time_;
 
 
-            protected:
-                /**
-                 * @brief Compute some derived variables.
-                 */
-                void finalize()
-                {
-                    // convert milliseconds to seconds
-                    sampling_time_    = convertMillisecondToSecond(sampling_time_ms_);
-                    // convert milliseconds to seconds
-                    subsampling_time_ = convertMillisecondToSecond(subsampling_time_ms_);
-                }
-
-
             public:
                 /// Length of the preview horizon (N)
                 std::size_t preview_horizon_length_;
@@ -320,19 +298,6 @@ namespace humoto
 
 
             public:
-                /**
-                 * @brief Initialize to default values
-                 */
-                void setDefaults()
-                {
-                    preview_horizon_length_         = 15;
-                    sampling_time_ms_               = 100;
-                    subsampling_time_ms_            = sampling_time_ms_;
-
-                    finalize();
-                }
-
-
                 /**
                  * @brief Constructor.
                  *
@@ -349,6 +314,31 @@ namespace humoto
                     subsampling_time_ms_            = subsampling_time_ms;
 
                     finalize();
+                }
+
+
+                /**
+                 * @brief Initialize to default values
+                 */
+                virtual void setDefaults()
+                {
+                    preview_horizon_length_         = 15;
+                    sampling_time_ms_               = 100;
+                    subsampling_time_ms_            = sampling_time_ms_;
+
+                    finalize();
+                }
+
+
+                /**
+                 * @brief Compute some derived variables.
+                 */
+                virtual void finalize()
+                {
+                    // convert milliseconds to seconds
+                    sampling_time_    = convertMillisecondToSecond(sampling_time_ms_);
+                    // convert milliseconds to seconds
+                    subsampling_time_ = convertMillisecondToSecond(subsampling_time_ms_);
                 }
 
 

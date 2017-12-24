@@ -252,7 +252,7 @@ namespace humoto
                 /**
                  * @brief Initialize state (everything is set to zeros).
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     rpy_.setZero();
                     angular_velocity_.setZero();

@@ -24,8 +24,15 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                void setDefaults()
+            public:
+                explicit TaskCoPPosition(const double gain = 12.2474487139159)
+                    : TaskZeroVariables(gain, "TaskCoPPosition", COP_VARIABLES_ID)
+                {
+                    // nothing to do
+                }
+
+
+                virtual void setDefaults()
                 {
                     TaskZeroVariables::setDefaults();
                     TaskZeroVariables::setVariablesID(COP_VARIABLES_ID);
@@ -33,18 +40,10 @@ namespace humoto
                 }
 
 
-                void finalize()
+                virtual void finalize()
                 {
                     TaskZeroVariables::finalize();
                 }
-
-
-            public:
-                explicit TaskCoPPosition(const double gain = 12.2474487139159)
-                    : TaskZeroVariables(gain, "TaskCoPPosition", COP_VARIABLES_ID)
-                {
-                    // nothing to do
-                };
         };
     }
 }

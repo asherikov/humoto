@@ -162,7 +162,7 @@ namespace humoto
                 /**
                  * @brief Call this after updating parameters
                  */
-                void finalize()
+                virtual void finalize()
                 {
                     humoto::walking::RobotFootParameters::finalize();
                 }

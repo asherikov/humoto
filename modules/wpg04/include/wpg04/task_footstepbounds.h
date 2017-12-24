@@ -30,14 +30,6 @@ namespace humoto
                 bool fix_footsteps_;
 
 
-            protected:
-                void setDefaults()
-                {
-                    TaskILU::setDefaults();
-                    fix_footsteps_ = false;
-                }
-
-
             public:
                 explicit TaskFootstepBounds(const bool fix_footsteps = false)
                     : TaskILU("TaskFootstepBounds")
@@ -134,6 +126,13 @@ namespace humoto
                             }
                         }
                     }
+                }
+
+
+                virtual void setDefaults()
+                {
+                    TaskILU::setDefaults();
+                    fix_footsteps_ = false;
                 }
         };
     }

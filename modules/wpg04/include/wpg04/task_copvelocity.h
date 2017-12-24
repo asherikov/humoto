@@ -22,20 +22,6 @@ namespace humoto
             #define HUMOTO_CONFIG_ENTRIES \
                 HUMOTO_CONFIG_PARENT_CLASS(TaskAB)
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
-                
-                
-            protected:
-                void setDefaults()
-                {
-                    TaskAB::setDefaults();
-                    setGain(0.223606797749979);
-                }
-
-
-                void finalize()
-                {
-                    TaskAB::finalize();
-                }
             
             
             public:
@@ -67,7 +53,20 @@ namespace humoto
 
 
                     b.noalias() = -getGain() * mpc.sdz_;
-                };
+                }
+                
+                
+                virtual void setDefaults()
+                {
+                    TaskAB::setDefaults();
+                    setGain(0.223606797749979);
+                }
+
+
+                virtual void finalize()
+                {
+                    TaskAB::finalize();
+                }
         };
     }
 }

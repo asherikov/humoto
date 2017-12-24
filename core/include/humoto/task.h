@@ -334,7 +334,8 @@ namespace humoto
                 setGain(0.0);
             }
 
-            void finalize() {}
+
+            virtual void finalize() {}
 
 
             /**
@@ -425,7 +426,9 @@ namespace humoto
             {
                 setGain(0.0);
             }
-            void finalize() {}
+
+
+            virtual void finalize() {}
 
 
             /**

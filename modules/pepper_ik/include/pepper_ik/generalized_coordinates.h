@@ -29,18 +29,6 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                /**
-                 * @brief Check length of the vector of joint angles after
-                 * reading it from a configuration file.
-                 */
-                void finalize()
-                {
-                    HUMOTO_ASSERT(  ModelDescription<t_features>::JOINTS_DOF_NUMBER == joint_angles_.rows(),
-                                    "Wrong size of the vector of joint angles.");
-                }
-
-
             public:
                 EIGENTOOLS_CONSTANT_SIZE_VECTOR(ModelDescription<t_features>::ROOT_DOF_NUMBER)      root_pose_;
                 EIGENTOOLS_CONSTANT_SIZE_VECTOR(ModelDescription<t_features>::JOINTS_DOF_NUMBER)    joint_angles_;
@@ -59,9 +47,20 @@ namespace humoto
                 /**
                  * @brief Default configuration
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     ModelDescription<t_features>::getDefaultGeneralizedCoordinates(joint_angles_, root_pose_);
+                }
+
+
+                /**
+                 * @brief Check length of the vector of joint angles after
+                 * reading it from a configuration file.
+                 */
+                virtual void finalize()
+                {
+                    HUMOTO_ASSERT(  ModelDescription<t_features>::JOINTS_DOF_NUMBER == joint_angles_.rows(),
+                                    "Wrong size of the vector of joint angles.");
                 }
 
 

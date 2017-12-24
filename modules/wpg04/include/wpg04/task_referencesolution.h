@@ -23,13 +23,6 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                void setDefaults()
-                {
-                    TaskAB::setDefaults();
-                }
-
-
             public:
                 explicit TaskReferenceSolution(const double gain = 1.0) : TaskAB("TaskReferenceSolution", gain)
                 {
@@ -65,6 +58,12 @@ namespace humoto
                     A.bottomRows(num_rows_footpos_profile).setZero();
                     sol_structure.getMatrixPart(FOOTPOS_VARIABLES_ID, A).bottomRows(num_rows_footpos_profile) = getGain()*mpc.Vfp_;
                     b.tail(num_rows_footpos_profile).noalias() = getGain()*(mpc.footpos_profile_ - mpc.vfp_);
+                }
+
+
+                virtual void setDefaults()
+                {
+                    TaskAB::setDefaults();
                 }
         };
     }

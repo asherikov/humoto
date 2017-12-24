@@ -64,19 +64,19 @@ namespace humoto
 
 
             public:
-                void setDefaults()
-                {
-                    solution_method_ = LU;
-                    elimination_regularization_factor_ = 1e-08;
-                }
-
-
                 /**
                  * @brief Default constructor
                  */
                 SolverParameters()
                 {
                     setDefaults();
+                }
+
+
+                virtual void setDefaults()
+                {
+                    solution_method_ = LU;
+                    elimination_regularization_factor_ = 1e-08;
                 }
         };
 

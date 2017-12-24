@@ -24,20 +24,6 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                void setDefaults()
-                {
-                    TaskAB::setDefaults();
-                    setGain(0.707106781186548);
-                }
-
-
-                void finalize()
-                {
-                    TaskAB::finalize();
-                }
-
-
             public:
                 explicit TaskCoMVelocity(const double gain = 0.707106781186548) : TaskAB("TaskCoMVelocity", gain)
                 {
@@ -66,7 +52,20 @@ namespace humoto
                     A.noalias() = getGain() * (mpc.velocity_selector_ * mpc.S_); // Sv
 
                     b.noalias() = -getGain() * (mpc.velocity_selector_ * mpc.s_ /*sv*/ - cvel_ref);
-                };
+                }
+
+
+                virtual void setDefaults()
+                {
+                    TaskAB::setDefaults();
+                    setGain(0.707106781186548);
+                }
+
+
+                virtual void finalize()
+                {
+                    TaskAB::finalize();
+                }
         };
     }
 }

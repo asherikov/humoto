@@ -155,12 +155,50 @@ namespace humoto
                 LeftRightContainer<LeftRightParameters> feet_;
 
 
+            public:
+                /// @{
+                /**
+                 * Various parameters of the feet and steps
+                 */
+                double max_step_len_;
+                double min_feet_dist_;
+                double max_feet_dist_;
+                double feet_dist_default_;
+                double foot_length_;
+                double foot_width_;
+                /// @}
 
-            protected:
+
+            public:
+                /**
+                 * @brief Default constructor
+                 */
+                RobotFootParameters()
+                {
+                    setDefaults();
+                }
+
+
+                /**
+                 * @brief Initialize to default values (HRP2)
+                 */
+                virtual void setDefaults()
+                {
+                    max_step_len_ = 0.2;
+                    min_feet_dist_ = 0.19; // In mpc-walkgen 0.19 is in the DS only, 0.2 afterwards
+                    max_feet_dist_ = 0.3;
+                    feet_dist_default_ = 0.19;
+                    foot_length_ = 0.1372;
+                    foot_width_ = 0.058;
+
+                    finalize();
+                }
+
+
                 /**
                  * @brief Create some useful parameters derived from the primal robot parameters
                  */
-                void finalize()
+                virtual void finalize()
                 {
                     double half_foot_length = foot_length_/2.;
                     double half_foot_width = foot_width_/2.;
@@ -207,46 +245,6 @@ namespace humoto
                     feet_.getRight().foot_position_fixed_ds_ <<
                          0.,                         0.,
                         -half_feet_dist_default,    -half_feet_dist_default;
-                }
-
-
-            public:
-                /// @{
-                /**
-                 * Various parameters of the feet and steps
-                 */
-                double max_step_len_;
-                double min_feet_dist_;
-                double max_feet_dist_;
-                double feet_dist_default_;
-                double foot_length_;
-                double foot_width_;
-                /// @}
-
-
-            public:
-                /**
-                 * @brief Default constructor
-                 */
-                RobotFootParameters()
-                {
-                    setDefaults();
-                }
-
-
-                /**
-                 * @brief Initialize to default values (HRP2)
-                 */
-                void setDefaults()
-                {
-                    max_step_len_ = 0.2;
-                    min_feet_dist_ = 0.19; // In mpc-walkgen 0.19 is in the DS only, 0.2 afterwards
-                    max_feet_dist_ = 0.3;
-                    feet_dist_default_ = 0.19;
-                    foot_length_ = 0.1372;
-                    foot_width_ = 0.058;
-
-                    finalize();
                 }
 
 

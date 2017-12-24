@@ -298,7 +298,7 @@ namespace humoto
             /**
              * @brief Initialize output parameters
              */
-            void setDefaults()
+            virtual void setDefaults()
             {
                 *output_stream_ << std::setprecision(std::numeric_limits<double>::digits10);
             }

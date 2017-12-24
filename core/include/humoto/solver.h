@@ -38,7 +38,7 @@ namespace humoto
 
 
         public:
-            void setDefaults()
+            virtual void setDefaults()
             {
                 crash_on_any_failure_ = true;
                 solve_two_levels_as_qp_ = true;

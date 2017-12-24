@@ -23,8 +23,15 @@ namespace humoto
             #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
-            protected:
-                void setDefaults()
+            public:
+                explicit TaskFootstepPenalize(const double gain = 1.0)
+                    : TaskZeroVariables(gain, "TaskFootstepPenalize", FOOTPOS_VARIABLES_ID)
+                {
+                    // nothing to do
+                }
+
+
+                virtual void setDefaults()
                 {
                     TaskZeroVariables::setDefaults();
                     TaskZeroVariables::setVariablesID(FOOTPOS_VARIABLES_ID);
@@ -32,18 +39,10 @@ namespace humoto
                 }
 
 
-                void finalize()
+                virtual void finalize()
                 {
                     TaskZeroVariables::finalize();
                 }
-
-
-            public:
-                explicit TaskFootstepPenalize(const double gain = 1.0)
-                    : TaskZeroVariables(gain, "TaskFootstepPenalize", FOOTPOS_VARIABLES_ID)
-                {
-                    // nothing to do
-                };
         };
     }
 }

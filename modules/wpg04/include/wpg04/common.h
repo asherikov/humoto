@@ -60,7 +60,7 @@ namespace humoto
                 /**
                  * @brief Default parameters of the walk
                  */
-                void setDefaults()
+                virtual void setDefaults()
                 {
                     com_velocity_               << 0.2, 0.;
                     first_stance_com_velocity_  << 0.2, 0.;
@@ -124,20 +124,6 @@ namespace humoto
 
             public:
                 /**
-                 * @brief Initialize to default values
-                 */
-                void setDefaults()
-                {
-                    preview_horizon_length_         = 16;
-                    sampling_time_ms_               = 100;
-                    subsampling_time_ms_            = 100;
-                    tds_sampling_time_ms_           = 100;
-
-                    finalize();
-                }
-
-
-                /**
                  * @brief Constructor.
                  *
                  * @param[in] preview_horizon_len   Length of the preview horizon
@@ -160,9 +146,23 @@ namespace humoto
 
 
                 /**
+                 * @brief Initialize to default values
+                 */
+                virtual void setDefaults()
+                {
+                    preview_horizon_length_         = 16;
+                    sampling_time_ms_               = 100;
+                    subsampling_time_ms_            = 100;
+                    tds_sampling_time_ms_           = 100;
+
+                    finalize();
+                }
+
+
+                /**
                  * @brief Compute some derived variables.
                  */
-                void finalize()
+                virtual void finalize()
                 {
                     if (sampling_time_ms_ % subsampling_time_ms_ == 0)
                     {

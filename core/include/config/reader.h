@@ -204,9 +204,9 @@ namespace humoto
                 {
                     try
                     {
-                        entry.setDefaults();
                         if (descend(node_name))
                         {
+                            entry.setDefaults();
                             entry.readConfigEntries(*this, crash_on_missing_entry);
                             ascend();
                         }

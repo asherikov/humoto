@@ -172,6 +172,7 @@ namespace humoto
 
                     virtual bool getCrashOnMissingEntryFlag() = 0;
 
+
                 public:
                     /**
                      * @brief This function is called automaticaly after reading
