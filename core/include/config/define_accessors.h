@@ -259,13 +259,21 @@
 
 
 // Format-specific stuff
-    #ifdef HUMOTO_BRIDGE_config_yaml_DEFINITIONS
-        HUMOTO_BRIDGE_config_yaml_DEFINITIONS
-    #endif
+    #define HUMOTO_CONFIG_NAMESPACE_WRAPPER(config_namespace) \
+        public: \
+            virtual void writeConfigEntries(humoto::config::config_namespace::Writer & writer) const \
+            { \
+                writeConfigEntriesTemplate(writer); \
+            } \
+            virtual void readConfigEntries( humoto::config::ReaderMixin<humoto::config::config_namespace::ReaderBase> & reader, \
+                                            const bool crash_flag)\
+            {\
+                readConfigEntriesTemplate(reader, crash_flag);\
+            }
 
-    #ifdef HUMOTO_BRIDGE_config_msgpack_DEFINITIONS
-        HUMOTO_BRIDGE_config_msgpack_DEFINITIONS
-    #endif
+    HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
+
+    #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
 
 #endif //HUMOTO_USE_CONFIG
 

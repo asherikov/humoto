@@ -113,6 +113,7 @@ namespace humoto
                         return(YAML::NodeType::Sequence == getCurrentNode()->Type());
                     }
 
+
                     template<class t_Node>
                     std::size_t getArraySize(t_Node & node, const std::size_t depth)
                     {

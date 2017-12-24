@@ -21,7 +21,78 @@ namespace humoto
 
 #define HUMOTO_CONFIG_DEFINE_ACCESSORS  "humoto/config/define_accessors.h"
 
-#ifdef HUMOTO_USE_CONFIG
+
+#ifdef HUMOTO_CONFIG_NAMESPACE_0
+#   define HUMOTO_USE_CONFIG
+
+#   ifndef HUMOTO_CONFIG_NAMESPACE_1
+#       define HUMOTO_CONFIG_NAMESPACE_LIST \
+                    HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0)
+#   else
+#       ifndef HUMOTO_CONFIG_NAMESPACE_2
+#           define HUMOTO_CONFIG_NAMESPACE_LIST \
+                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1)
+#       else
+#           ifndef HUMOTO_CONFIG_NAMESPACE_3
+#               define HUMOTO_CONFIG_NAMESPACE_LIST \
+                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1) \
+                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_2)
+#           else
+#               ifndef HUMOTO_CONFIG_NAMESPACE_4
+#                   define HUMOTO_CONFIG_NAMESPACE_LIST \
+                                HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                                HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1) \
+                                HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_2) \
+                                HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_3)
+#               else
+#                   ifndef HUMOTO_CONFIG_NAMESPACE_5
+#                       define HUMOTO_CONFIG_NAMESPACE_LIST \
+                                    HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                                    HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1) \
+                                    HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_2) \
+                                    HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_3) \
+                                    HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_4)
+#                   else
+#                       ifndef HUMOTO_CONFIG_NAMESPACE_6
+#                           define HUMOTO_CONFIG_NAMESPACE_LIST \
+                                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1) \
+                                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_2) \
+                                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_3) \
+                                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_4) \
+                                        HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_5)
+#                       else
+#                           ifndef HUMOTO_CONFIG_NAMESPACE_7
+#                               define HUMOTO_CONFIG_NAMESPACE_LIST \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_2) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_3) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_4) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_5) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_6)
+#                           else
+#                               define HUMOTO_CONFIG_NAMESPACE_LIST \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_1) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_2) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_3) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_4) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_5) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_6) \
+                                            HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_7)
+#                           endif
+#                       endif
+#                   endif
+#               endif
+#           endif
+#       endif
+#   endif
+
+
+
     #define HUMOTO_CONFIG_WRITE_PARENT_CLASS(parent_class)  parent_class::writeConfigEntries(writer);
     #define HUMOTO_CONFIG_WRITE_MEMBER_CLASS(member, name)  member.writeNestedConfig(writer, name);
 
@@ -49,10 +120,6 @@ namespace humoto
 
     // ----------------------------
 
-    #ifndef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
-        #error "Header inclusion error: configuration is enabled, but no configuration bridges included."
-    #endif
-
     namespace humoto
     {
         namespace config
@@ -60,7 +127,7 @@ namespace humoto
             /**
              * @brief Configurable base class.
              */
-            class HUMOTO_LOCAL CommonConfigurableBase : public HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
+            class HUMOTO_LOCAL CommonConfigurableBase
             {
                 protected:
                     /**
@@ -97,7 +164,10 @@ namespace humoto
                     /**
                      * These functions are always defined automatically.
                      */
-                    using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::writeConfigEntries;
+                    #define HUMOTO_CONFIG_NAMESPACE_WRAPPER(config_namespace) \
+                        virtual void writeConfigEntries(humoto::config::config_namespace::Writer &) const = 0;
+                    HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
+                    #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
                     /// @}
 
                     virtual bool getCrashOnMissingEntryFlag() = 0;
@@ -298,7 +368,7 @@ namespace humoto
             };
         }
     }
+#endif //HUMOTO_CONFIG_NAMESPACE_0
 
-    #define HUMOTO_CONFIG_DISABLED
 
-#endif //HUMOTO_USE_CONFIG
+#define HUMOTO_CONFIG_INCLUDED

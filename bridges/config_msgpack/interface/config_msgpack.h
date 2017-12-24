@@ -5,76 +5,73 @@
     (see @ref LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 
     @brief
-
-    @note Headers with the implementation are included in 'config.h'.
 */
 
 #pragma once
 
-#ifdef HUMOTO_CONFIG_DISABLED
+#ifdef HUMOTO_CONFIG_INCLUDED
     #error "This header must be included before humoto.h"
+#endif
+
+
+#include "humoto_helpers.h"
+
+#include "config/reader.h"
+#include "config/writer.h"
+
+#include "msgpack.hpp"
+
+#include "config_msgpack/reader.h"
+#include "config_msgpack/writer.h"
+
+
+#define HUMOTO_CONFIG_MSGPACK_NAMESPACE msgpack
+
+
+// If something is stupid but it works, it is not stupid (c)
+#ifndef HUMOTO_CONFIG_NAMESPACE_0
+#   define HUMOTO_CONFIG_NAMESPACE_0 HUMOTO_CONFIG_MSGPACK_NAMESPACE
 #else
+#   ifndef HUMOTO_CONFIG_NAMESPACE_1
+#       define HUMOTO_CONFIG_NAMESPACE_1 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#   else
+#       ifndef HUMOTO_CONFIG_NAMESPACE_2
+#           define HUMOTO_CONFIG_NAMESPACE_2 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#       else
+#           ifndef HUMOTO_CONFIG_NAMESPACE_3
+#               define HUMOTO_CONFIG_NAMESPACE_3 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#           else
+#               ifndef HUMOTO_CONFIG_NAMESPACE_4
+#                   define HUMOTO_CONFIG_NAMESPACE_4 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#               else
+#                   ifndef HUMOTO_CONFIG_NAMESPACE_5
+#                       define HUMOTO_CONFIG_NAMESPACE_5 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#                   else
+#                       ifndef HUMOTO_CONFIG_NAMESPACE_6
+#                           define HUMOTO_CONFIG_NAMESPACE_6 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#                       else
+#                           ifndef HUMOTO_CONFIG_NAMESPACE_7
+#                               define HUMOTO_CONFIG_NAMESPACE_7 HUMOTO_CONFIG_MSGPACK_NAMESPACE
+#                           else
+#                               error "Too many config namespaces."
+#                           endif
+#                       endif
+#                   endif
+#               endif
+#           endif
+#       endif
+#   endif
+#endif
 
-    #include "humoto_helpers.h"
-
-    #include "config/reader.h"
-    #include "config/writer.h"
-
-    #include "msgpack.hpp"
-
-    #include "config_msgpack/reader.h"
-    #include "config_msgpack/writer.h"
-
-
-    namespace humoto
+namespace humoto
+{
+    namespace config
     {
-        namespace config
+        /**
+         * @brief MessagePack bridge namespace.
+         */
+        namespace msgpack
         {
-            /**
-             * @brief MessagePack bridge namespace.
-             */
-            namespace msgpack
-            {
-                class ConfigurableBase
-                #ifdef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
-                    : public HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
-                #endif
-                {
-                    protected:
-                        #ifdef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
-                            using HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT::writeConfigEntries;
-                        #endif
-
-                        ///@{
-                        /**
-                         * @attention Implementations of these methods are added
-                         * automatically upon inclusion of define_accessors.h.
-                         */
-                        virtual void writeConfigEntries(humoto::config::msgpack::Writer &) const = 0;
-                        ///@}
-                };
-
-                #ifdef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
-                    #undef HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT
-                #endif
-                #define HUMOTO_CONFIG_CONFIGURABLE_BASE_PARENT humoto::config::msgpack::ConfigurableBase
-            }
         }
     }
-
-    #define HUMOTO_BRIDGE_config_msgpack_DEFINITIONS \
-        public: \
-            void writeConfigEntries(humoto::config::msgpack::Writer & writer) const \
-            { \
-                writeConfigEntriesTemplate(writer); \
-            } \
-            virtual void readConfigEntries(humoto::config::ReaderMixin<humoto::config::msgpack::ReaderBase> & reader, const bool crash_flag)\
-            {\
-                readConfigEntriesTemplate(reader, crash_flag);\
-            }
-
-    #ifndef HUMOTO_USE_CONFIG
-        #define HUMOTO_USE_CONFIG
-    #endif
-
-#endif
+}
