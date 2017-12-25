@@ -20,4 +20,7 @@ if (HUMOTO_BUILD_REGRESSION_TESTS)
 
     # Tests of condensing functions
     humoto_define_regression_test(${HUMOTO_MODULE} "005" "config_yaml")
+
+    # Config tests
+    humoto_define_regression_test(${HUMOTO_MODULE} "006" "config_yaml;config_msgpack")
 endif()

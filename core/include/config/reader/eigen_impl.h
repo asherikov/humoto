@@ -88,12 +88,15 @@ namespace humoto
 
                 HUMOTO_ASSERT(v.rows() == num_rows*num_cols, "Wrong entry size.");
 
-                Eigen::Map< Eigen::Matrix<  double,
-                                            Eigen::Dynamic,
-                                            Eigen::Dynamic,
-                                            Eigen::RowMajor> >  map(v.data(),
-                                                                    num_rows,
-                                                                    num_cols);
+                Eigen::Map<
+                    Eigen::Matrix<  double,
+                                    Eigen::Dynamic,
+                                    Eigen::Dynamic,
+                                    Eigen::Matrix<t_Scalar, t_rows, t_cols, t_flags>::IsRowMajor
+                                        ? Eigen::RowMajor
+                                        : Eigen::ColMajor> >    map(v.data(),
+                                                                num_rows,
+                                                                num_cols);
                 entry = map;
             }
         }

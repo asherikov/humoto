@@ -45,7 +45,7 @@
 
             template <class t_Reader>
                 void readConfigEntriesTemplate( t_Reader & reader,
-                                        const bool crash_on_missing_entry = false)
+                                                const bool crash_on_missing_entry = false)
             {
                 HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES)
                 finalize();
@@ -297,7 +297,7 @@
                 readConfigEntriesTemplate(reader, crash_flag);\
             }
 
-    HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
+            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
 
     #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
 
