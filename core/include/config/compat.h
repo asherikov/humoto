@@ -13,6 +13,7 @@
 
 
 #ifdef HUMOTO_USE_CONFIG
+
     #define HUMOTO_CONFIG_READ_COMPOUND_(entry)     HUMOTO_CONFIG_READ_ENTRY_(entry)
     #define HUMOTO_CONFIG_READ_COMPOUND(entry)      HUMOTO_CONFIG_READ_ENTRY(entry)
 
@@ -31,4 +32,15 @@
 
     #define HUMOTO_CONFIG_WRITE_ENUM_(entry)        HUMOTO_CONFIG_WRITE_ENTRY_(entry)
     #define HUMOTO_CONFIG_WRITE_ENUM(entry)         HUMOTO_CONFIG_WRITE_ENTRY(entry)
+
+
+    #define HUMOTO_CONFIG_COMPOUND_(entry)     HUMOTO_CONFIG_ENTRY_(entry)
+    #define HUMOTO_CONFIG_COMPOUND(entry)      HUMOTO_CONFIG_ENTRY(entry)
+
+    #define HUMOTO_CONFIG_SCALAR_(entry)       HUMOTO_CONFIG_ENTRY_(entry)
+    #define HUMOTO_CONFIG_SCALAR(entry)        HUMOTO_CONFIG_ENTRY(entry)
+
+    #define HUMOTO_CONFIG_ENUM_(entry)         HUMOTO_CONFIG_ENTRY_(entry)
+    #define HUMOTO_CONFIG_ENUM(entry)          HUMOTO_CONFIG_ENTRY(entry)
+
 #endif
