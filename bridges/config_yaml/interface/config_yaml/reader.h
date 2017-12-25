@@ -19,7 +19,7 @@ namespace humoto
             /**
              * @brief Configuration reader class
              */
-            class HUMOTO_LOCAL ReaderBase
+            class HUMOTO_LOCAL Reader
             {
                 protected:
                     enum Status
@@ -47,32 +47,6 @@ namespace humoto
 
 
                 protected:
-                    ReaderBase() {};
-                    ~ReaderBase() {};
-
-
-                    std::size_t startArray()
-                    {
-                        status_ = IN_ARRAY;
-                        array_counters_.push_back(0);
-
-                        return(getArraySize(*getCurrentNode(), 0));
-                    }
-
-                    void endArray()
-                    {
-                        array_counters_.pop_back();
-                        if (0 == array_counters_.size())
-                        {
-                            status_ = UNDEFINED;
-                        }
-                        else
-                        {
-                            ++array_counters_.back();
-                        }
-                    }
-
-
                     /**
                      * @brief open configuration file
                      *
@@ -108,12 +82,6 @@ namespace humoto
                     }
 
 
-                    bool isArray()
-                    {
-                        return(YAML::NodeType::Sequence == getCurrentNode()->Type());
-                    }
-
-
                     template<class t_Node>
                     std::size_t getArraySize(t_Node & node, const std::size_t depth)
                     {
@@ -146,21 +114,26 @@ namespace humoto
                     }
 
 
-                    template<class t_ElementType>
-                        void readElement(t_ElementType &element)
+                public:
+                    /**
+                     * @brief Constructor
+                     *
+                     * @param[in] file_name
+                     */
+                    explicit Reader(const std::string& file_name)
                     {
-                        if (IN_ARRAY == status_)
-                        {
-                            readArrayElement(element, *getCurrentNode(), 0);
-                        }
-                        else
-                        {
-                            *getCurrentNode() >> element;
-                        }
+                        openFile(file_name);
                     }
 
 
-                public:
+                    /**
+                     * @brief Default constructor
+                     */
+                    Reader()
+                    {
+                    }
+
+
                     /**
                      * @brief Descend to the entry with the given name
                      *
@@ -191,28 +164,47 @@ namespace humoto
                     {
                         node_stack_.pop();
                     }
-            };
 
 
-            class HUMOTO_LOCAL Reader : public ReaderMixin<ReaderBase>
-            {
-                public:
-                    /**
-                     * @brief Constructor
-                     *
-                     * @param[in] file_name
-                     */
-                    explicit Reader(const std::string& file_name)
+                    bool isArray()
                     {
-                        openFile(file_name);
+                        return(YAML::NodeType::Sequence == getCurrentNode()->Type());
                     }
 
 
-                    /**
-                     * @brief Default constructor
-                     */
-                    Reader()
+                    std::size_t startArray()
                     {
+                        status_ = IN_ARRAY;
+                        array_counters_.push_back(0);
+
+                        return(getArraySize(*getCurrentNode(), 0));
+                    }
+
+                    void endArray()
+                    {
+                        array_counters_.pop_back();
+                        if (0 == array_counters_.size())
+                        {
+                            status_ = UNDEFINED;
+                        }
+                        else
+                        {
+                            ++array_counters_.back();
+                        }
+                    }
+
+
+                    template<class t_ElementType>
+                        void readElement(t_ElementType &element)
+                    {
+                        if (IN_ARRAY == status_)
+                        {
+                            readArrayElement(element, *getCurrentNode(), 0);
+                        }
+                        else
+                        {
+                            *getCurrentNode() >> element;
+                        }
                     }
             };
         }

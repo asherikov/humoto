@@ -13,6 +13,7 @@
 #include "humoto_helpers.h"
 
 #include "config.h"
+#include "config/compat.h"
 
 #include "humoto/solution.h"
 #include "humoto/model.h"

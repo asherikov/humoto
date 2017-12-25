@@ -163,7 +163,7 @@
                 void readConfig(t_Reader            & reader,
                                 const bool          crash_on_missing_entry = true)
             {
-                reader.readNestedConfig(*this, this->getConfigSectionID(), crash_on_missing_entry);
+                humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
             }
 
 
@@ -180,7 +180,7 @@
                                 const std::string   & node_name,
                                 const bool          crash_on_missing_entry = true)
             {
-                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
             }
 
 
@@ -199,7 +199,7 @@
                                 const char          * node_name,
                                 const bool          crash_on_missing_entry = true)
             {
-                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
             }
 
 
@@ -215,7 +215,7 @@
                                 const bool        crash_on_missing_entry = true)
             {
                 t_Reader reader(file_name);
-                reader.readNestedConfig(*this, this->getConfigSectionID(), crash_on_missing_entry);
+                humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
             }
 
 
@@ -233,7 +233,7 @@
                                 const bool        crash_on_missing_entry = true)
             {
                 t_Reader reader(file_name);
-                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
             }
 
 
@@ -253,7 +253,7 @@
                                 const bool        crash_on_missing_entry = true)
             {
                 t_Reader reader(file_name);
-                reader.readNestedConfig(*this, node_name, crash_on_missing_entry);
+                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
             }
 
 
@@ -265,7 +265,7 @@
             { \
                 writeConfigEntriesTemplate(writer); \
             } \
-            virtual void readConfigEntries( humoto::config::ReaderMixin<humoto::config::config_namespace::ReaderBase> & reader, \
+            virtual void readConfigEntries( humoto::config::config_namespace::Reader & reader, \
                                             const bool crash_flag)\
             {\
                 readConfigEntriesTemplate(reader, crash_flag);\

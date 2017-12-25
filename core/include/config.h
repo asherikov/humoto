@@ -25,6 +25,7 @@ namespace humoto
 #ifdef HUMOTO_CONFIG_NAMESPACE_0
 #   define HUMOTO_USE_CONFIG
 
+
 #   ifndef HUMOTO_CONFIG_NAMESPACE_1
 #       define HUMOTO_CONFIG_NAMESPACE_LIST \
                     HUMOTO_CONFIG_NAMESPACE_WRAPPER(HUMOTO_CONFIG_NAMESPACE_0)
@@ -106,17 +107,11 @@ namespace humoto
     #define HUMOTO_CONFIG_WRITE_ENUM(entry)     writer.writeEnum(entry, #entry);
 
 
+    #define HUMOTO_CONFIG_READ_ENTRY_(entry)     humoto::config::reader::readEntry(reader, entry##_, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_ENTRY(entry)      humoto::config::reader::readEntry(reader, entry, #entry, crash_on_missing_entry);
+
     #define HUMOTO_CONFIG_READ_PARENT_CLASS(parent_class)  parent_class::readConfigEntries(reader, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)  reader.readNestedConfig(member, name, crash_on_missing_entry);
-
-    #define HUMOTO_CONFIG_READ_COMPOUND_(entry)     reader.readEntry(entry##_, #entry, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_COMPOUND(entry)      reader.readEntry(entry, #entry, crash_on_missing_entry);
-
-    #define HUMOTO_CONFIG_READ_SCALAR_(entry)   reader.readEntry(entry##_, #entry, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_SCALAR(entry)    reader.readEntry(entry, #entry, crash_on_missing_entry);
-
-    #define HUMOTO_CONFIG_READ_ENUM_(entry)     reader.readEnum(entry##_, #entry, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_ENUM(entry)      reader.readEnum(entry, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)  humoto::config::reader::readEntry(reader, member, name, crash_on_missing_entry);
 
     // ----------------------------
 
@@ -159,17 +154,6 @@ namespace humoto
                      */
                     virtual std::size_t getNumberOfEntries() const = 0;
 
-
-                    /// @{
-                    /**
-                     * These functions are always defined automatically.
-                     */
-                    #define HUMOTO_CONFIG_NAMESPACE_WRAPPER(config_namespace) \
-                        virtual void writeConfigEntries(humoto::config::config_namespace::Writer &) const = 0;
-                    HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
-                    #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
-                    /// @}
-
                     virtual bool getCrashOnMissingEntryFlag() = 0;
 
 
@@ -185,6 +169,19 @@ namespace humoto
                      * @brief Set members to their default values.
                      */
                     virtual void setDefaults() = 0;
+
+
+                    /// @{
+                    /**
+                     * These functions are always defined automatically.
+                     */
+                    #define HUMOTO_CONFIG_NAMESPACE_WRAPPER(config_namespace) \
+                        virtual void writeConfigEntries(humoto::config::config_namespace::Writer &) const = 0; \
+                        virtual void readConfigEntries( humoto::config::config_namespace::Reader & reader, \
+                                                        const bool crash_flag) = 0;
+                    HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
+                    #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
+                    /// @}
 
 
                     // ------------------------------------------
@@ -326,6 +323,9 @@ namespace humoto
             };
         }
     }
+
+#   include "config/helpers.h"
+#   include "config/reader/all.h"
 
 #else
 
