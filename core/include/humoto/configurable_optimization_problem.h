@@ -93,7 +93,7 @@ namespace humoto
                             task->setDescription(task_ids_[i][j]);
 
                             // configure tasks
-                            task->readConfig(reader, task_ids_[i][j], crash_on_missing_entry);
+                            humoto::config::reader::readEntry(reader, *task, task_ids_[i][j], crash_on_missing_entry);
                             // push tasks into the stack/hierarchy
                             humoto::OptimizationProblem::pushTask(task, i);
                         }
@@ -194,7 +194,7 @@ namespace humoto
                             it != hierarchy_[i].tasks_.end();
                             ++it)
                     {
-                        it->ptr_->writeNestedConfig(writer);
+                        humoto::config::writer::writeEntry(writer, *(it->ptr_), it->ptr_->getConfigSectionID());
                     }
                 }
             }

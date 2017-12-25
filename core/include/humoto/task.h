@@ -119,12 +119,6 @@ namespace humoto
             }
 
 
-            const std::string & getConfigSectionID() const
-            {
-                return (string_description_);
-            }
-
-
 
             /**
              * @brief Initialize active set guess with defaults.
@@ -239,7 +233,13 @@ namespace humoto
              *
              * @return description
              */
-            const std::string  getDescription() const
+            const std::string & getDescription() const
+            {
+                return (string_description_);
+            }
+
+
+            const std::string & getConfigSectionID() const
             {
                 return (string_description_);
             }

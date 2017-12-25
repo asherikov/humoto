@@ -82,17 +82,6 @@
         #endif
 
 
-    protected:
-        // Define node name
-        #ifdef HUMOTO_CONFIG_SECTION_ID
-            const std::string & getConfigSectionID() const
-            {
-                static const std::string name(HUMOTO_CONFIG_SECTION_ID);
-                return (name);
-            }
-        #endif
-
-
         // Count number of entries and define a function, which returns it.
         #ifdef HUMOTO_CONFIG_ENTRIES
             #define HUMOTO_CONFIG_COMPOUND_(entry)       +1
@@ -150,6 +139,18 @@
                 readConfig(reader, crash_on_missing_entry);
             }
         #endif
+
+
+        // Define node name
+        #ifdef HUMOTO_CONFIG_SECTION_ID
+            const std::string & getConfigSectionID() const
+            {
+                static const std::string name(HUMOTO_CONFIG_SECTION_ID);
+                return (name);
+            }
+        #endif
+
+
 
 
             /**
@@ -256,6 +257,64 @@
                 humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
             }
 
+
+            // ============================================
+
+
+            /**
+             * @brief Write configuration
+             *
+             * @param[in,out] writer configuration writer
+             */
+            template <class t_Writer>
+                void writeConfig(t_Writer& writer) const
+            {
+                writeConfig(writer, this->getConfigSectionID());
+            }
+
+
+            /**
+             * @brief Write configuration
+             *
+             * @param[in,out] writer configuration writer
+             * @param[in] node_name   node name, the default is used if empty
+             */
+            template <class t_Writer>
+                void writeConfig(t_Writer& writer,
+                                 const std::string &node_name) const
+            {
+                writer.initRoot();
+                humoto::config::writer::writeEntry(writer, *this, node_name);
+                writer.flush();
+            }
+
+
+            /**
+             * @brief Write configuration.
+             *
+             * @param[in] file_name file name
+             */
+            template <class t_Writer>
+                void writeConfig(const std::string &file_name) const
+            {
+                t_Writer writer(file_name);
+                writeConfig(writer);
+            }
+
+
+            /**
+             * @brief Write configuration.
+             *
+             * @param[in] file_name file name
+             * @param[in] node_name   node name, the default is used if empty
+             */
+            template <class t_Writer>
+                void writeConfig(const std::string &file_name,
+                                 const std::string &node_name) const
+            {
+                t_Writer writer(file_name);
+                writeConfig(writer, node_name);
+            }
 
 
 // Format-specific stuff

@@ -93,18 +93,11 @@ namespace humoto
 #   endif
 
 
+    #define HUMOTO_CONFIG_WRITE_ENTRY_(entry)     humoto::config::writer::writeEntry(writer, entry##_, #entry);
+    #define HUMOTO_CONFIG_WRITE_ENTRY(entry)      humoto::config::writer::writeEntry(writer, entry, #entry);
 
     #define HUMOTO_CONFIG_WRITE_PARENT_CLASS(parent_class)  parent_class::writeConfigEntries(writer);
-    #define HUMOTO_CONFIG_WRITE_MEMBER_CLASS(member, name)  member.writeNestedConfig(writer, name);
-
-    #define HUMOTO_CONFIG_WRITE_COMPOUND_(entry)    writer.writeCompound(entry##_, #entry);
-    #define HUMOTO_CONFIG_WRITE_COMPOUND(entry)     writer.writeCompound(entry, #entry);
-
-    #define HUMOTO_CONFIG_WRITE_SCALAR_(entry)  writer.writeScalar(entry##_, #entry);
-    #define HUMOTO_CONFIG_WRITE_SCALAR(entry)   writer.writeScalar(entry, #entry);
-
-    #define HUMOTO_CONFIG_WRITE_ENUM_(entry)    writer.writeEnum(entry##_, #entry);
-    #define HUMOTO_CONFIG_WRITE_ENUM(entry)     writer.writeEnum(entry, #entry);
+    #define HUMOTO_CONFIG_WRITE_MEMBER_CLASS(member, name)  humoto::config::writer::writeEntry(writer, member, name);
 
 
     #define HUMOTO_CONFIG_READ_ENTRY_(entry)     humoto::config::reader::readEntry(reader, entry##_, #entry, crash_on_missing_entry);
@@ -133,6 +126,10 @@ namespace humoto
                     CommonConfigurableBase() {}
 
 
+                    virtual bool getCrashOnMissingEntryFlag() = 0;
+
+
+                public:
                     /**
                      * @brief Return the default name of a configuration node
                      * corresponding to this class
@@ -147,18 +144,6 @@ namespace humoto
 
 
                     /**
-                     * @brief Get number of entries in the corresponding
-                     * configuration node.
-                     *
-                     * @return number of entries
-                     */
-                    virtual std::size_t getNumberOfEntries() const = 0;
-
-                    virtual bool getCrashOnMissingEntryFlag() = 0;
-
-
-                public:
-                    /**
                      * @brief This function is called automaticaly after reading
                      * a configuration file. Does nothing by default.
                      */
@@ -169,6 +154,15 @@ namespace humoto
                      * @brief Set members to their default values.
                      */
                     virtual void setDefaults() = 0;
+
+
+                    /**
+                     * @brief Get number of entries in the corresponding
+                     * configuration node.
+                     *
+                     * @return number of entries
+                     */
+                    virtual std::size_t getNumberOfEntries() const = 0;
 
 
                     /// @{
@@ -182,93 +176,6 @@ namespace humoto
                     HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
                     #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
                     /// @}
-
-
-                    // ------------------------------------------
-
-
-                    /**
-                     * @brief Write nested configuration node
-                     *
-                     * @param[in,out] writer configuration writer
-                     */
-                    template <class t_Writer>
-                        void writeNestedConfig( t_Writer& writer) const
-                    {
-                        writeNestedConfig(writer, getConfigSectionID());
-                    }
-
-
-                    /**
-                     * @brief Write nested configuration node
-                     *
-                     * @param[in,out] writer configuration writer
-                     * @param[in] node_name   node name, the default is used if empty
-                     */
-                    template <class t_Writer>
-                        void writeNestedConfig( t_Writer& writer,
-                                                const std::string &node_name) const
-                    {
-                        writer.descend(node_name, getNumberOfEntries());
-                        writeConfigEntries(writer);
-                        writer.ascend();
-                    }
-
-
-                    /**
-                     * @brief Write configuration
-                     *
-                     * @param[in,out] writer configuration writer
-                     */
-                    template <class t_Writer>
-                        void writeConfig(t_Writer& writer) const
-                    {
-                        writeConfig(writer, getConfigSectionID());
-                    }
-
-
-                    /**
-                     * @brief Write configuration
-                     *
-                     * @param[in,out] writer configuration writer
-                     * @param[in] node_name   node name, the default is used if empty
-                     */
-                    template <class t_Writer>
-                        void writeConfig(t_Writer& writer,
-                                         const std::string &node_name) const
-                    {
-                        writer.initRoot();
-                        writeNestedConfig(writer, node_name);
-                        writer.flush();
-                    }
-
-
-                    /**
-                     * @brief Write configuration.
-                     *
-                     * @param[in] file_name file name
-                     */
-                    template <class t_Writer>
-                        void writeConfig(const std::string &file_name) const
-                    {
-                        t_Writer writer(file_name);
-                        writeConfig(writer);
-                    }
-
-
-                    /**
-                     * @brief Write configuration.
-                     *
-                     * @param[in] file_name file name
-                     * @param[in] node_name   node name, the default is used if empty
-                     */
-                    template <class t_Writer>
-                        void writeConfig(const std::string &file_name,
-                                         const std::string &node_name) const
-                    {
-                        t_Writer writer(file_name);
-                        writeConfig(writer, node_name);
-                    }
             };
 
 
@@ -326,6 +233,7 @@ namespace humoto
 
 #   include "config/helpers.h"
 #   include "config/reader/all.h"
+#   include "config/writer/all.h"
 
 #else
 

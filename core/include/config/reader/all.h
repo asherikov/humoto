@@ -47,19 +47,19 @@ namespace humoto
              * @param[in] crash_on_missing_entry
              */
             template <  class t_Reader,
-                        typename t_EnumerationType>
+                        typename t_Enumeration>
                 void readBody(   t_Reader & reader,
-                                        t_EnumerationType &entry,
+                                        t_Enumeration &entry,
                                         const bool crash_on_missing_entry = false,
                                         // disable this function for CommonConfigurableBase
                                         HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                            humoto::config::CommonConfigurableBase, t_EnumerationType) *dummy_base = NULL,
+                                            humoto::config::CommonConfigurableBase, t_Enumeration) *dummy_base = NULL,
                                         // ENABLE this function for enums
-                                        HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_EnumerationType) *dummy_enum = NULL)
+                                        HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
             {
                 int tmp_value = 0;
                 reader.readElement(tmp_value);
-                entry = static_cast<t_EnumerationType> (tmp_value);
+                entry = static_cast<t_Enumeration> (tmp_value);
             }
 
 

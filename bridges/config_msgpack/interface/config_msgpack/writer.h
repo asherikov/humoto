@@ -18,7 +18,7 @@ namespace humoto
             /**
              * @brief Configuration writer class
              */
-            class HUMOTO_LOCAL WriterBase
+            class HUMOTO_LOCAL Writer
             {
                 protected:
                     /// output file stream
@@ -27,90 +27,6 @@ namespace humoto
                     ::msgpack::packer< std::ofstream > *packer_;
 
 
-                protected:
-                    WriterBase(){}
-                    ~WriterBase(){}
-
-
-                    void startArray(const std::string &name, const std::size_t size)
-                    {
-                        HUMOTO_ASSERT(size <= std::numeric_limits<uint32_t>::max(), "Vector is too long.");
-
-                        packer_->pack(name);
-                        packer_->pack_array(size);
-                    }
-
-
-                    void endArray() const {}
-
-
-                    template<class t_Element>
-                        void writeArrayElement(t_Element & element)
-                    {
-                        packer_->pack(element);
-                    }
-
-
-                public:
-                    /**
-                     * @brief Starts a nested map in the configuration file
-                     *
-                     * @param[in] map_name name of the map
-                     * @param[in] num_entries number of child entries
-                     */
-                    void descend(const std::string &map_name, const std::size_t num_entries)
-                    {
-                        packer_->pack(map_name);
-                        packer_->pack_map(num_entries);
-                    }
-
-
-                    /**
-                     * @brief Starts a nested map in the configuration file
-                     */
-                    void initRoot()
-                    {
-                        packer_->pack_map(1);
-                    }
-
-
-                    /**
-                     * @brief Ends a nested map in the configuration file
-                     */
-                    void ascend()
-                    {
-                    }
-
-
-                    /**
-                     * @brief Write a configuration entry (scalar template)
-                     *
-                     * @tparam t_EntryType type of the entry
-                     *
-                     * @param[in] entry_name name
-                     * @param[in] entry      data
-                     */
-                    template <typename t_EntryType>
-                        void writeScalar(   const t_EntryType  entry,
-                                            const std::string  & entry_name)
-                    {
-                        packer_->pack(entry_name);
-                        packer_->pack(entry);
-                    }
-
-
-                    /**
-                     * @brief Flush the configuration to the file
-                     */
-                    void flush()
-                    {
-                        config_ofs_.flush();
-                    }
-            };
-
-
-            class HUMOTO_LOCAL Writer : public WriterMixin<WriterBase>
-            {
                 public:
                     /**
                      * @brief Constructor
@@ -136,6 +52,83 @@ namespace humoto
                     ~Writer()
                     {
                         delete packer_;
+                    }
+
+
+                    /**
+                     * @brief Starts a nested map in the configuration file
+                     *
+                     * @param[in] map_name name of the map
+                     */
+                    void descend(const std::string &map_name)
+                    {
+                        packer_->pack(map_name);
+                    }
+
+
+                    /**
+                     * @brief Starts a nested map in the configuration file
+                     *
+                     * @param[in] map_name name of the map
+                     * @param[in] num_entries number of child entries
+                     */
+                    void startMap(const std::size_t num_entries)
+                    {
+                        packer_->pack_map(num_entries);
+                    }
+
+                    void endMap()
+                    {
+                    }
+
+                    /**
+                     * @brief Starts a nested map in the configuration file
+                     */
+                    void initRoot()
+                    {
+                        packer_->pack_map(1);
+                    }
+
+
+                    /**
+                     * @brief Ends a nested map in the configuration file
+                     */
+                    void ascend()
+                    {
+                    }
+
+
+                    /**
+                     * @brief Flush the configuration to the file
+                     */
+                    void flush()
+                    {
+                        config_ofs_.flush();
+                    }
+
+
+                    void startArray(const std::size_t size)
+                    {
+                        HUMOTO_ASSERT(size <= std::numeric_limits<uint32_t>::max(), "Vector is too long.");
+
+                        packer_->pack_array(size);
+                    }
+
+
+                    void endArray() const {}
+
+
+                    /**
+                     * @brief Write a configuration entry (scalar template)
+                     *
+                     * @tparam t_EntryType type of the entry
+                     *
+                     * @param[in] entry      data
+                     */
+                    template<class t_Element>
+                        void writeElement(const t_Element & element)
+                    {
+                        packer_->pack(element);
                     }
             };
         }

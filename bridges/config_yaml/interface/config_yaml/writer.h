@@ -19,7 +19,7 @@ namespace humoto
             /**
              * @brief Configuration writer class
              */
-            class HUMOTO_LOCAL WriterBase
+            class HUMOTO_LOCAL Writer
             {
                 protected:
                     /// output file stream
@@ -30,10 +30,6 @@ namespace humoto
 
 
                 protected:
-                    WriterBase(){}
-                    ~WriterBase(){}
-
-
                     /**
                      * @brief Initialize emitter
                      */
@@ -60,38 +56,45 @@ namespace humoto
                     }
 
 
-
-                    void startArray(const std::string &name, const std::size_t size)
-                    {
-                        *emitter_ << YAML::Key << name;
-                        *emitter_ << YAML::Value << YAML::Flow;
-                        *emitter_ << YAML::BeginSeq;
-                    }
-
-                    void endArray()
-                    {
-                        *emitter_ << YAML::EndSeq;
-                    }
-
-
-                    template<class t_Element>
-                        void writeArrayElement(t_Element & element)
-                    {
-                        *emitter_ << element;
-                    }
-
-
                 public:
+                    explicit Writer(const std::string& file_name)
+                    {
+                        config_ofs_.open(file_name.c_str());
+
+                        if (!config_ofs_.good())
+                        {
+                            HUMOTO_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
+                        }
+
+                        initEmitter();
+                    }
+
+
+                    ~Writer()
+                    {
+                        delete emitter_;
+                    }
+
+
                     /**
                      * @brief Starts a nested map in the configuration file
                      *
                      * @param[in] map_name name of the map
-                     * @param[in] num_entries number of child entries
                      */
-                    void descend(const std::string &map_name, const std::size_t num_entries)
+                    void descend(const std::string &map_name)
                     {
                         *emitter_ << YAML::Key << map_name;
                         *emitter_ << YAML::Value;
+                    }
+
+
+                    /**
+                     * @brief Starts a nested map in the configuration file
+                     *
+                     * @param[in] num_entries number of child entries
+                     */
+                    void startMap(const std::size_t num_entries)
+                    {
                         *emitter_ << YAML::BeginMap;
                     }
 
@@ -107,26 +110,13 @@ namespace humoto
                     /**
                      * @brief Ends a nested map in the configuration file
                      */
-                    void ascend()
+                    void endMap()
                     {
                         *emitter_ << YAML::EndMap;
                     }
 
-
-
-                    /**
-                     * @brief Write a configuration entry (scalar template)
-                     *
-                     * @tparam t_EntryType type of the entry
-                     *
-                     * @param[in] entry_name name
-                     * @param[in] entry      data
-                     */
-                    template <typename t_EntryType>
-                        void writeScalar(   const t_EntryType  entry,
-                                            const std::string  & entry_name)
+                    void ascend()
                     {
-                        *emitter_ << YAML::Key << entry_name << YAML::Value << entry;
                     }
 
 
@@ -139,28 +129,32 @@ namespace humoto
                         destroyEmitter();
                         initEmitter();
                     }
-            };
 
 
 
-            class HUMOTO_LOCAL Writer : public WriterMixin<WriterBase>
-            {
-                public:
-                    explicit Writer(const std::string& file_name)
+                    void startArray(const std::size_t size)
                     {
-                        config_ofs_.open(file_name.c_str());
-
-                        if (!config_ofs_.good())
-                        {
-                            HUMOTO_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
-                        }
-
-                        initEmitter();
+                        *emitter_ << YAML::Flow;
+                        *emitter_ << YAML::BeginSeq;
                     }
 
-                    ~Writer()
+                    void endArray()
                     {
-                        delete emitter_;
+                        *emitter_ << YAML::EndSeq;
+                    }
+
+
+                    /**
+                     * @brief Write a configuration entry (scalar template)
+                     *
+                     * @tparam t_EntryType type of the entry
+                     *
+                     * @param[in] entry      data
+                     */
+                    template<class t_Element>
+                        void writeElement(const t_Element & element)
+                    {
+                        *emitter_ << element;
                     }
             };
         }
