@@ -27,19 +27,20 @@ namespace humoto
 
 #   include "config/process_namespaces.h"
 
+    #define HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry, name)    humoto::config::writer::writeEntry(writer, entry, name);
 
-    #define HUMOTO_CONFIG_WRITE_ENTRY_(entry)     humoto::config::writer::writeEntry(writer, entry##_, #entry);
-    #define HUMOTO_CONFIG_WRITE_ENTRY(entry)      humoto::config::writer::writeEntry(writer, entry, #entry);
+    #define HUMOTO_CONFIG_WRITE_ENTRY_(entry)   HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry##_, #entry)
+    #define HUMOTO_CONFIG_WRITE_ENTRY(entry)    HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry, #entry)
 
     #define HUMOTO_CONFIG_WRITE_PARENT_CLASS(parent_class)  parent_class::writeConfigEntries(writer);
-    #define HUMOTO_CONFIG_WRITE_MEMBER_CLASS(member, name)  humoto::config::writer::writeEntry(writer, member, name);
 
 
-    #define HUMOTO_CONFIG_READ_ENTRY_(entry)     humoto::config::reader::readEntry(reader, entry##_, #entry, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_ENTRY(entry)      humoto::config::reader::readEntry(reader, entry, #entry, crash_on_missing_entry);
+    #define HUMOTO_CONFIG_READ_NAMED_ENTRY(entry, name)  humoto::config::reader::readEntry(reader, entry, name, crash_on_missing_entry);
+
+    #define HUMOTO_CONFIG_READ_ENTRY_(entry)    HUMOTO_CONFIG_READ_NAMED_ENTRY(entry##_, #entry);
+    #define HUMOTO_CONFIG_READ_ENTRY(entry)     HUMOTO_CONFIG_READ_NAMED_ENTRY(entry, #entry);
 
     #define HUMOTO_CONFIG_READ_PARENT_CLASS(parent_class)  parent_class::readConfigEntries(reader, crash_on_missing_entry);
-    #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)  humoto::config::reader::readEntry(reader, member, name, crash_on_missing_entry);
 
     // ----------------------------
 

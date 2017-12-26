@@ -43,4 +43,8 @@
     #define HUMOTO_CONFIG_ENUM_(entry)         HUMOTO_CONFIG_ENTRY_(entry)
     #define HUMOTO_CONFIG_ENUM(entry)          HUMOTO_CONFIG_ENTRY(entry)
 
+
+    #define HUMOTO_CONFIG_WRITE_MEMBER_CLASS(member, name)  HUMOTO_CONFIG_WRITE_NAMED_ENTRY(member, name)
+    #define HUMOTO_CONFIG_READ_MEMBER_CLASS(member, name)   HUMOTO_CONFIG_READ_NAMED_ENTRY(member, name)
+    #define HUMOTO_CONFIG_MEMBER_CLASS(entry, name)         HUMOTO_CONFIG_NAMED_ENTRY(entry, name)
 #endif

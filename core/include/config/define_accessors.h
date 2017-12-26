@@ -14,14 +14,15 @@
 
     #ifndef HUMOTO_DOXYGEN_PROCESSING
     protected:
-        // Define read and write methods
         #ifdef HUMOTO_CONFIG_ENTRIES
 
-            #define HUMOTO_CONFIG_ENTRY_(entry)     HUMOTO_CONFIG_WRITE_ENTRY_(entry)
-            #define HUMOTO_CONFIG_ENTRY(entry)      HUMOTO_CONFIG_WRITE_ENTRY(entry)
+            #define HUMOTO_CONFIG_ENTRY_(entry)     HUMOTO_CONFIG_NAMED_ENTRY(entry##_, #entry)
+            #define HUMOTO_CONFIG_ENTRY(entry)      HUMOTO_CONFIG_NAMED_ENTRY(entry, #entry)
 
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)           HUMOTO_CONFIG_WRITE_PARENT_CLASS(entry)
-            #define HUMOTO_CONFIG_MEMBER_CLASS(entry, name)     HUMOTO_CONFIG_WRITE_MEMBER_CLASS(entry, name)
+
+        // Define write methods
+            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry, name)
+            #define HUMOTO_CONFIG_PARENT_CLASS(entry)       HUMOTO_CONFIG_WRITE_PARENT_CLASS(entry)
 
             template <class t_Writer>
                 void writeConfigEntriesTemplate(t_Writer & writer) const
@@ -29,18 +30,14 @@
                 HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES)
             }
 
-            #undef HUMOTO_CONFIG_ENTRY_
-            #undef HUMOTO_CONFIG_ENTRY
-
+            #undef HUMOTO_CONFIG_NAMED_ENTRY
             #undef HUMOTO_CONFIG_PARENT_CLASS
-            #undef HUMOTO_CONFIG_MEMBER_CLASS
 
 
-            #define HUMOTO_CONFIG_ENTRY_(entry)     HUMOTO_CONFIG_READ_ENTRY_(entry)
-            #define HUMOTO_CONFIG_ENTRY(entry)      HUMOTO_CONFIG_READ_ENTRY(entry)
+        // Define read methods
 
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)           HUMOTO_CONFIG_READ_PARENT_CLASS(entry)
-            #define HUMOTO_CONFIG_MEMBER_CLASS(entry, name)     HUMOTO_CONFIG_READ_MEMBER_CLASS(entry, name)
+            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  HUMOTO_CONFIG_READ_NAMED_ENTRY(entry, name)
+            #define HUMOTO_CONFIG_PARENT_CLASS(entry)       HUMOTO_CONFIG_READ_PARENT_CLASS(entry)
 
             template <class t_Reader>
                 void readConfigEntriesTemplate( t_Reader & reader,
@@ -50,23 +47,14 @@
                 finalize();
             }
 
-            #undef HUMOTO_CONFIG_ENTRY_
-            #undef HUMOTO_CONFIG_ENTRY
-
+            #undef HUMOTO_CONFIG_NAMED_ENTRY
             #undef HUMOTO_CONFIG_PARENT_CLASS
-            #undef HUMOTO_CONFIG_MEMBER_CLASS
-
-        #endif
 
 
         // Count number of entries and define a function, which returns it.
-        #ifdef HUMOTO_CONFIG_ENTRIES
 
-            #define HUMOTO_CONFIG_ENTRY_(entry)         +1
-            #define HUMOTO_CONFIG_ENTRY(entry)          +1
-
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)          +entry::getNumberOfEntries()
-            #define HUMOTO_CONFIG_MEMBER_CLASS(entry, name)    +1
+            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  +1
+            #define HUMOTO_CONFIG_PARENT_CLASS(entry)       +entry::getNumberOfEntries()
 
             std::size_t getNumberOfEntries() const
             {
@@ -74,11 +62,8 @@
                 return(num_entries);
             }
 
-            #undef HUMOTO_CONFIG_ENTRY_
-            #undef HUMOTO_CONFIG_ENTRY
-
+            #undef HUMOTO_CONFIG_NAMED_ENTRY
             #undef HUMOTO_CONFIG_PARENT_CLASS
-            #undef HUMOTO_CONFIG_MEMBER_CLASS
 
         #endif
     #endif
