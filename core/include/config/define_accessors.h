@@ -9,11 +9,10 @@
     header from / to a configuration file.
 */
 
-#ifndef HUMOTO_DOXYGEN_PROCESSING
-
 
 #ifdef HUMOTO_USE_CONFIG
-// Generic stuff
+
+    #ifndef HUMOTO_DOXYGEN_PROCESSING
     protected:
         // Define read and write methods
         #ifdef HUMOTO_CONFIG_ENTRIES
@@ -82,6 +81,7 @@
             #undef HUMOTO_CONFIG_MEMBER_CLASS
 
         #endif
+    #endif
 
 
     public:
@@ -91,7 +91,7 @@
              * Define constructors for the given class.
              */
             template <class t_Reader>
-                explicit HUMOTO_CONFIG_CONSTRUCTOR(
+                HUMOTO_CONFIG_CONSTRUCTOR(
                         t_Reader &reader,
                         const std::string &node_name,
                         const bool crash_on_missing_entry = true)
@@ -119,191 +119,188 @@
         #endif
 
 
-
-            /**
-             * @brief Read configuration (assuming the configuration node
-             * to be in the root).
-             *
-             * @param[in] reader configuration reader
-             * @param[in] crash_on_missing_entry
-             */
-            template <class t_Reader>
-                void readConfig(t_Reader            & reader,
-                                const bool          crash_on_missing_entry = true)
-            {
-                humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
-            }
-
-
-            /**
-             * @brief Read configuration (assuming the configuration node
-             * to be in the root).
-             *
-             * @param[in] reader configuration reader
-             * @param[in] crash_on_missing_entry
-             * @param[in] node_name   node name, the default is used if empty
-             */
-            template <class t_Reader>
-                void readConfig(t_Reader            & reader,
-                                const std::string   & node_name,
-                                const bool          crash_on_missing_entry = true)
-            {
-                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
-            }
-
-
-            /**
-             * @brief Read configuration (assuming the configuration node
-             * to be in the root).
-             *
-             * @param[in] reader configuration reader
-             * @param[in] crash_on_missing_entry
-             * @param[in] node_name   node name, the default is used if empty
-             *
-             * @note Intercept implicit conversion of a pointer to bool.
-             */
-            template <class t_Reader>
-                void readConfig(t_Reader            & reader,
-                                const char          * node_name,
-                                const bool          crash_on_missing_entry = true)
-            {
-                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
-            }
-
-
-            /**
-             * @brief Read configuration (assuming the configuration node
-             * to be in the root).
-             *
-             * @param[in] file_name file name
-             * @param[in] crash_on_missing_entry
-             */
-            template <class t_Reader>
-                void readConfig(const std::string &file_name,
-                                const bool        crash_on_missing_entry = true)
-            {
-                t_Reader reader(file_name);
-                humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
-            }
-
-
-            /**
-             * @brief Read configuration (assuming the configuration node
-             * to be in the root).
-             *
-             * @param[in] file_name file name
-             * @param[in] node_name   node name, the default is used if empty
-             * @param[in] crash_on_missing_entry
-             */
-            template <class t_Reader>
-                void readConfig(const std::string &file_name,
-                                const std::string &node_name,
-                                const bool        crash_on_missing_entry = true)
-            {
-                t_Reader reader(file_name);
-                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
-            }
-
-
-            /**
-             * @brief Read configuration (assuming the configuration node
-             * to be in the root).
-             *
-             * @param[in] file_name file name
-             * @param[in] crash_on_missing_entry
-             * @param[in] node_name   node name, the default is used if empty
-             *
-             * @note Intercept implicit conversion of a pointer to bool.
-             */
-            template <class t_Reader>
-                void readConfig(const std::string &file_name,
-                                const char        *node_name,
-                                const bool        crash_on_missing_entry = true)
-            {
-                t_Reader reader(file_name);
-                humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
-            }
-
-
-            // ============================================
-
-
-            /**
-             * @brief Write configuration
-             *
-             * @param[in,out] writer configuration writer
-             */
-            template <class t_Writer>
-                void writeConfig(t_Writer& writer) const
-            {
-                writeConfig(writer, this->getConfigSectionID());
-            }
-
-
-            /**
-             * @brief Write configuration
-             *
-             * @param[in,out] writer configuration writer
-             * @param[in] node_name   node name, the default is used if empty
-             */
-            template <class t_Writer>
-                void writeConfig(t_Writer& writer,
-                                 const std::string &node_name) const
-            {
-                writer.initRoot();
-                humoto::config::writer::writeEntry(writer, *this, node_name);
-                writer.flush();
-            }
-
-
-            /**
-             * @brief Write configuration.
-             *
-             * @param[in] file_name file name
-             */
-            template <class t_Writer>
-                void writeConfig(const std::string &file_name) const
-            {
-                t_Writer writer(file_name);
-                writeConfig(writer);
-            }
-
-
-            /**
-             * @brief Write configuration.
-             *
-             * @param[in] file_name file name
-             * @param[in] node_name   node name, the default is used if empty
-             */
-            template <class t_Writer>
-                void writeConfig(const std::string &file_name,
-                                 const std::string &node_name) const
-            {
-                t_Writer writer(file_name);
-                writeConfig(writer, node_name);
-            }
-
-
-// Format-specific stuff
-    #define HUMOTO_CONFIG_NAMESPACE_WRAPPER(config_namespace) \
-        public: \
+        // Format-specific stuff
+        #define HUMOTO_CONFIG_NAMESPACE(config_namespace) \
             virtual void writeConfigEntries(humoto::config::config_namespace::Writer & writer) const \
             { \
                 writeConfigEntriesTemplate(writer); \
             } \
             virtual void readConfigEntries( humoto::config::config_namespace::Reader & reader, \
-                                            const bool crash_flag)\
+                                            const bool crash_flag) \
             {\
                 readConfigEntriesTemplate(reader, crash_flag);\
             }
 
             HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
 
-    #undef HUMOTO_CONFIG_NAMESPACE_WRAPPER
+        #undef HUMOTO_CONFIG_NAMESPACE
+
+
+        /**
+         * @brief Read configuration (assuming the configuration node
+         * to be in the root).
+         *
+         * @param[in] reader configuration reader
+         * @param[in] crash_on_missing_entry
+         */
+        template <class t_Reader>
+            void readConfig(t_Reader            & reader,
+                            const bool          crash_on_missing_entry = true)
+        {
+            humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
+        }
+
+
+        /**
+         * @brief Read configuration (assuming the configuration node
+         * to be in the root).
+         *
+         * @param[in] reader configuration reader
+         * @param[in] crash_on_missing_entry
+         * @param[in] node_name   node name, the default is used if empty
+         */
+        template <class t_Reader>
+            void readConfig(t_Reader            & reader,
+                            const std::string   & node_name,
+                            const bool          crash_on_missing_entry = true)
+        {
+            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+        }
+
+
+        /**
+         * @brief Read configuration (assuming the configuration node
+         * to be in the root).
+         *
+         * @param[in] reader configuration reader
+         * @param[in] crash_on_missing_entry
+         * @param[in] node_name   node name, the default is used if empty
+         *
+         * @note Intercept implicit conversion of a pointer to bool.
+         */
+        template <class t_Reader>
+            void readConfig(t_Reader            & reader,
+                            const char          * node_name,
+                            const bool          crash_on_missing_entry = true)
+        {
+            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+        }
+
+
+        /**
+         * @brief Read configuration (assuming the configuration node
+         * to be in the root).
+         *
+         * @param[in] file_name file name
+         * @param[in] crash_on_missing_entry
+         */
+        template <class t_Reader>
+            void readConfig(const std::string &file_name,
+                            const bool        crash_on_missing_entry = true)
+        {
+            t_Reader reader(file_name);
+            humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
+        }
+
+
+        /**
+         * @brief Read configuration (assuming the configuration node
+         * to be in the root).
+         *
+         * @param[in] file_name file name
+         * @param[in] node_name   node name, the default is used if empty
+         * @param[in] crash_on_missing_entry
+         */
+        template <class t_Reader>
+            void readConfig(const std::string &file_name,
+                            const std::string &node_name,
+                            const bool        crash_on_missing_entry = true)
+        {
+            t_Reader reader(file_name);
+            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+        }
+
+
+        /**
+         * @brief Read configuration (assuming the configuration node
+         * to be in the root).
+         *
+         * @param[in] file_name file name
+         * @param[in] crash_on_missing_entry
+         * @param[in] node_name   node name, the default is used if empty
+         *
+         * @note Intercept implicit conversion of a pointer to bool.
+         */
+        template <class t_Reader>
+            void readConfig(const std::string &file_name,
+                            const char        *node_name,
+                            const bool        crash_on_missing_entry = true)
+        {
+            t_Reader reader(file_name);
+            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+        }
+
+
+        // ============================================
+
+
+        /**
+         * @brief Write configuration
+         *
+         * @param[in,out] writer configuration writer
+         */
+        template <class t_Writer>
+            void writeConfig(t_Writer& writer) const
+        {
+            writeConfig(writer, this->getConfigSectionID());
+        }
+
+
+        /**
+         * @brief Write configuration
+         *
+         * @param[in,out] writer configuration writer
+         * @param[in] node_name   node name, the default is used if empty
+         */
+        template <class t_Writer>
+            void writeConfig(t_Writer& writer,
+                             const std::string &node_name) const
+        {
+            writer.initRoot();
+            humoto::config::writer::writeEntry(writer, *this, node_name);
+            writer.flush();
+        }
+
+
+        /**
+         * @brief Write configuration.
+         *
+         * @param[in] file_name file name
+         */
+        template <class t_Writer>
+            void writeConfig(const std::string &file_name) const
+        {
+            t_Writer writer(file_name);
+            writeConfig(writer);
+        }
+
+
+        /**
+         * @brief Write configuration.
+         *
+         * @param[in] file_name file name
+         * @param[in] node_name   node name, the default is used if empty
+         */
+        template <class t_Writer>
+            void writeConfig(const std::string &file_name,
+                             const std::string &node_name) const
+        {
+            t_Writer writer(file_name);
+            writeConfig(writer, node_name);
+        }
 
 #endif //HUMOTO_USE_CONFIG
 
 #undef HUMOTO_CONFIG_SECTION_ID
 #undef HUMOTO_CONFIG_CONSTRUCTOR
 #undef HUMOTO_CONFIG_ENTRIES
-#endif

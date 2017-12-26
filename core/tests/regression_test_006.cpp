@@ -22,6 +22,7 @@ namespace
 {
     const double g_tolerance = 1e-12;
 
+
     class TypeContainer : public humoto::config::ConfigurableBase
     {
         #define HUMOTO_CONFIG_SECTION_ID "TypeContainer"
@@ -31,6 +32,7 @@ namespace
             HUMOTO_CONFIG_ENTRY_(real) \
             HUMOTO_CONFIG_ENTRY_(vector) \
             HUMOTO_CONFIG_ENTRY_(matrix) \
+            HUMOTO_CONFIG_ENTRY_(matrix_x) \
             HUMOTO_CONFIG_ENTRY_(std_vector) \
             HUMOTO_CONFIG_ENTRY_(std_nested_vector) \
             HUMOTO_CONFIG_ENTRY_(string) \
@@ -132,8 +134,6 @@ namespace
 
             void setDefaults()
             {
-                vector_.resize(3);
-
                 vector_.resize(4);
                 for(std::size_t i = 0; i < vector_.size(); ++i)
                 {

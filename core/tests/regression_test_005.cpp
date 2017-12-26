@@ -92,9 +92,6 @@ namespace humoto
         // condense
         condenseTimeInvariant(S, U, preview_horizon_length_, A, B);
 
-        std::cout << U - U_ << std::endl;
-        std::cout << U << std::endl;
-        std::cout << U_ << std::endl;
         ASSERT_TRUE(U.isApprox(U_, 1e-8));
         ASSERT_TRUE(S.isApprox(S_, 1e-8));
     }
