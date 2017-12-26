@@ -13,14 +13,27 @@
 #ifdef HUMOTO_USE_CONFIG
 
     #ifndef HUMOTO_DOXYGEN_PROCESSING
+    public:
+        #ifdef HUMOTO_CONFIG_ENTRIES
+            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)
+            #define HUMOTO_CONFIG_PARENT_CLASS(entry)
+            #define HUMOTO_CONFIG_TYPED_NAMED_ENTRY(type, entry, name)  type    entry;
+
+            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES)
+
+            #undef HUMOTO_CONFIG_NAMED_ENTRY
+            #undef HUMOTO_CONFIG_PARENT_CLASS
+            #undef HUMOTO_CONFIG_TYPED_NAMED_ENTRY
+
+            #define HUMOTO_CONFIG_TYPED_NAMED_ENTRY(type, entry, name)  HUMOTO_CONFIG_NAMED_ENTRY(entry, name)
+        #endif
+
+
     protected:
         #ifdef HUMOTO_CONFIG_ENTRIES
 
-            #define HUMOTO_CONFIG_ENTRY_(entry)     HUMOTO_CONFIG_NAMED_ENTRY(entry##_, #entry)
-            #define HUMOTO_CONFIG_ENTRY(entry)      HUMOTO_CONFIG_NAMED_ENTRY(entry, #entry)
-
-
         // Define write methods
+
             #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry, name)
             #define HUMOTO_CONFIG_PARENT_CLASS(entry)       HUMOTO_CONFIG_WRITE_PARENT_CLASS(entry)
 
@@ -65,6 +78,8 @@
             #undef HUMOTO_CONFIG_NAMED_ENTRY
             #undef HUMOTO_CONFIG_PARENT_CLASS
 
+
+            #undef HUMOTO_CONFIG_TYPED_NAMED_ENTRY
         #endif
     #endif
 

@@ -27,6 +27,13 @@ namespace humoto
 
 #   include "config/process_namespaces.h"
 
+    #define HUMOTO_CONFIG_ENTRY_(entry)     HUMOTO_CONFIG_NAMED_ENTRY(entry##_, #entry)
+    #define HUMOTO_CONFIG_ENTRY(entry)      HUMOTO_CONFIG_NAMED_ENTRY(entry, #entry)
+
+    #define HUMOTO_CONFIG_TYPED_ENTRY_(entry, type) HUMOTO_CONFIG_TYPED_NAMED_ENTRY(type, entry##_, #entry)
+    #define HUMOTO_CONFIG_TYPED_ENTRY(entry, type)  HUMOTO_CONFIG_TYPED_NAMED_ENTRY(type, entry, #entry)
+
+
     #define HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry, name)    humoto::config::writer::writeEntry(writer, entry, name);
 
     #define HUMOTO_CONFIG_WRITE_ENTRY_(entry)   HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry##_, #entry)
