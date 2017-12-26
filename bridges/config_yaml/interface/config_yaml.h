@@ -16,6 +16,7 @@
 
 
 #include "humoto_helpers.h"
+#include "config/reader_base.h"
 
 #include "yaml-cpp/yaml.h"
 

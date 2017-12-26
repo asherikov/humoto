@@ -48,14 +48,14 @@ namespace humoto
              */
             template <  class t_Reader,
                         typename t_Enumeration>
-                void readBody(   t_Reader & reader,
-                                        t_Enumeration &entry,
-                                        const bool crash_on_missing_entry = false,
-                                        // disable this function for CommonConfigurableBase
-                                        HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                            humoto::config::CommonConfigurableBase, t_Enumeration) *dummy_base = NULL,
-                                        // ENABLE this function for enums
-                                        HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
+                void readBody(  t_Reader & reader,
+                                t_Enumeration &entry,
+                                const bool crash_on_missing_entry = false,
+                                // disable this function for CommonConfigurableBase
+                                HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
+                                    humoto::config::CommonConfigurableBase, t_Enumeration) *dummy_base = NULL,
+                                // ENABLE this function for enums
+                                HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
             {
                 int tmp_value = 0;
                 reader.readElement(tmp_value);
@@ -73,14 +73,14 @@ namespace humoto
              */
             template <  class t_Reader,
                         typename t_Entry>
-                void readBody(   t_Reader & reader,
-                                        t_Entry &entry,
-                                        const bool crash_on_missing_entry = false,
-                                        // disable this function for CommonConfigurableBase
-                                        HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                            humoto::config::CommonConfigurableBase, t_Entry) *dummy_base = NULL,
-                                        // disable this function for enums
-                                        HUMOTO_CONFIG_IS_ENUM_DISABLER_TYPE(t_Entry) *dummy_enum = NULL)
+                void readBody(  t_Reader & reader,
+                                t_Entry &entry,
+                                const bool crash_on_missing_entry = false,
+                                // disable this function for CommonConfigurableBase
+                                HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
+                                    humoto::config::CommonConfigurableBase, t_Entry) *dummy_base = NULL,
+                                // disable this function for enums
+                                HUMOTO_CONFIG_IS_ENUM_DISABLER_TYPE(t_Entry) *dummy_enum = NULL)
             {
                 reader.readElement(entry);
             }
@@ -98,10 +98,10 @@ namespace humoto
              */
             template <  class t_Reader,
                         class t_Entry>
-                void readEntry(  t_Reader & reader,
-                                        t_Entry &entry,
-                                        const std::string & entry_name,
-                                        const bool crash_on_missing_entry = false)
+                void readEntry( t_Reader & reader,
+                                t_Entry &entry,
+                                const std::string & entry_name,
+                                const bool crash_on_missing_entry = false)
             {
                 if (reader.descend(entry_name))
                 {
@@ -113,7 +113,7 @@ namespace humoto
                     {
                         HUMOTO_THROW_MSG(   std::string("Failed to parse entry <")
                                             + entry_name
-                                            + "> in the configuration file: "
+                                            + "> ||  "
                                             + e.what());
                     }
 

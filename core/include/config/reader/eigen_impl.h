@@ -32,9 +32,6 @@ namespace humoto
                                 Eigen::Matrix<t_Scalar, t_rows, 1, t_flags> &entry,
                                 const bool crash_on_missing_entry)
             {
-                HUMOTO_ASSERT(reader.isArray(), "Entry is not an array.");
-
-
                 std::size_t size = reader.startArray();
 
                 if (Eigen::Dynamic == t_rows)
@@ -50,6 +47,7 @@ namespace humoto
                 for(humoto::EigenIndex i = 0; i < (Eigen::Dynamic == t_rows ? entry.rows() : t_rows); ++i)
                 {
                     readBody(reader,entry[i]);
+                    reader.shiftArray();
                 }
                 reader.endArray();
             }
@@ -92,11 +90,9 @@ namespace humoto
                     Eigen::Matrix<  double,
                                     Eigen::Dynamic,
                                     Eigen::Dynamic,
-                                    Eigen::Matrix<t_Scalar, t_rows, t_cols, t_flags>::IsRowMajor
-                                        ? Eigen::RowMajor
-                                        : Eigen::ColMajor> >    map(v.data(),
-                                                                num_rows,
-                                                                num_cols);
+                                    Eigen::RowMajor> >  map(v.data(),
+                                                        num_rows,
+                                                        num_cols);
                 entry = map;
             }
         }

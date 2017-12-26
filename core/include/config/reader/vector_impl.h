@@ -31,12 +31,11 @@ namespace humoto
                                         std::vector<t_VectorEntryType> & entry,
                                         const bool crash_on_missing_entry)
             {
-                HUMOTO_ASSERT(reader.isArray(), "Entry is not an array.");
-
                 entry.resize(reader.startArray());
                 for(std::size_t i = 0; i < entry.size(); ++i)
                 {
                     readBody(reader, entry[i], crash_on_missing_entry);
+                    reader.shiftArray();
                 }
                 reader.endArray();
             }

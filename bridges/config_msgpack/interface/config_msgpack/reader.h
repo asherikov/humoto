@@ -18,14 +18,10 @@ namespace humoto
             /**
              * @brief Configuration reader class
              */
-            class HUMOTO_LOCAL Reader
+            class HUMOTO_LOCAL Reader : public humoto::config::ReaderBase
             {
                 protected:
-                    enum Status
-                    {
-                        UNDEFINED = 0,
-                        IN_ARRAY = 1
-                    };
+                    typedef humoto::config::Node< ::msgpack::object > NodeWrapper;
 
 
                 protected:
@@ -34,10 +30,7 @@ namespace humoto
                     std::vector< boost::shared_ptr< ::msgpack::object_handle >  >           handles_;
 
                     /// Stack of nodes.
-                    std::stack< const ::msgpack::object * >     node_stack_;
-
-                    std::vector< std::size_t >             array_counters_;
-                    Status      status_;
+                    std::vector<NodeWrapper>    node_stack_;
 
 
                 protected:
@@ -50,16 +43,7 @@ namespace humoto
                     {
                         std::ifstream config_ifs_;
 
-                        config_ifs_.open(file_name.c_str());
-                        if (!config_ifs_.good())
-                        {
-                            std::string file_name_default = std::string(HUMOTO_DEFAULT_CONFIG_PREFIX) + file_name;
-                            config_ifs_.open(file_name_default.c_str());
-                        }
-                        if (!config_ifs_.good())
-                        {
-                            HUMOTO_THROW_MSG(std::string("Could not open configuration file: ") +  file_name.c_str());
-                        }
+                        ReaderBase::openFile(config_ifs_, file_name);
 
 
                         std::stringstream   str_stream;
@@ -91,41 +75,22 @@ namespace humoto
                      *
                      * @return pointer to the current node
                      */
-                    const ::msgpack::object * getCurrentNode() const
+                    const ::msgpack::object & getRawNode(const std::size_t depth)
                     {
-                        return(node_stack_.top());
-                    }
-
-
-                    template<class t_Node>
-                    std::size_t getArraySize(t_Node & node, const std::size_t depth)
-                    {
-                        if ( depth == array_counters_.size()-1 )
+                        if (node_stack_[depth].isArray())
                         {
-                            return(node.via.array.size);
+                            return(getRawNode(depth-1).via.array.ptr[node_stack_[depth].index_]);
                         }
                         else
                         {
-                            return(getArraySize(node.via.array.ptr[ array_counters_[depth] ], depth + 1));
+                            return(*node_stack_[depth].node_);
                         }
                     }
 
 
-                    template<   class t_ElementType,
-                                class t_NodeType>
-                        void readArrayElement(  t_ElementType &element,
-                                                t_NodeType &node,
-                                                const std::size_t depth)
+                    const ::msgpack::object & getRawNode()
                     {
-                        if ( depth == array_counters_.size()-1 )
-                        {
-                            node.via.array.ptr[ array_counters_[depth] ] >> element;
-                            ++array_counters_[depth];
-                        }
-                        else
-                        {
-                            readArrayElement(element, node.via.array.ptr[ array_counters_[depth] ], depth + 1);
-                        }
+                        return(getRawNode(node_stack_.size()-1));
                     }
 
 
@@ -168,7 +133,7 @@ namespace humoto
                                     {
                                         if (::msgpack::type::MAP == handles_[i]->get().via.map.ptr[0].val.type)
                                         {
-                                            node_stack_.push( &(handles_[i]->get().via.map.ptr[0].val) );
+                                            node_stack_.push_back( NodeWrapper( &(handles_[i]->get().via.map.ptr[0].val) ) );
                                             return(true);
                                         }
                                     }
@@ -177,13 +142,13 @@ namespace humoto
                         }
                         else
                         {
-                            if (::msgpack::type::MAP == getCurrentNode()->type)
+                            if (::msgpack::type::MAP == getRawNode().type)
                             {
-                                for (std::size_t i = 0; i < getCurrentNode()->via.map.size; ++i)
+                                for (std::size_t i = 0; i < getRawNode().via.map.size; ++i)
                                 {
-                                    if (child_name == getCurrentNode()->via.map.ptr[i].key.as<std::string>())
+                                    if (child_name == getRawNode().via.map.ptr[i].key.as<std::string>())
                                     {
-                                        node_stack_.push( &(getCurrentNode()->via.map.ptr[i].val) );
+                                        node_stack_.push_back( NodeWrapper( &(getRawNode().via.map.ptr[i].val) ) );
                                         return(true);
                                     }
                                 }
@@ -199,52 +164,38 @@ namespace humoto
                      */
                     void ascend()
                     {
-                        node_stack_.pop();
+                        node_stack_.pop_back();
                     }
 
 
                     std::size_t startArray()
                     {
-                        status_ = IN_ARRAY;
-                        array_counters_.push_back(0);
+                        std::size_t size = getRawNode().via.array.size;
+                        node_stack_.push_back(NodeWrapper(0, size));
 
-                        return(getArraySize(*getCurrentNode(), 0));
+                        return(size);
                     }
+
 
                     void endArray()
                     {
-                        array_counters_.pop_back();
-                        if (0 == array_counters_.size())
-                        {
-                            status_ = UNDEFINED;
-                        }
-                        else
-                        {
-                            ++array_counters_.back();
-                        }
+                        node_stack_.pop_back();
                     }
 
 
-                    bool isArray() const
+                    void shiftArray()
                     {
-                        return(::msgpack::type::ARRAY == getCurrentNode()->type);
+                        if (node_stack_.back().isArray())
+                        {
+                            ++node_stack_.back().index_;
+                        }
                     }
 
 
                     template<class t_ElementType>
                         void readElement(t_ElementType &element)
                     {
-                        if (IN_ARRAY == status_)
-                        {
-                            readArrayElement(element, *getCurrentNode(), 0);
-                            //node[ array_counters_[depth] ] >> element;
-                            //getCurrentNode()->via.array.ptr[array_counters_.top()] >> element;
-                            //++array_counters_.top();
-                        }
-                        else
-                        {
-                            *getCurrentNode() >> element;
-                        }
+                        getRawNode() >> element;
                     }
             };
         }

@@ -68,9 +68,12 @@ namespace humoto
 
                 writer.descend("data");
                 writer.startArray(entry.size());
-                for (humoto::EigenIndex i = 0; i < entry.size(); ++i)
+                for (humoto::EigenIndex i = 0; i < entry.rows(); ++i)
                 {
-                    writer.writeElement(entry.data()[i]);
+                    for (humoto::EigenIndex j = 0; j < entry.cols(); ++j)
+                    {
+                        writer.writeElement(entry(i, j));
+                    }
                 }
                 writer.endArray();
                 writer.ascend();

@@ -109,6 +109,38 @@ namespace
                 }
             }
     };
+
+
+    class TypeContainerVector : public humoto::config::ConfigurableBase
+    {
+        #define HUMOTO_CONFIG_SECTION_ID "TypeContainerVector"
+        #define HUMOTO_CONFIG_CONSTRUCTOR TypeContainerVector
+        #define HUMOTO_CONFIG_ENTRIES \
+            HUMOTO_CONFIG_ENTRY_(vector)
+        #include HUMOTO_CONFIG_DEFINE_ACCESSORS
+
+        public:
+            std::vector<TypeContainer> vector_;
+
+
+        public:
+            TypeContainerVector()
+            {
+                setDefaults();
+            }
+
+
+            void setDefaults()
+            {
+                vector_.resize(3);
+
+                vector_.resize(4);
+                for(std::size_t i = 0; i < vector_.size(); ++i)
+                {
+                    vector_[i].integer_ = i;
+                }
+            }
+    };
 }
 
 
@@ -244,6 +276,27 @@ class ConfigMatchTest : public ::testing::Test
             compare(type_container_out1, type_container_in1);
             compare(type_container_out2, type_container_in2);
         }
+
+
+        template<class t_Reader, class t_Writer>
+            void testVector()
+        {
+            TypeContainerVector type_container_vector_out;
+            type_container_vector_out.writeConfig<t_Writer>("type_container_vector_config_match_simple.cfg");
+
+            // -------
+
+            TypeContainerVector type_container_vector_in;
+            type_container_vector_in.readConfig<t_Reader>("type_container_vector_config_match_simple.cfg");
+
+            // -------
+
+            EXPECT_EQ(type_container_vector_out.vector_.size(), type_container_vector_in.vector_.size());
+            for(std::size_t i = 0; i < type_container_vector_out.vector_.size(); ++i)
+            {
+                compare(type_container_vector_out.vector_[i], type_container_vector_in.vector_[i]);
+            }
+        }
 };
 
 
@@ -288,6 +341,17 @@ TEST_F(ConfigMatchTest, ConfigMatchMultiMSGPACK)
     testMulti<humoto::config::msgpack::Reader, humoto::config::msgpack::Writer>();
 }
 
+
+TEST_F(ConfigMatchTest, ConfigMatchVectorYAML)
+{
+    testVector<humoto::config::yaml::Reader, humoto::config::yaml::Writer>();
+}
+
+
+TEST_F(ConfigMatchTest, ConfigMatchVectorMSGPACK)
+{
+    testVector<humoto::config::msgpack::Reader, humoto::config::msgpack::Writer>();
+}
 
 
 /**

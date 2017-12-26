@@ -19,14 +19,10 @@ namespace humoto
             /**
              * @brief Configuration reader class
              */
-            class HUMOTO_LOCAL Reader
+            class HUMOTO_LOCAL Reader : public humoto::config::ReaderBase
             {
                 protected:
-                    enum Status
-                    {
-                        UNDEFINED = 0,
-                        IN_ARRAY = 1
-                    };
+                    typedef humoto::config::Node<YAML::Node> NodeWrapper;
 
 
                 protected:
@@ -40,10 +36,7 @@ namespace humoto
                     YAML::Node    root_node_;
 
                     /// Stack of nodes.
-                    std::stack<const YAML::Node *>    node_stack_;
-
-                    std::vector< std::size_t >        array_counters_;
-                    Status      status_;
+                    std::vector<NodeWrapper>    node_stack_;
 
 
                 protected:
@@ -54,20 +47,11 @@ namespace humoto
                      */
                     void openFile(const std::string& file_name)
                     {
-                        config_ifs_.open(file_name.c_str());
-                        if (!config_ifs_.good())
-                        {
-                            std::string file_name_default = std::string(HUMOTO_DEFAULT_CONFIG_PREFIX) + file_name;
-                            config_ifs_.open(file_name_default.c_str());
-                        }
-                        if (!config_ifs_.good())
-                        {
-                            HUMOTO_THROW_MSG(std::string("Could not open configuration file: ") +  file_name.c_str());
-                        }
+                        ReaderBase::openFile(config_ifs_, file_name);
 
                         parser_.Load(config_ifs_),
                         parser_.GetNextDocument(root_node_);
-                        node_stack_.push(&root_node_);
+                        node_stack_.push_back(NodeWrapper(&root_node_));
                     }
 
 
@@ -76,42 +60,24 @@ namespace humoto
                      *
                      * @return pointer to the current node
                      */
-                    const YAML::Node * getCurrentNode()
+                    const YAML::Node & getRawNode(const std::size_t depth)
                     {
-                        return(node_stack_.top());
-                    }
-
-
-                    template<class t_Node>
-                    std::size_t getArraySize(t_Node & node, const std::size_t depth)
-                    {
-                        if ( depth == array_counters_.size()-1 )
+                        if (node_stack_[depth].isArray())
                         {
-                            return(node.size());
+                            return(getRawNode(depth-1)[node_stack_[depth].index_]);
                         }
                         else
                         {
-                            return(getArraySize(node[ array_counters_[depth] ], depth + 1));
+                            return(*node_stack_[depth].node_);
                         }
                     }
 
 
-                    template<   class t_ElementType,
-                                class t_NodeType>
-                        void readArrayElement(  t_ElementType &element,
-                                                t_NodeType &node,
-                                                const std::size_t depth)
+                    const YAML::Node & getRawNode()
                     {
-                        if ( depth == array_counters_.size()-1 )
-                        {
-                            node[ array_counters_[depth] ] >> element;
-                            ++array_counters_[depth];
-                        }
-                        else
-                        {
-                            readArrayElement(element, node[ array_counters_[depth] ], depth + 1);
-                        }
+                        return(getRawNode(node_stack_.size()-1));
                     }
+
 
 
                 public:
@@ -143,7 +109,7 @@ namespace humoto
                      */
                     bool descend(const std::string & child_name)
                     {
-                        const YAML::Node * child = getCurrentNode()->FindValue(child_name);
+                        const YAML::Node * child = getRawNode().FindValue(child_name);
 
                         if (child == NULL)
                         {
@@ -151,7 +117,7 @@ namespace humoto
                         }
                         else
                         {
-                            node_stack_.push(child);
+                            node_stack_.push_back(NodeWrapper(child));
                             return(true);
                         }
                     }
@@ -162,49 +128,38 @@ namespace humoto
                      */
                     void ascend()
                     {
-                        node_stack_.pop();
-                    }
-
-
-                    bool isArray()
-                    {
-                        return(YAML::NodeType::Sequence == getCurrentNode()->Type());
+                        node_stack_.pop_back();
                     }
 
 
                     std::size_t startArray()
                     {
-                        status_ = IN_ARRAY;
-                        array_counters_.push_back(0);
+                        std::size_t size = getRawNode().size();
+                        node_stack_.push_back(NodeWrapper(0, size));
 
-                        return(getArraySize(*getCurrentNode(), 0));
+                        return(size);
                     }
+
+
+                    void shiftArray()
+                    {
+                        if (node_stack_.back().isArray())
+                        {
+                            ++node_stack_.back().index_;
+                        }
+                    }
+
 
                     void endArray()
                     {
-                        array_counters_.pop_back();
-                        if (0 == array_counters_.size())
-                        {
-                            status_ = UNDEFINED;
-                        }
-                        else
-                        {
-                            ++array_counters_.back();
-                        }
+                        node_stack_.pop_back();
                     }
 
 
                     template<class t_ElementType>
                         void readElement(t_ElementType &element)
                     {
-                        if (IN_ARRAY == status_)
-                        {
-                            readArrayElement(element, *getCurrentNode(), 0);
-                        }
-                        else
-                        {
-                            *getCurrentNode() >> element;
-                        }
+                        getRawNode() >> element;
                     }
             };
         }
