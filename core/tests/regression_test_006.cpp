@@ -22,6 +22,13 @@ namespace
 {
     const double g_tolerance = 1e-12;
 
+    enum SomeEnum
+    {
+        UNDEFINED = 0,
+        SOME_VALUE = 1,
+        ANOTHER_VALUE = 2
+    };
+
 
     class Configurable : public humoto::config::ConfigurableBase
     {
@@ -37,7 +44,8 @@ namespace
             HUMOTO_CONFIG_ENTRY_(std_nested_vector) \
             HUMOTO_CONFIG_ENTRY_(string) \
             HUMOTO_CONFIG_ENTRY_(std_vector_evector) \
-            HUMOTO_CONFIG_ENTRY_(std_nested_vector_evector)
+            HUMOTO_CONFIG_ENTRY_(std_nested_vector_evector) \
+            HUMOTO_CONFIG_ENTRY_(enum)
         #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
@@ -56,6 +64,8 @@ namespace
 
             std::vector<Eigen::Vector3d>                std_vector_evector_;
             std::vector< std::vector<Eigen::Vector3d> > std_nested_vector_evector_;
+
+            SomeEnum enum_;
 
 
         public:
@@ -109,6 +119,8 @@ namespace
                         std_nested_vector_evector_[i][j].setConstant(5.2 + i*0.1 + j*0.3);
                     }
                 }
+
+                enum_ = ANOTHER_VALUE;
             }
     };
 
@@ -127,7 +139,8 @@ namespace
             HUMOTO_CONFIG_TYPED_ENTRY_(std_vector,          std::vector<double>) \
             HUMOTO_CONFIG_TYPED_ENTRY_(std_nested_vector,   std::vector< std::vector<double> >) \
             HUMOTO_CONFIG_TYPED_ENTRY_(std_vector_evector,  std::vector<Eigen::Vector3d>) \
-            HUMOTO_CONFIG_TYPED_ENTRY_(std_nested_vector_evector, std::vector< std::vector<Eigen::Vector3d> >)
+            HUMOTO_CONFIG_TYPED_ENTRY_(std_nested_vector_evector, std::vector< std::vector<Eigen::Vector3d> >)\
+            HUMOTO_CONFIG_TYPED_ENTRY_(enum, SomeEnum)
         #include HUMOTO_CONFIG_DEFINE_ACCESSORS
 
 
@@ -182,6 +195,8 @@ namespace
                         std_nested_vector_evector_[i][j].setConstant(5.2 + i*0.1 + j*0.3);
                     }
                 }
+
+                enum_ = ANOTHER_VALUE;
             }
     };
 

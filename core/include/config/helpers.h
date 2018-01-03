@@ -12,16 +12,23 @@
 
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 #include <boost/type_traits/is_enum.hpp>
-
-
-#define HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(Base, Derived) \
-    const typename boost::enable_if_c< !(boost::is_base_of<Base, Derived>::value) >::type
 
 
 #define HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(Enum) \
     const typename boost::enable_if_c< (boost::is_enum<Enum>::value) >::type
 
-#define HUMOTO_CONFIG_IS_ENUM_DISABLER_TYPE(Enum) \
-    const typename boost::enable_if_c< !(boost::is_enum<Enum>::value) >::type
+
+#define HUMOTO_CONFIG_BASIC_TYPES_LIST \
+    HUMOTO_CONFIG_BASIC_TYPE(std::string) \
+    HUMOTO_CONFIG_BASIC_TYPE(float) \
+    HUMOTO_CONFIG_BASIC_TYPE(double) \
+    HUMOTO_CONFIG_BASIC_TYPE(int) \
+    HUMOTO_CONFIG_BASIC_TYPE(unsigned int) \
+    HUMOTO_CONFIG_BASIC_TYPE(short) \
+    HUMOTO_CONFIG_BASIC_TYPE(unsigned short) \
+    HUMOTO_CONFIG_BASIC_TYPE(long) \
+    HUMOTO_CONFIG_BASIC_TYPE(unsigned long) \
+    HUMOTO_CONFIG_BASIC_TYPE(char) \
+    HUMOTO_CONFIG_BASIC_TYPE(unsigned char) \
+    HUMOTO_CONFIG_BASIC_TYPE(bool)

@@ -31,8 +31,6 @@ namespace humoto
                         typename t_Enumeration>
                 void writeBody( t_Writer & writer,
                                 const t_Enumeration  entry,
-                                HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                        humoto::config::CommonConfigurableBase, t_Enumeration) *dummy_base = NULL,
                                 HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
             {
                 int tmp_value = entry;
@@ -50,16 +48,18 @@ namespace humoto
             }
 
 
-            template <  class t_Writer,
-                        typename t_Entry>
-                void writeBody( t_Writer & writer,
-                                const t_Entry & entry,
-                                HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                        humoto::config::CommonConfigurableBase, t_Entry) *dummy_base = NULL,
-                                HUMOTO_CONFIG_IS_ENUM_DISABLER_TYPE(t_Entry) *dummy_enum = NULL)
-            {
-                writer.writeElement(entry);
-            }
+
+            #define HUMOTO_CONFIG_BASIC_TYPE(type) \
+                    template <class t_Writer> \
+                        void writeBody( t_Writer &  writer,\
+                                        const type & entry) \
+                    {\
+                        writer.writeElement(entry);\
+                    }
+
+            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_BASIC_TYPES_LIST)
+
+            #undef HUMOTO_CONFIG_BASIC_TYPE
 
 
 

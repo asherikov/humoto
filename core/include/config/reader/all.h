@@ -51,9 +51,6 @@ namespace humoto
                 void readBody(  t_Reader & reader,
                                 t_Enumeration &entry,
                                 const bool crash_on_missing_entry = false,
-                                // disable this function for CommonConfigurableBase
-                                HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                    humoto::config::CommonConfigurableBase, t_Enumeration) *dummy_base = NULL,
                                 // ENABLE this function for enums
                                 HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
             {
@@ -63,27 +60,18 @@ namespace humoto
             }
 
 
-            /**
-             * @brief Read configuration entry (scalar template)
-             *
-             * @tparam t_Entry type of the entry
-             *
-             * @param[out] entry     configuration parameter
-             * @param[in] crash_on_missing_entry
-             */
-            template <  class t_Reader,
-                        typename t_Entry>
-                void readBody(  t_Reader & reader,
-                                t_Entry &entry,
-                                const bool crash_on_missing_entry = false,
-                                // disable this function for CommonConfigurableBase
-                                HUMOTO_CONFIG_IS_BASE_OF_DISABLER_TYPE(
-                                    humoto::config::CommonConfigurableBase, t_Entry) *dummy_base = NULL,
-                                // disable this function for enums
-                                HUMOTO_CONFIG_IS_ENUM_DISABLER_TYPE(t_Entry) *dummy_enum = NULL)
-            {
-                reader.readElement(entry);
-            }
+            #define HUMOTO_CONFIG_BASIC_TYPE(type) \
+                    template <  class t_Reader> \
+                        void readBody(  t_Reader & reader, \
+                                        type &entry, \
+                                        const bool crash_on_missing_entry = false) \
+                    { \
+                        reader.readElement(entry);\
+                    }
+
+            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_BASIC_TYPES_LIST)
+
+            #undef HUMOTO_CONFIG_BASIC_TYPE
 
 
 
