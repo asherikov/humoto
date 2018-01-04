@@ -19,7 +19,7 @@ namespace humoto
             /**
              * @brief Configuration writer class
              */
-            class HUMOTO_LOCAL Writer
+            class ARILES_VISIBILITY_ATTRIBUTE Writer
             {
                 protected:
                     /// output file stream
@@ -63,7 +63,7 @@ namespace humoto
 
                         if (!config_ofs_.good())
                         {
-                            HUMOTO_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
+                            ARILES_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
                         }
 
                         initEmitter();

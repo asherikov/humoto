@@ -10,13 +10,13 @@
 
 #pragma once
 
-#ifdef HUMOTO_CONFIG_INCLUDED
-    #error "This header must be included before humoto.h"
+#if defined(ARILES_ENABLED) || defined(ARILES_DISABLED)
+    #error "This header must be included before config.h"
 #endif
 
 
-#include "humoto_helpers.h"
-#include "config/reader_base.h"
+#include "helpers.h"
+#include "reader_base.h"
 
 #include "yaml-cpp/yaml.h"
 
@@ -24,33 +24,33 @@
 #include "config_yaml/writer.h"
 
 
-#define HUMOTO_CONFIG_YAML_NAMESPACE yaml
+#define ARILES_YAML_NAMESPACE yaml
 
 
 // If something is stupid but it works, it is not stupid (c)
-#ifndef HUMOTO_CONFIG_NAMESPACE_0
-#   define HUMOTO_CONFIG_NAMESPACE_0 HUMOTO_CONFIG_YAML_NAMESPACE
+#ifndef ARILES_NAMESPACE_0
+#   define ARILES_NAMESPACE_0 ARILES_YAML_NAMESPACE
 #else
-#   ifndef HUMOTO_CONFIG_NAMESPACE_1
-#       define HUMOTO_CONFIG_NAMESPACE_1 HUMOTO_CONFIG_YAML_NAMESPACE
+#   ifndef ARILES_NAMESPACE_1
+#       define ARILES_NAMESPACE_1 ARILES_YAML_NAMESPACE
 #   else
-#       ifndef HUMOTO_CONFIG_NAMESPACE_2
-#           define HUMOTO_CONFIG_NAMESPACE_2 HUMOTO_CONFIG_YAML_NAMESPACE
+#       ifndef ARILES_NAMESPACE_2
+#           define ARILES_NAMESPACE_2 ARILES_YAML_NAMESPACE
 #       else
-#           ifndef HUMOTO_CONFIG_NAMESPACE_3
-#               define HUMOTO_CONFIG_NAMESPACE_3 HUMOTO_CONFIG_YAML_NAMESPACE
+#           ifndef ARILES_NAMESPACE_3
+#               define ARILES_NAMESPACE_3 ARILES_YAML_NAMESPACE
 #           else
-#               ifndef HUMOTO_CONFIG_NAMESPACE_4
-#                   define HUMOTO_CONFIG_NAMESPACE_4 HUMOTO_CONFIG_YAML_NAMESPACE
+#               ifndef ARILES_NAMESPACE_4
+#                   define ARILES_NAMESPACE_4 ARILES_YAML_NAMESPACE
 #               else
-#                   ifndef HUMOTO_CONFIG_NAMESPACE_5
-#                       define HUMOTO_CONFIG_NAMESPACE_5 HUMOTO_CONFIG_YAML_NAMESPACE
+#                   ifndef ARILES_NAMESPACE_5
+#                       define ARILES_NAMESPACE_5 ARILES_YAML_NAMESPACE
 #                   else
-#                       ifndef HUMOTO_CONFIG_NAMESPACE_6
-#                           define HUMOTO_CONFIG_NAMESPACE_6 HUMOTO_CONFIG_YAML_NAMESPACE
+#                       ifndef ARILES_NAMESPACE_6
+#                           define ARILES_NAMESPACE_6 ARILES_YAML_NAMESPACE
 #                       else
-#                           ifndef HUMOTO_CONFIG_NAMESPACE_7
-#                               define HUMOTO_CONFIG_NAMESPACE_7 HUMOTO_CONFIG_YAML_NAMESPACE
+#                           ifndef ARILES_NAMESPACE_7
+#                               define ARILES_NAMESPACE_7 ARILES_YAML_NAMESPACE
 #                           else
 #                               error "Too many config namespaces."
 #                           endif

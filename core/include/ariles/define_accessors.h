@@ -5,93 +5,93 @@
     (see @ref LICENSE or http://www.apache.org/licenses/LICENSE-2.0)
 
     @brief Inclusion of this file results in generation of functions which
-    read and write entries 'HUMOTO_CONFIG_ENTRIES' defined in the including
+    read and write entries 'ARILES_ENTRIES' defined in the including
     header from / to a configuration file.
 */
 
 
-#ifdef HUMOTO_USE_CONFIG
+#ifdef ARILES_ENABLED
 
-    #ifndef HUMOTO_DOXYGEN_PROCESSING
+    #ifndef ARILES_DOXYGEN_PROCESSING
     public:
-        #ifdef HUMOTO_CONFIG_ENTRIES
-            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)
-            #define HUMOTO_CONFIG_TYPED_NAMED_ENTRY(type, entry, name)  type    entry;
+        #ifdef ARILES_ENTRIES
+            #define ARILES_NAMED_ENTRY(entry, name)
+            #define ARILES_PARENT_CLASS(entry)
+            #define ARILES_TYPED_NAMED_ENTRY(type, entry, name)  type    entry;
 
-            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES)
+            ARILES_MACRO_SUBSTITUTE(ARILES_ENTRIES)
 
-            #undef HUMOTO_CONFIG_NAMED_ENTRY
-            #undef HUMOTO_CONFIG_PARENT_CLASS
-            #undef HUMOTO_CONFIG_TYPED_NAMED_ENTRY
+            #undef ARILES_NAMED_ENTRY
+            #undef ARILES_PARENT_CLASS
+            #undef ARILES_TYPED_NAMED_ENTRY
 
-            #define HUMOTO_CONFIG_TYPED_NAMED_ENTRY(type, entry, name)  HUMOTO_CONFIG_NAMED_ENTRY(entry, name)
+            #define ARILES_TYPED_NAMED_ENTRY(type, entry, name)  ARILES_NAMED_ENTRY(entry, name)
         #endif
 
 
     protected:
-        #ifdef HUMOTO_CONFIG_ENTRIES
+        #ifdef ARILES_ENTRIES
 
         // Define write methods
 
-            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  HUMOTO_CONFIG_WRITE_NAMED_ENTRY(entry, name)
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)       HUMOTO_CONFIG_WRITE_PARENT_CLASS(entry)
+            #define ARILES_NAMED_ENTRY(entry, name)  ARILES_WRITE_NAMED_ENTRY(entry, name)
+            #define ARILES_PARENT_CLASS(entry)       ARILES_WRITE_PARENT_CLASS(entry)
 
             template <class t_Writer>
                 void writeConfigEntriesTemplate(t_Writer & writer) const
             {
-                HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES)
+                ARILES_MACRO_SUBSTITUTE(ARILES_ENTRIES)
             }
 
-            #undef HUMOTO_CONFIG_NAMED_ENTRY
-            #undef HUMOTO_CONFIG_PARENT_CLASS
+            #undef ARILES_NAMED_ENTRY
+            #undef ARILES_PARENT_CLASS
 
 
         // Define read methods
 
-            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  HUMOTO_CONFIG_READ_NAMED_ENTRY(entry, name)
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)       HUMOTO_CONFIG_READ_PARENT_CLASS(entry)
+            #define ARILES_NAMED_ENTRY(entry, name)  ARILES_READ_NAMED_ENTRY(entry, name)
+            #define ARILES_PARENT_CLASS(entry)       ARILES_READ_PARENT_CLASS(entry)
 
             template <class t_Reader>
                 void readConfigEntriesTemplate( t_Reader & reader,
                                                 const bool crash_on_missing_entry = false)
             {
-                HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES)
+                ARILES_MACRO_SUBSTITUTE(ARILES_ENTRIES)
                 finalize();
             }
 
-            #undef HUMOTO_CONFIG_NAMED_ENTRY
-            #undef HUMOTO_CONFIG_PARENT_CLASS
+            #undef ARILES_NAMED_ENTRY
+            #undef ARILES_PARENT_CLASS
 
 
         // Count number of entries and define a function, which returns it.
 
-            #define HUMOTO_CONFIG_NAMED_ENTRY(entry, name)  +1
-            #define HUMOTO_CONFIG_PARENT_CLASS(entry)       +entry::getNumberOfEntries()
+            #define ARILES_NAMED_ENTRY(entry, name)  +1
+            #define ARILES_PARENT_CLASS(entry)       +entry::getNumberOfEntries()
 
             std::size_t getNumberOfEntries() const
             {
-                static const std::size_t    num_entries = (0 HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_ENTRIES) );
+                static const std::size_t    num_entries = (0 ARILES_MACRO_SUBSTITUTE(ARILES_ENTRIES) );
                 return(num_entries);
             }
 
-            #undef HUMOTO_CONFIG_NAMED_ENTRY
-            #undef HUMOTO_CONFIG_PARENT_CLASS
+            #undef ARILES_NAMED_ENTRY
+            #undef ARILES_PARENT_CLASS
 
 
-            #undef HUMOTO_CONFIG_TYPED_NAMED_ENTRY
+            #undef ARILES_TYPED_NAMED_ENTRY
         #endif
     #endif
 
 
     public:
         // Define constructors if requested
-        #ifdef HUMOTO_CONFIG_CONSTRUCTOR
+        #ifdef ARILES_CONSTRUCTOR
             /**
              * Define constructors for the given class.
              */
             template <class t_Reader>
-                HUMOTO_CONFIG_CONSTRUCTOR(
+                ARILES_CONSTRUCTOR(
                         t_Reader &reader,
                         const std::string &node_name,
                         const bool crash_on_missing_entry = true)
@@ -100,7 +100,7 @@
             }
 
             template <class t_Reader>
-                explicit HUMOTO_CONFIG_CONSTRUCTOR(
+                explicit ARILES_CONSTRUCTOR(
                         t_Reader &reader,
                         const bool crash_on_missing_entry = true)
             {
@@ -110,17 +110,17 @@
 
 
         // Define node name
-        #ifdef HUMOTO_CONFIG_SECTION_ID
+        #ifdef ARILES_SECTION_ID
             const std::string & getConfigSectionID() const
             {
-                static const std::string name(HUMOTO_CONFIG_SECTION_ID);
+                static const std::string name(ARILES_SECTION_ID);
                 return (name);
             }
         #endif
 
 
         // Format-specific stuff
-        #define HUMOTO_CONFIG_NAMESPACE(config_namespace) \
+        #define ARILES_NAMESPACE(config_namespace) \
             virtual void writeConfigEntries(humoto::config::config_namespace::Writer & writer) const \
             { \
                 writeConfigEntriesTemplate(writer); \
@@ -131,9 +131,9 @@
                 readConfigEntriesTemplate(reader, crash_flag);\
             }
 
-            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_NAMESPACE_LIST)
+            ARILES_MACRO_SUBSTITUTE(ARILES_NAMESPACE_LIST)
 
-        #undef HUMOTO_CONFIG_NAMESPACE
+        #undef ARILES_NAMESPACE
 
 
         /**
@@ -299,8 +299,8 @@
             writeConfig(writer, node_name);
         }
 
-#endif //HUMOTO_USE_CONFIG
+#endif //ARILES_ENABLED
 
-#undef HUMOTO_CONFIG_SECTION_ID
-#undef HUMOTO_CONFIG_CONSTRUCTOR
-#undef HUMOTO_CONFIG_ENTRIES
+#undef ARILES_SECTION_ID
+#undef ARILES_CONSTRUCTOR
+#undef ARILES_ENTRIES

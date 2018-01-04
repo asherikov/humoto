@@ -10,10 +10,39 @@
 
 #pragma once
 
+#define ARILES_ADAPTER_EIGEN
+
+#include <Eigen/Core>
+#include <Eigen/Geometry>
+
+
 namespace humoto
 {
     namespace config
     {
+        namespace reader
+        {
+            template <  class t_Reader,
+                        typename t_Scalar,
+                        int t_rows,
+                        int t_flags>
+                void ARILES_VISIBILITY_ATTRIBUTE
+                readBody(   t_Reader &reader,
+                            Eigen::Matrix<t_Scalar, t_rows, 1, t_flags> &entry,
+                            const bool crash_on_missing_entry = false);
+
+            template <  class t_Reader,
+                        typename t_Scalar,
+                        int t_rows,
+                        int t_cols,
+                        int t_flags>
+                void ARILES_VISIBILITY_ATTRIBUTE
+                readBody(   t_Reader & reader,
+                            Eigen::Matrix<t_Scalar, t_rows, t_cols, t_flags> &entry,
+                            const bool crash_on_missing_entry = false);
+        }
+
+
         namespace writer
         {
             /**
@@ -28,8 +57,9 @@ namespace humoto
                         typename t_Scalar,
                         int t_rows,
                         int t_flags>
-                void writeBody( t_Writer & writer,
-                                const Eigen::Matrix<t_Scalar, t_rows, 1, t_flags> &entry);
+                void ARILES_VISIBILITY_ATTRIBUTE
+                writeBody(  t_Writer & writer,
+                            const Eigen::Matrix<t_Scalar, t_rows, 1, t_flags> &entry);
 
 
 
@@ -49,8 +79,9 @@ namespace humoto
                         int t_rows,
                         int t_cols,
                         int t_flags>
-                void writeBody( t_Writer & writer,
-                                const Eigen::Matrix<t_Scalar, t_rows, t_cols, t_flags> &entry);
+                void ARILES_VISIBILITY_ATTRIBUTE
+                writeBody(  t_Writer & writer,
+                            const Eigen::Matrix<t_Scalar, t_rows, t_cols, t_flags> &entry);
         }
     }
 }

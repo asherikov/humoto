@@ -35,6 +35,14 @@
 /// @ingroup EigenTools
 namespace etools
 {
+    /**
+     * Index type used by Eigen. We should not use Eigen::DenseIndex since it
+     * is going to be deprecated in new versions of Eigen. May be EigenIndex
+     * should be defined depending on the version of Eigen.
+     */
+    typedef EIGEN_DEFAULT_DENSE_INDEX_TYPE                      EigenIndex;
+
+
     typedef double  DefaultScalar;
     //#define EIGENTOOLS_ENABLE_EIGENTYPE_DETECTION
 

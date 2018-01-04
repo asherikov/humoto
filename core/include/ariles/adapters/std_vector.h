@@ -10,10 +10,24 @@
 
 #pragma once
 
+#define ARILES_ADAPTER_STD_VECTOR
+
+#include <vector>
+
 namespace humoto
 {
     namespace config
     {
+        namespace reader
+        {
+            template <  class t_Reader,
+                        typename t_VectorEntryType>
+                void ARILES_VISIBILITY_ATTRIBUTE readBody(   t_Reader & reader,
+                                        std::vector<t_VectorEntryType> & entry,
+                                        const bool crash_on_missing_entry = false);
+        }
+
+
         namespace writer
         {
             /**
@@ -26,7 +40,7 @@ namespace humoto
              */
             template <  class t_Writer,
                         typename t_VectorEntryType>
-                void writeBody( t_Writer & writer,
+                void ARILES_VISIBILITY_ATTRIBUTE writeBody( t_Writer & writer,
                                 const std::vector<t_VectorEntryType> & entry);
         }
     }

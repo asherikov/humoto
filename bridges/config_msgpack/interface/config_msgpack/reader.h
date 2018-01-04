@@ -18,7 +18,7 @@ namespace humoto
             /**
              * @brief Configuration reader class
              */
-            class HUMOTO_LOCAL Reader : public humoto::config::ReaderBase
+            class ARILES_VISIBILITY_ATTRIBUTE Reader : public humoto::config::ReaderBase
             {
                 protected:
                     typedef humoto::config::Node< ::msgpack::object > NodeWrapper;
@@ -65,7 +65,7 @@ namespace humoto
                         }
                         catch(const std::exception &e)
                         {
-                            HUMOTO_THROW_MSG(std::string("Failed to parse the configuration file: ") + e.what());
+                            ARILES_THROW_MSG(std::string("Failed to parse the configuration file: ") + e.what());
                         }
                     }
 

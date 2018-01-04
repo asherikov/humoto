@@ -10,8 +10,6 @@
 
 #pragma once
 
-#include "eigen_decl.h"
-#include "vector_decl.h"
 
 namespace humoto
 {
@@ -28,7 +26,7 @@ namespace humoto
              * @param[in] crash_on_missing_entry
              */
             template <class t_Reader>
-                void readBody(   t_Reader  & reader,
+                void ARILES_VISIBILITY_ATTRIBUTE readBody(   t_Reader  & reader,
                                         humoto::config::CommonConfigurableBase & entry,
                                         const bool crash_on_missing_entry = false)
             {
@@ -48,11 +46,11 @@ namespace humoto
              */
             template <  class t_Reader,
                         typename t_Enumeration>
-                void readBody(  t_Reader & reader,
+                void ARILES_VISIBILITY_ATTRIBUTE readBody(  t_Reader & reader,
                                 t_Enumeration &entry,
                                 const bool crash_on_missing_entry = false,
                                 // ENABLE this function for enums
-                                HUMOTO_CONFIG_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
+                                ARILES_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
             {
                 int tmp_value = 0;
                 reader.readElement(tmp_value);
@@ -60,18 +58,18 @@ namespace humoto
             }
 
 
-            #define HUMOTO_CONFIG_BASIC_TYPE(type) \
+            #define ARILES_BASIC_TYPE(type) \
                     template <  class t_Reader> \
-                        void readBody(  t_Reader & reader, \
+                        void ARILES_VISIBILITY_ATTRIBUTE readBody(  t_Reader & reader, \
                                         type &entry, \
                                         const bool crash_on_missing_entry = false) \
                     { \
                         reader.readElement(entry);\
                     }
 
-            HUMOTO_MACRO_SUBSTITUTE(HUMOTO_CONFIG_BASIC_TYPES_LIST)
+            ARILES_MACRO_SUBSTITUTE(ARILES_BASIC_TYPES_LIST)
 
-            #undef HUMOTO_CONFIG_BASIC_TYPE
+            #undef ARILES_BASIC_TYPE
 
 
 
@@ -86,7 +84,7 @@ namespace humoto
              */
             template <  class t_Reader,
                         class t_Entry>
-                void readEntry( t_Reader & reader,
+                void ARILES_VISIBILITY_ATTRIBUTE readEntry( t_Reader & reader,
                                 t_Entry &entry,
                                 const std::string & entry_name,
                                 const bool crash_on_missing_entry = false)
@@ -99,7 +97,7 @@ namespace humoto
                     }
                     catch(const std::exception &e)
                     {
-                        HUMOTO_THROW_MSG(   std::string("Failed to parse entry <")
+                        ARILES_THROW_MSG(   std::string("Failed to parse entry <")
                                             + entry_name
                                             + "> ||  "
                                             + e.what());
@@ -111,13 +109,69 @@ namespace humoto
                 {
                     if (crash_on_missing_entry)
                     {
-                        HUMOTO_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
+                        ARILES_THROW_MSG(std::string("Configuration file does not contain entry '") + entry_name + "'.");
                     }
                 }
             }
         }
+
+
+        namespace writer
+        {
+            /**
+             * @brief Write a configuration entry (enum)
+             *
+             * @tparam t_EnumType type of the enum
+             *
+             * @param[in] entry      data
+             * @param[in] entry_name name
+             */
+            template <  class t_Writer,
+                        typename t_Enumeration>
+                void ARILES_VISIBILITY_ATTRIBUTE writeBody( t_Writer & writer,
+                                const t_Enumeration  entry,
+                                ARILES_IS_ENUM_ENABLER_TYPE(t_Enumeration) *dummy_enum = NULL)
+            {
+                int tmp_value = entry;
+                writer.writeElement(tmp_value);
+            }
+
+
+            template <  class t_Writer>
+                void ARILES_VISIBILITY_ATTRIBUTE writeBody( t_Writer & writer,
+                                const humoto::config::CommonConfigurableBase & entry)
+            {
+                writer.startMap(entry.getNumberOfEntries());
+                entry.writeConfigEntries(writer);
+                writer.endMap();
+            }
+
+
+
+            #define ARILES_BASIC_TYPE(type) \
+                    template <class t_Writer> \
+                        void ARILES_VISIBILITY_ATTRIBUTE writeBody( t_Writer &  writer,\
+                                        const type & entry) \
+                    {\
+                        writer.writeElement(entry);\
+                    }
+
+            ARILES_MACRO_SUBSTITUTE(ARILES_BASIC_TYPES_LIST)
+
+            #undef ARILES_BASIC_TYPE
+
+
+
+            template <  class t_Writer,
+                        typename t_Entry>
+                void ARILES_VISIBILITY_ATTRIBUTE writeEntry( t_Writer & writer,
+                                const t_Entry & entry,
+                                const std::string  & entry_name)
+            {
+                writer.descend(entry_name);
+                writeBody(writer, entry);
+                writer.ascend();
+            }
+        }
     }
 }
-
-#include "eigen_impl.h"
-#include "vector_impl.h"

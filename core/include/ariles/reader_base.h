@@ -7,13 +7,12 @@
 
 #pragma once
 
-
 namespace humoto
 {
     namespace config
     {
         template <class t_RawNode>
-            class Node
+            class ARILES_VISIBILITY_ATTRIBUTE Node
         {
             public:
                 const t_RawNode     *node_;
@@ -38,7 +37,7 @@ namespace humoto
         };
 
 
-        class ReaderBase
+        class ARILES_VISIBILITY_ATTRIBUTE ReaderBase
         {
             protected:
                 /**
@@ -52,12 +51,12 @@ namespace humoto
                     config_ifs_.open(file_name.c_str());
                     if (!config_ifs_.good())
                     {
-                        std::string file_name_default = std::string(HUMOTO_DEFAULT_CONFIG_PREFIX) + file_name;
+                        std::string file_name_default = std::string(ARILES_DEFAULT_CONFIG_PREFIX) + file_name;
                         config_ifs_.open(file_name_default.c_str());
                     }
                     if (!config_ifs_.good())
                     {
-                        HUMOTO_THROW_MSG(std::string("Could not open configuration file: ") +  file_name.c_str());
+                        ARILES_THROW_MSG(std::string("Could not open configuration file: ") +  file_name.c_str());
                     }
                 }
         };

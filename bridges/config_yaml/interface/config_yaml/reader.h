@@ -19,7 +19,7 @@ namespace humoto
             /**
              * @brief Configuration reader class
              */
-            class HUMOTO_LOCAL Reader : public humoto::config::ReaderBase
+            class ARILES_VISIBILITY_ATTRIBUTE Reader : public humoto::config::ReaderBase
             {
                 protected:
                     typedef humoto::config::Node<YAML::Node> NodeWrapper;

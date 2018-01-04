@@ -27,7 +27,7 @@ namespace humoto
              */
             template <  class t_Reader,
                         typename t_VectorEntryType>
-                void readBody(   t_Reader & reader,
+                void ARILES_VISIBILITY_ATTRIBUTE readBody(   t_Reader & reader,
                                         std::vector<t_VectorEntryType> & entry,
                                         const bool crash_on_missing_entry)
             {
@@ -40,6 +40,30 @@ namespace humoto
                 reader.endArray();
             }
         }
+
+
+        namespace writer
+        {
+            /**
+             * @brief Read configuration entry (std::vector)
+             *
+             * @tparam t_VectorEntryType type of the entry of std::vector
+             *
+             * @param[in] entry      data
+             * @param[in] entry_name name
+             */
+            template <  class t_Writer,
+                        typename t_VectorEntryType>
+                void ARILES_VISIBILITY_ATTRIBUTE writeBody( t_Writer & writer,
+                                const std::vector<t_VectorEntryType> & entry)
+            {
+                writer.startArray(entry.size());
+                for (std::size_t i = 0; i < entry.size(); ++i)
+                {
+                    writeBody(writer, entry[i]);
+                }
+                writer.endArray();
+            }
+        }
     }
 }
-

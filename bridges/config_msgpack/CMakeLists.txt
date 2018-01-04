@@ -28,9 +28,9 @@ humoto_add_external_git_project(TARGET_NAME "${TGT_MESSAGEPACK}"
                                 CMAKE_ARGS   ${MESSAGEPACK_ARGS})
 
 humoto_copy_file_if_exists( TGT_humoto_copy_headers                         "config_msgpack_h"
-                            "${MESSAGEPACK_INTERFACE_DIR}/config_msgpack.h" "${HUMOTO_INCLUDE_DIR}")
+                            "${MESSAGEPACK_INTERFACE_DIR}/config_msgpack.h" "${HUMOTO_INCLUDE_DIR}/ariles")
 humoto_copy_dir_if_exists(  TGT_humoto_copy_headers                         "config_msgpack_dir"
-                            "${MESSAGEPACK_INTERFACE_DIR}/config_msgpack"   "${HUMOTO_INCLUDE_DIR}/config_msgpack")
+                            "${MESSAGEPACK_INTERFACE_DIR}/config_msgpack"   "${HUMOTO_INCLUDE_DIR}/ariles/config_msgpack")
 
 
 set(HUMOTO_USE_CONFIG ON PARENT_SCOPE)

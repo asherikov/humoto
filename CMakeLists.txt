@@ -510,7 +510,8 @@ configure_file("cmake/humotoConfig.cmake.in"    "${PROJECT_BINARY_DIR}/humotoCon
 # but more flexible -- no need to know all possible variables in advance
 #----
 set(HUMOTO_BUILD_CONFIG
-"// __func__ ?
+"#pragma once
+// __func__ ?
 #cmakedefine HUMOTO_COMPILER_SUPPORTS_FUNC_
 // __FUNCTION__ ?
 #cmakedefine HUMOTO_COMPILER_SUPPORTS_FUNCTION_

@@ -20,9 +20,9 @@ humoto_add_external_git_project(TARGET_NAME "${TGT_YAMLCPP}"
                                 CMAKE_ARGS   ${YAMLCPP_ARGS})
 
 humoto_copy_file_if_exists( TGT_humoto_copy_headers                     "config_yaml_h"
-                            "${YAMLCPP_INTERFACE_DIR}/config_yaml.h"    "${HUMOTO_INCLUDE_DIR}")
+                            "${YAMLCPP_INTERFACE_DIR}/config_yaml.h"    "${HUMOTO_INCLUDE_DIR}/ariles/")
 humoto_copy_dir_if_exists(  TGT_humoto_copy_headers                     "config_yaml_dir"
-                            "${YAMLCPP_INTERFACE_DIR}/config_yaml"      "${HUMOTO_INCLUDE_DIR}/config_yaml")
+                            "${YAMLCPP_INTERFACE_DIR}/config_yaml"      "${HUMOTO_INCLUDE_DIR}/ariles/config_yaml")
 
 
 set(HUMOTO_USE_CONFIG ON PARENT_SCOPE)
