@@ -61,15 +61,12 @@
 #   endif
 #endif
 
-namespace humoto
+namespace ariles
 {
-    namespace config
+    /**
+     * @brief MessagePack bridge namespace.
+     */
+    namespace msgpack
     {
-        /**
-         * @brief MessagePack bridge namespace.
-         */
-        namespace msgpack
-        {
-        }
     }
 }

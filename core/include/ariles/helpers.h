@@ -19,11 +19,6 @@
 #include <boost/type_traits/is_enum.hpp>
 
 
-#ifndef ARILES_VISIBILITY_ATTRIBUTE
-#   define ARILES_VISIBILITY_ATTRIBUTE
-#endif
-
-
 #ifndef ARILES_DEFAULT_CONFIG_PREFIX
 #   define ARILES_DEFAULT_CONFIG_PREFIX     ""
 #endif
@@ -60,69 +55,25 @@
     ARILES_BASIC_TYPE(bool)
 
 
-#ifdef ARILES_DOXYGEN_PROCESSING
-    // enter this branch only during the documentation generation
+#ifndef ARILES_VISIBILITY_ATTRIBUTE
+// helper macro depending on the compiler
+#   if defined _WIN32 || defined __CYGWIN__
+#       define ARILES_LIB_IMPORT __declspec(dllimport)
+#       define ARILES_LIB_EXPORT __declspec(dllexport)
+#       define ARILES_LIB_LOCAL
+#   else
+#       if __GNUC__ >= 4
+#           define ARILES_LIB_IMPORT __attribute__ ((visibility ("default")))
+#           define ARILES_LIB_EXPORT __attribute__ ((visibility ("default")))
+#           define ARILES_LIB_LOCAL  __attribute__ ((visibility ("hidden")))
+#       else
+#           define ARILES_LIB_IMPORT
+#           define ARILES_LIB_EXPORT
+#           define ARILES_LIB_LOCAL
+#       endif
+#   endif
 
-    /**
-     * This macro sets visibility parameters of the classes that should be
-     * exported from the compiled library.
-     * This macro is defined automatically.
-     */
-    #define ARILES_API
+#   define ARILES_VISIBILITY_ATTRIBUTE ARILES_LIB_EXPORT
+#endif
 
-    /**
-     * This macro sets visibility parameters of the classes that should NOT be
-     * exported from the compiled library.
-     * This macro is defined automatically.
-     */
-    #define ARILES_LOCAL
 
-    /**
-     * This should be defined if humoto is compiled in a shared library to hide
-     * classes defied with ARILES_LOCAL.
-     */
-    #define ARILES_COMPILE_SHARED_LIB
-
-    /**
-     * This should be defined if some sources are compiled using a library
-     * containing humoto. This should be neccessary on WIN platforms, which we
-     * do not support currently.
-     */
-    #define ARILES_IMPORT_LIB
-
-#else
-
-    // helper macro depending on the compiler
-    #if defined _WIN32 || defined __CYGWIN__
-        #define ARILES_LIB_IMPORT __declspec(dllimport)
-        #define ARILES_LIB_EXPORT __declspec(dllexport)
-        #define ARILES_LIB_LOCAL
-    #else
-        #if __GNUC__ >= 4
-            #define ARILES_LIB_IMPORT __attribute__ ((visibility ("default")))
-            #define ARILES_LIB_EXPORT __attribute__ ((visibility ("default")))
-            #define ARILES_LIB_LOCAL  __attribute__ ((visibility ("hidden")))
-        #else
-            #define ARILES_LIB_IMPORT
-            #define ARILES_LIB_EXPORT
-            #define ARILES_LIB_LOCAL
-        #endif
-    #endif
-
-    #ifdef ARILES_COMPILE_SHARED_LIB
-        // compiled as a shared library (the default)
-        #define ARILES_LOCAL ARILES_LIB_LOCAL
-
-        #ifdef ARILES_IMPORT_LIB
-            // this apparently makes sense only in WIN
-            #define ARILES_API ARILES_LIB_IMPORT
-        #else
-            #define ARILES_API ARILES_LIB_EXPORT
-        #endif
-    #else
-        // compiled as a static library
-        #define ARILES_API
-        #define ARILES_LOCAL
-    #endif
-
-#endif // ARILES_DOXYGEN_PROCESSING

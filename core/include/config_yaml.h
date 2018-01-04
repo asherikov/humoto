@@ -7,10 +7,17 @@
 
 #pragma once
 
-#include "build_config.h"
+#ifndef ARILES_VISIBILITY_ATTRIBUTE
+#   include "build_config.h"
+#   include "export_import.h"
 
-#ifndef ARILES_DEFAULT_CONFIG_PREFIX
-#   define ARILES_DEFAULT_CONFIG_PREFIX    HUMOTO_DEFAULT_CONFIG_PREFIX
+#   define ARILES_VISIBILITY_ATTRIBUTE      HUMOTO_LOCAL
+#   define ARILES_DEFAULT_CONFIG_PREFIX     HUMOTO_DEFAULT_CONFIG_PREFIX
 #endif
 
 #include "ariles/config_yaml.h"
+
+namespace humoto
+{
+    namespace config = ::ariles;
+}

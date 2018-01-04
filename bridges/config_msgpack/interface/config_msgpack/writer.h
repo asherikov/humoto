@@ -9,128 +9,125 @@
 
 #pragma once
 
-namespace humoto
+namespace ariles
 {
-    namespace config
+    namespace msgpack
     {
-        namespace msgpack
+        /**
+         * @brief Configuration writer class
+         */
+        class ARILES_VISIBILITY_ATTRIBUTE Writer
         {
-            /**
-             * @brief Configuration writer class
-             */
-            class ARILES_VISIBILITY_ATTRIBUTE Writer
-            {
-                protected:
-                    /// output file stream
-                    std::ofstream   config_ofs_;
+            protected:
+                /// output file stream
+                std::ofstream   config_ofs_;
 
-                    ::msgpack::packer< std::ofstream > *packer_;
+                ::msgpack::packer< std::ofstream > *packer_;
 
 
-                public:
-                    /**
-                     * @brief Constructor
-                     *
-                     * @param[in] file_name
-                     */
-                    explicit Writer(const std::string& file_name)
+            public:
+                /**
+                 * @brief Constructor
+                 *
+                 * @param[in] file_name
+                 */
+                explicit Writer(const std::string& file_name)
+                {
+                    config_ofs_.open(file_name.c_str());
+
+                    if (!config_ofs_.good())
                     {
-                        config_ofs_.open(file_name.c_str());
-
-                        if (!config_ofs_.good())
-                        {
-                            ARILES_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
-                        }
-
-                        packer_ = new ::msgpack::packer< std::ofstream >(config_ofs_);
+                        ARILES_THROW_MSG(std::string("Could not open configuration file for writing: ") +  file_name.c_str());
                     }
 
-
-                    /**
-                     * @brief Destructor
-                     */
-                    ~Writer()
-                    {
-                        delete packer_;
-                    }
+                    packer_ = new ::msgpack::packer< std::ofstream >(config_ofs_);
+                }
 
 
-                    /**
-                     * @brief Starts a nested map in the configuration file
-                     *
-                     * @param[in] map_name name of the map
-                     */
-                    void descend(const std::string &map_name)
-                    {
-                        packer_->pack(map_name);
-                    }
+                /**
+                 * @brief Destructor
+                 */
+                ~Writer()
+                {
+                    delete packer_;
+                }
 
 
-                    /**
-                     * @brief Starts a nested map in the configuration file
-                     *
-                     * @param[in] map_name name of the map
-                     * @param[in] num_entries number of child entries
-                     */
-                    void startMap(const std::size_t num_entries)
-                    {
-                        packer_->pack_map(num_entries);
-                    }
-
-                    void endMap()
-                    {
-                    }
-
-                    /**
-                     * @brief Starts a nested map in the configuration file
-                     */
-                    void initRoot()
-                    {
-                        packer_->pack_map(1);
-                    }
+                /**
+                 * @brief Starts a nested map in the configuration file
+                 *
+                 * @param[in] map_name name of the map
+                 */
+                void descend(const std::string &map_name)
+                {
+                    packer_->pack(map_name);
+                }
 
 
-                    /**
-                     * @brief Ends a nested map in the configuration file
-                     */
-                    void ascend()
-                    {
-                    }
+                /**
+                 * @brief Starts a nested map in the configuration file
+                 *
+                 * @param[in] map_name name of the map
+                 * @param[in] num_entries number of child entries
+                 */
+                void startMap(const std::size_t num_entries)
+                {
+                    packer_->pack_map(num_entries);
+                }
+
+                void endMap()
+                {
+                }
+
+                /**
+                 * @brief Starts a nested map in the configuration file
+                 */
+                void initRoot()
+                {
+                    packer_->pack_map(1);
+                }
 
 
-                    /**
-                     * @brief Flush the configuration to the file
-                     */
-                    void flush()
-                    {
-                        config_ofs_.flush();
-                    }
+                /**
+                 * @brief Ends a nested map in the configuration file
+                 */
+                void ascend()
+                {
+                }
 
 
-                    void startArray(const std::size_t size)
-                    {
-                        ARILES_ASSERT(size <= std::numeric_limits<uint32_t>::max(), "Vector is too long.");
-
-                        packer_->pack_array(size);
-                    }
-
-
-                    void endArray() const {}
+                /**
+                 * @brief Flush the configuration to the file
+                 */
+                void flush()
+                {
+                    config_ofs_.flush();
+                }
 
 
-                    /**
-                     * @brief Write a configuration entry (scalar template)
-                     *
-                     * @tparam t_EntryType type of the entry
-                     *
-                     * @param[in] entry      data
-                     */
-                    template<class t_Element>
-                        void writeElement(const t_Element & element)
-                    {
-                        packer_->pack(element);
-                    }
-            };
-        }
+                void startArray(const std::size_t size)
+                {
+                    ARILES_ASSERT(size <= std::numeric_limits<uint32_t>::max(), "Vector is too long.");
+
+                    packer_->pack_array(size);
+                }
+
+
+                void endArray() const {}
+
+
+                /**
+                 * @brief Write a configuration entry (scalar template)
+                 *
+                 * @tparam t_EntryType type of the entry
+                 *
+                 * @param[in] entry      data
+                 */
+                template<class t_Element>
+                    void writeElement(const t_Element & element)
+                {
+                    packer_->pack(element);
+                }
+        };
     }
 }

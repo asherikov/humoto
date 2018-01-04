@@ -63,15 +63,12 @@
 #endif
 
 
-namespace humoto
+namespace ariles
 {
-    namespace config
+    /**
+     * @brief YAML bridge namespace.
+     */
+    namespace yaml
     {
-        /**
-         * @brief YAML bridge namespace.
-         */
-        namespace yaml
-        {
-        }
     }
 }

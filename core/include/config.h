@@ -11,12 +11,27 @@
 
 #pragma once
 
+
 #ifdef HUMOTO_DOXYGEN_PROCESSING
 #   define ARILES_DOXYGEN_PROCESSING
 #endif
 
+#ifndef ARILES_VISIBILITY_ATTRIBUTE
+#   define ARILES_VISIBILITY_ATTRIBUTE  HUMOTO_LOCAL
+#endif
+
 #include "ariles/adapters_all.h"
 #include "ariles/ariles.h"
+
+
+namespace humoto
+{
+    /**
+     * @brief Namespace of classes related to configuration handling
+     */
+    namespace config = ::ariles;
+}
+
 
 #ifdef ARILES_ENABLED
 #   define HUMOTO_USE_CONFIG

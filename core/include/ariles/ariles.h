@@ -9,17 +9,6 @@
 
 #pragma once
 
-namespace humoto
-{
-    /**
-     * @brief Namespace of classes related to configuration handling
-     */
-    namespace config
-    {
-    }
-}
-
-
 #ifdef ARILES_NAMESPACE_0
 #   define ARILES_ENABLED
 
@@ -35,7 +24,7 @@ namespace humoto
     #define ARILES_TYPED_ENTRY(entry, type)  ARILES_TYPED_NAMED_ENTRY(type, entry, #entry)
 
 
-    #define ARILES_WRITE_NAMED_ENTRY(entry, name)    humoto::config::writer::writeEntry(writer, entry, name);
+    #define ARILES_WRITE_NAMED_ENTRY(entry, name)    ariles::writer::writeEntry(writer, entry, name);
 
     #define ARILES_WRITE_ENTRY_(entry)   ARILES_WRITE_NAMED_ENTRY(entry##_, #entry)
     #define ARILES_WRITE_ENTRY(entry)    ARILES_WRITE_NAMED_ENTRY(entry, #entry)
@@ -43,7 +32,7 @@ namespace humoto
     #define ARILES_WRITE_PARENT_CLASS(parent_class)  parent_class::writeConfigEntries(writer);
 
 
-    #define ARILES_READ_NAMED_ENTRY(entry, name)  humoto::config::reader::readEntry(reader, entry, name, crash_on_missing_entry);
+    #define ARILES_READ_NAMED_ENTRY(entry, name)  ariles::reader::readEntry(reader, entry, name, crash_on_missing_entry);
 
     #define ARILES_READ_ENTRY_(entry)    ARILES_READ_NAMED_ENTRY(entry##_, #entry);
     #define ARILES_READ_ENTRY(entry)     ARILES_READ_NAMED_ENTRY(entry, #entry);
@@ -52,122 +41,119 @@ namespace humoto
 
     // ----------------------------
 
-    namespace humoto
+    namespace ariles
     {
-        namespace config
+        /**
+         * @brief Configurable base class.
+         */
+        class ARILES_VISIBILITY_ATTRIBUTE CommonConfigurableBase
         {
-            /**
-             * @brief Configurable base class.
-             */
-            class ARILES_VISIBILITY_ATTRIBUTE CommonConfigurableBase
-            {
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the child
-                     * classes through a base pointer.
-                     */
-                    ~CommonConfigurableBase() {}
-                    CommonConfigurableBase() {}
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the child
+                 * classes through a base pointer.
+                 */
+                ~CommonConfigurableBase() {}
+                CommonConfigurableBase() {}
 
 
-                    virtual bool getCrashOnMissingEntryFlag() = 0;
+                virtual bool getCrashOnMissingEntryFlag() = 0;
 
 
-                public:
-                    /**
-                     * @brief Return the default name of a configuration node
-                     * corresponding to this class
-                     *
-                     * @return the name
-                     *
-                     * @attention Implementation of this method is added
-                     * automatically upon inclusion of define_accessors.h if
-                     * ARILES_SECTION_ID is defined.
-                     */
-                    virtual const std::string & getConfigSectionID() const = 0;
+            public:
+                /**
+                 * @brief Return the default name of a configuration node
+                 * corresponding to this class
+                 *
+                 * @return the name
+                 *
+                 * @attention Implementation of this method is added
+                 * automatically upon inclusion of define_accessors.h if
+                 * ARILES_SECTION_ID is defined.
+                 */
+                virtual const std::string & getConfigSectionID() const = 0;
 
 
-                    /**
-                     * @brief This function is called automaticaly after reading
-                     * a configuration file. Does nothing by default.
-                     */
-                    virtual void finalize() {};
+                /**
+                 * @brief This function is called automaticaly after reading
+                 * a configuration file. Does nothing by default.
+                 */
+                virtual void finalize() {};
 
 
-                    /**
-                     * @brief Set members to their default values.
-                     */
-                    virtual void setDefaults() = 0;
+                /**
+                 * @brief Set members to their default values.
+                 */
+                virtual void setDefaults() = 0;
 
 
-                    /**
-                     * @brief Get number of entries in the corresponding
-                     * configuration node.
-                     *
-                     * @return number of entries
-                     */
-                    virtual std::size_t getNumberOfEntries() const = 0;
+                /**
+                 * @brief Get number of entries in the corresponding
+                 * configuration node.
+                 *
+                 * @return number of entries
+                 */
+                virtual std::size_t getNumberOfEntries() const = 0;
 
 
-                    /// @{
-                    /**
-                     * These functions are always defined automatically.
-                     */
-                    #define ARILES_NAMESPACE(config_namespace) \
-                        virtual void writeConfigEntries(humoto::config::config_namespace::Writer &) const = 0; \
-                        virtual void readConfigEntries( humoto::config::config_namespace::Reader & reader, \
-                                                        const bool crash_flag) = 0;
-                    ARILES_MACRO_SUBSTITUTE(ARILES_NAMESPACE_LIST)
-                    #undef ARILES_NAMESPACE
-                    /// @}
-            };
+                /// @{
+                /**
+                 * These functions are always defined automatically.
+                 */
+                #define ARILES_NAMESPACE(config_namespace) \
+                    virtual void writeConfigEntries(ariles::config_namespace::Writer &) const = 0; \
+                    virtual void readConfigEntries( ariles::config_namespace::Reader & reader, \
+                                                    const bool crash_flag) = 0;
+                ARILES_MACRO_SUBSTITUTE(ARILES_NAMESPACE_LIST)
+                #undef ARILES_NAMESPACE
+                /// @}
+        };
 
 
-            class ARILES_VISIBILITY_ATTRIBUTE StrictConfigurableBase : public humoto::config::CommonConfigurableBase
-            {
-                protected:
-                    bool getCrashOnMissingEntryFlag() {return (true);}
+        class ARILES_VISIBILITY_ATTRIBUTE StrictConfigurableBase : public ariles::CommonConfigurableBase
+        {
+            protected:
+                bool getCrashOnMissingEntryFlag() {return (true);}
 
 
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the child
-                     * classes through a base pointer.
-                     */
-                    ~StrictConfigurableBase() {}
-                    StrictConfigurableBase() {}
-            };
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the child
+                 * classes through a base pointer.
+                 */
+                ~StrictConfigurableBase() {}
+                StrictConfigurableBase() {}
+        };
 
 
-            class ARILES_VISIBILITY_ATTRIBUTE RelaxedConfigurableBase : public humoto::config::CommonConfigurableBase
-            {
-                protected:
-                    bool getCrashOnMissingEntryFlag() {return (false);}
+        class ARILES_VISIBILITY_ATTRIBUTE RelaxedConfigurableBase : public ariles::CommonConfigurableBase
+        {
+            protected:
+                bool getCrashOnMissingEntryFlag() {return (false);}
 
 
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the child
-                     * classes through a base pointer.
-                     */
-                    ~RelaxedConfigurableBase() {}
-                    RelaxedConfigurableBase() {}
-            };
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the child
+                 * classes through a base pointer.
+                 */
+                ~RelaxedConfigurableBase() {}
+                RelaxedConfigurableBase() {}
+        };
 
 
 
-            /// Default configurable base is strict
-            class ARILES_VISIBILITY_ATTRIBUTE ConfigurableBase : public humoto::config::StrictConfigurableBase
-            {
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the child
-                     * classes through a base pointer.
-                     */
-                    ~ConfigurableBase() {}
-                    ConfigurableBase() {}
-            };
-        }
+        /// Default configurable base is strict
+        class ARILES_VISIBILITY_ATTRIBUTE ConfigurableBase : public ariles::StrictConfigurableBase
+        {
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the child
+                 * classes through a base pointer.
+                 */
+                ~ConfigurableBase() {}
+                ConfigurableBase() {}
+        };
     }
 
 #   include "adapters/basic.h"
@@ -177,45 +163,42 @@ namespace humoto
 
 #   define ARILES_DISABLED
 
-    namespace humoto
+    namespace ariles
     {
-        namespace config
+        // Some classes may inherit from this
+        class ARILES_VISIBILITY_ATTRIBUTE StrictConfigurableBase
         {
-            // Some classes may inherit from this
-            class ARILES_VISIBILITY_ATTRIBUTE StrictConfigurableBase
-            {
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the
-                     * child classes through a base pointer.
-                     */
-                    ~StrictConfigurableBase() {}
-            };
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the
+                 * child classes through a base pointer.
+                 */
+                ~StrictConfigurableBase() {}
+        };
 
 
-            // Some classes may inherit from this
-            class ARILES_VISIBILITY_ATTRIBUTE RelaxedConfigurableBase
-            {
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the
-                     * child classes through a base pointer.
-                     */
-                    ~RelaxedConfigurableBase() {}
-            };
+        // Some classes may inherit from this
+        class ARILES_VISIBILITY_ATTRIBUTE RelaxedConfigurableBase
+        {
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the
+                 * child classes through a base pointer.
+                 */
+                ~RelaxedConfigurableBase() {}
+        };
 
 
-            // Some classes may inherit from this
-            class ARILES_VISIBILITY_ATTRIBUTE ConfigurableBase : humoto::config::StrictConfigurableBase
-            {
-                protected:
-                    /**
-                     * @brief Protected destructor: prevent destruction of the
-                     * child classes through a base pointer.
-                     */
-                    ~ConfigurableBase() {}
-            };
-        }
+        // Some classes may inherit from this
+        class ARILES_VISIBILITY_ATTRIBUTE ConfigurableBase : ariles::StrictConfigurableBase
+        {
+            protected:
+                /**
+                 * @brief Protected destructor: prevent destruction of the
+                 * child classes through a base pointer.
+                 */
+                ~ConfigurableBase() {}
+        };
     }
 
 #endif //ARILES_NAMESPACE_0

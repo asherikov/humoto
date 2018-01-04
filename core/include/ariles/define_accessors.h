@@ -121,11 +121,11 @@
 
         // Format-specific stuff
         #define ARILES_NAMESPACE(config_namespace) \
-            virtual void writeConfigEntries(humoto::config::config_namespace::Writer & writer) const \
+            virtual void writeConfigEntries(ariles::config_namespace::Writer & writer) const \
             { \
                 writeConfigEntriesTemplate(writer); \
             } \
-            virtual void readConfigEntries( humoto::config::config_namespace::Reader & reader, \
+            virtual void readConfigEntries( ariles::config_namespace::Reader & reader, \
                                             const bool crash_flag) \
             {\
                 readConfigEntriesTemplate(reader, crash_flag);\
@@ -147,7 +147,7 @@
             void readConfig(t_Reader            & reader,
                             const bool          crash_on_missing_entry = true)
         {
-            humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
+            ariles::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
         }
 
 
@@ -164,7 +164,7 @@
                             const std::string   & node_name,
                             const bool          crash_on_missing_entry = true)
         {
-            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+            ariles::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
         }
 
 
@@ -183,7 +183,7 @@
                             const char          * node_name,
                             const bool          crash_on_missing_entry = true)
         {
-            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+            ariles::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
         }
 
 
@@ -199,7 +199,7 @@
                             const bool        crash_on_missing_entry = true)
         {
             t_Reader reader(file_name);
-            humoto::config::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
+            ariles::reader::readEntry(reader, *this, this->getConfigSectionID(), crash_on_missing_entry);
         }
 
 
@@ -217,7 +217,7 @@
                             const bool        crash_on_missing_entry = true)
         {
             t_Reader reader(file_name);
-            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+            ariles::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
         }
 
 
@@ -237,7 +237,7 @@
                             const bool        crash_on_missing_entry = true)
         {
             t_Reader reader(file_name);
-            humoto::config::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
+            ariles::reader::readEntry(reader, *this, node_name, crash_on_missing_entry);
         }
 
 
@@ -267,7 +267,7 @@
                              const std::string &node_name) const
         {
             writer.initRoot();
-            humoto::config::writer::writeEntry(writer, *this, node_name);
+            ariles::writer::writeEntry(writer, *this, node_name);
             writer.flush();
         }
 
