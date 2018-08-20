@@ -11,7 +11,7 @@
 
 #pragma once
 
-
+/*
 #ifdef HUMOTO_DOXYGEN_PROCESSING
 #   define ARILES_DOXYGEN_PROCESSING
 #endif
@@ -22,7 +22,7 @@
 
 #include "ariles/adapters_all.h"
 #include "ariles/ariles.h"
-
+*/
 
 namespace humoto
 {
@@ -33,9 +33,9 @@ namespace humoto
 }
 
 
-#ifdef ARILES_ENABLED
+//#ifdef ARILES_ENABLED
 #   define HUMOTO_USE_CONFIG
-#endif
+//#endif
 
 
 #define HUMOTO_CONFIG_DEFINE_ACCESSORS  "humoto/config_accessors.h"
@@ -102,5 +102,5 @@ namespace humoto
 
     #define HUMOTO_CONFIG_READ_PARENT_CLASS(parent_class)  ARILES_READ_PARENT_CLASS(parent_class)
 
-    #define HUMOTO_CONFIG_PARENT_CLASS(entry)               ARILES_PARENT_CLASS(entry)
+    #define HUMOTO_CONFIG_PARENT_CLASS(entry)               ARILES_PARENT(entry)
 #endif

@@ -21,7 +21,8 @@
 #endif
 
 
-#include "humoto/ariles/define_accessors.h"
+//#include "humoto/ariles/define_accessors.h"
+#include ARILES_INITIALIZE
 
 
 #undef HUMOTO_CONFIG_ENTRIES

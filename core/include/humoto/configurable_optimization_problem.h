@@ -57,7 +57,7 @@ namespace humoto
              */
             template <class t_Reader>
                 void readConfigEntriesTemplate( t_Reader& reader,
-                                                const bool crash_on_missing_entry = true)
+                                                const ariles::ConfigurableParameters& param)
             {
                 HUMOTO_CONFIG_READ_COMPOUND_(task_class_names)
                 HUMOTO_CONFIG_READ_COMPOUND_(task_ids)
@@ -93,7 +93,7 @@ namespace humoto
                             task->setDescription(task_ids_[i][j]);
 
                             // configure tasks
-                            humoto::config::reader::readEntry(reader, *task, task_ids_[i][j], crash_on_missing_entry);
+                            humoto::config::reader::readEntry(reader, *task, task_ids_[i][j], param.crash_on_missing_entry_);
                             // push tasks into the stack/hierarchy
                             humoto::OptimizationProblem::pushTask(task, i);
                         }
@@ -177,7 +177,8 @@ namespace humoto
              * @param[in] writer
              */
             template <class t_Writer>
-                void writeConfigEntriesTemplate(t_Writer& writer) const
+                void writeConfigEntriesTemplate(t_Writer& writer,
+                                                const ariles::ConfigurableParameters& param) const
             {
                 HUMOTO_CONFIG_WRITE_COMPOUND_(task_class_names)
                 HUMOTO_CONFIG_WRITE_COMPOUND_(task_ids)
@@ -194,7 +195,7 @@ namespace humoto
                             it != hierarchy_[i].tasks_.end();
                             ++it)
                     {
-                        humoto::config::writer::writeEntry(writer, *(it->ptr_), it->ptr_->getConfigSectionID());
+                        humoto::config::writer::writeEntry(writer, *(it->ptr_), it->ptr_->getConfigSectionID(), param);
                     }
                 }
             }
