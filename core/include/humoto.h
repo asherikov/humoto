@@ -123,8 +123,8 @@ namespace humoto
 
 #include "humoto/solver.h"
 
-#ifdef HUMOTO_USE_CONFIG
+//#ifdef HUMOTO_USE_CONFIG
 #include "humoto/configurable_optimization_problem.h"
-#endif
+//#endif
 
 #include "rigid_body.h"

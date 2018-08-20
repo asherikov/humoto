@@ -23,8 +23,11 @@
 #   define ARILES_DEFAULT_CONFIG_PREFIX     ""
 #endif
 
+#define ARILES_DEFINE_ACCESSORS  "ariles/define_accessors.h"
 
-#define ARILES_THROW_MSG(s) throw std::runtime_error(s)
+
+#define ARILES_THROW_MSG(s) \
+    throw std::runtime_error(std::string("In ") + __FILE__ + " // " + (s))
 
 #ifdef DNDEBUG
 #   define ARILES_ASSERT(condition, message)

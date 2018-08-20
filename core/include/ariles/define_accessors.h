@@ -11,6 +11,11 @@
 
 
 #ifdef ARILES_ENABLED
+/*
+#   ifndef ARILES_ENTRIES
+#       error "ARILES_ENTRIES must be defined."
+#   endif
+*/
 
     #ifndef ARILES_DOXYGEN_PROCESSING
     public:

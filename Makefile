@@ -118,8 +118,8 @@ check-doc:
 
 
 as-check-build: clean
-	${MAKE}	debug-all-tests
-	${MAKE}	debug-all-tests TC=gcc EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
+	${MAKE}	debug-all-tests EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
+	#${MAKE}	debug-all-tests TC=gcc EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
 
 as-check: check-doc as-check-build
 
