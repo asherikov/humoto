@@ -22,10 +22,19 @@
 
 #include "ariles/ariles_all.h"
 
+#ifdef ARILES_BRIDGE_INCLUDED_yaml_cpp
+namespace ariles
+{
+    typedef ::ariles::yaml_cpp yaml;
+}
+#endif
+
+#ifdef ARILES_BRIDGE_INCLUDED_yaml_cpp03
 namespace ariles
 {
     typedef ::ariles::yaml_cpp03 yaml;
 }
+#endif
 
 namespace humoto
 {
