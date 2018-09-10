@@ -1,6 +1,6 @@
 if (HUMOTO_BUILD_TESTS)
     # Circular motion
-    humoto_define_test(${HUMOTO_MODULE} "000" "qpOASES;config_yaml")
+    humoto_define_test(${HUMOTO_MODULE} "000" "qpOASES")
 
     #Performance test 1
     #- LexLS / qpOASES / eiQuadProg / QuadProgpp / qpmad
@@ -15,20 +15,20 @@ if (HUMOTO_BUILD_TESTS)
     #    b) solution of the optimization problem
     #    c) the whole loop
     #- results are saved in Octave-parsable format
-    humoto_define_test(${HUMOTO_MODULE} "001" "config_yaml" "lexls;qpOASES;eiquadprog;QuadProgpp;qpmad")
+    humoto_define_test(${HUMOTO_MODULE} "001" "" "lexls;qpOASES;eiquadprog;QuadProgpp;qpmad")
 
 
     # Stand still + 10 ms state shift
-    humoto_define_test(${HUMOTO_MODULE} "004" "qpOASES;config_yaml")
+    humoto_define_test(${HUMOTO_MODULE} "004" "qpOASES")
 
     # testing active set handling, multiple solvers
-    humoto_define_test(${HUMOTO_MODULE} "005" "qpOASES;config_yaml" "lexls")
+    humoto_define_test(${HUMOTO_MODULE} "005" "qpOASES" "lexls")
 endif()
 
 if (HUMOTO_BUILD_REGRESSION_TESTS)
     # Circular motion
-    humoto_define_regression_test(${HUMOTO_MODULE} "000" "config_yaml" "QuadProgpp;qpOASES;qpmad")
+    humoto_define_regression_test(${HUMOTO_MODULE} "000" "" "QuadProgpp;qpOASES;qpmad")
 
     # Active set handling
-    humoto_define_regression_test(${HUMOTO_MODULE} "001" "qpOASES;config_yaml" "lexls")
+    humoto_define_regression_test(${HUMOTO_MODULE} "001" "qpOASES" "lexls")
 endif()

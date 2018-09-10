@@ -14,8 +14,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 // specific solver (many can be included simultaneously)
@@ -95,7 +93,7 @@ int main(int argc, char **argv)
         humoto::pepper_ik::MotionParameters     ik_motion_parameters(config_reader, "IKMotionParameters", true);
         //humoto::pepper_ik::GeneralizedCoordinates<MODEL_FEATURES>   ik_generalized_coordinates;
         humoto::pepper_ik::GeneralizedCoordinates<MODEL_FEATURES>   ik_generalized_coordinates;
-        ik_generalized_coordinates.readConfig<humoto::config::yaml::Reader>(config_path + "initial_state_pepper_ik_planar.yaml", true);
+        ik_generalized_coordinates.readConfig<humoto::config::yaml>(config_path + "initial_state_pepper_ik_planar.yaml", true);
         ik_model.updateState(ik_generalized_coordinates);
 
         // -----------------ik--------------------------------
@@ -128,7 +126,7 @@ int main(int argc, char **argv)
 
         // options for walking
         humoto::pepper_mpc::MotionParameters        mpc_motion_parameters_1;
-        mpc_motion_parameters_1.readConfig<humoto::config::yaml::Reader>(mpc_motion_param_config_file_name,
+        mpc_motion_parameters_1.readConfig<humoto::config::yaml>(mpc_motion_param_config_file_name,
                                                                         mpc_motion_param_config_entry_id);
 
         humoto::pepper_mpc::MotionParameters        mpc_motion_parameters_2;

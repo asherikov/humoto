@@ -13,7 +13,7 @@ function(humoto_define_regression_test HUMOTO_MODULE REGRESSION_TEST_ID DEPENDEN
     set(LINK_TO_LIBRARIES       "${HUMOTO_MANDATORY_LIBRARIES}")
 
 
-    humoto_parse_test_dependencies("${DEPENDENCIES};googletest" "${LINK_TO_LIBRARIES}" "${TGT_DEPENDS}")
+    humoto_parse_test_dependencies("${DEPENDENCIES};googletest;ariles" "${LINK_TO_LIBRARIES}" "${TGT_DEPENDS}")
     if (MISSING_DEPENDENCY)
         return()
     endif()

@@ -9,9 +9,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-#include "humoto/config_yaml.h"
-#include "humoto/config_msgpack.h"
-
 #include "humoto/humoto.h"
 #include "humoto/qpoases.h"
 #include "humoto/qpmad.h"

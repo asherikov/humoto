@@ -11,7 +11,7 @@
 
 #pragma once
 
-/*
+
 #ifdef HUMOTO_DOXYGEN_PROCESSING
 #   define ARILES_DOXYGEN_PROCESSING
 #endif
@@ -20,9 +20,12 @@
 #   define ARILES_VISIBILITY_ATTRIBUTE  HUMOTO_LOCAL
 #endif
 
-#include "ariles/adapters_all.h"
-#include "ariles/ariles.h"
-*/
+#include "ariles/ariles_all.h"
+
+namespace ariles
+{
+    typedef ::ariles::yaml_cpp03 yaml;
+}
 
 namespace humoto
 {
@@ -33,9 +36,9 @@ namespace humoto
 }
 
 
-//#ifdef ARILES_ENABLED
+#ifdef ARILES_ENABLED
 #   define HUMOTO_USE_CONFIG
-//#endif
+#endif
 
 
 #define HUMOTO_CONFIG_DEFINE_ACCESSORS  "humoto/config_accessors.h"

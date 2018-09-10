@@ -7,8 +7,6 @@
     @brief
 */
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 #include "humoto/pepper_ik.h"
@@ -55,9 +53,8 @@ namespace humoto_tests
                 Fixture_FixedWheelsRoot()
                 {
                     model_.loadParameters(g_config_path + "pepper_fixedwheels.urdf");
-                    bool crash_on_missing_entries = true;
-                    readConfig<humoto::config::yaml::Reader>(g_ref_filename, crash_on_missing_entries);
-                    generalized_coordinates_.readConfig<humoto::config::yaml::Reader>(g_config_path + "initial_state_pepper_ik_torso_default.yaml");
+                    readConfig<humoto::config::yaml>(g_ref_filename);
+                    generalized_coordinates_.readConfig<humoto::config::yaml>(g_config_path + "initial_state_pepper_ik_torso_default.yaml");
                     model_.updateState(generalized_coordinates_);
 
                     /*
@@ -411,9 +408,8 @@ namespace humoto_tests
                 Fixture_FixedWheelsRootTibiaModel()
                 {
                     model_.loadParameters(g_config_path + "pepper_fixedwheels_roottibia.urdf");
-                    bool crash_on_missing_entries = true;
-                    readConfig<humoto::config::yaml::Reader>(g_ref_filename, crash_on_missing_entries);
-                    generalized_coordinates_.readConfig<humoto::config::yaml::Reader>(g_config_path + "initial_state_pepper_ik_tibia_default.yaml");
+                    readConfig<humoto::config::yaml>(g_ref_filename);
+                    generalized_coordinates_.readConfig<humoto::config::yaml>(g_config_path + "initial_state_pepper_ik_tibia_default.yaml");
                     model_.updateState(generalized_coordinates_);
 
                     reorderJacobian(com_jacobian_reference00_);
@@ -681,9 +677,8 @@ namespace humoto_tests
                 Fixture_FixedWheelsRootTibiaPlanarModel()
                 {
                     model_.loadParameters(g_config_path + "pepper_fixedwheels_roottibia_planar.urdf");
-                    bool crash_on_missing_entries = true;
-                    readConfig<humoto::config::yaml::Reader>(g_ref_filename, crash_on_missing_entries);
-                    generalized_coordinates_.readConfig<humoto::config::yaml::Reader>(g_config_path + "initial_state_pepper_ik_planar_default.yaml");
+                    readConfig<humoto::config::yaml>(g_ref_filename);
+                    generalized_coordinates_.readConfig<humoto::config::yaml>(g_config_path + "initial_state_pepper_ik_planar_default.yaml");
                     model_.updateState(generalized_coordinates_);
 
                     reorderJacobian(com_jacobian_reference00_);

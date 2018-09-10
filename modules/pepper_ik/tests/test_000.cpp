@@ -14,8 +14,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 // specific solver (many can be included simultaneously)
@@ -50,7 +48,7 @@ int main(int argc, char **argv)
     {
         // optimization problem (a stack of tasks / hierarchy)
         humoto::pepper_ik::ConfigurableOptimizationProblem<MODEL_FEATURES>     opt_problem;
-        opt_problem.readConfig<humoto::config::yaml::Reader>(config_path + "hierarchies_torso.yaml", "Hierarchy00");
+        opt_problem.readConfig<humoto::config::yaml>(config_path + "hierarchies_torso.yaml", "Hierarchy00");
 
 
         // parameters of the solver
@@ -75,7 +73,7 @@ int main(int argc, char **argv)
         // parameters of the control problem
         //humoto::pepper_ik::WBCParameters           wbc_parameters;
         humoto::pepper_ik::WBCParameters           wbc_parameters;
-        wbc_parameters.readConfig<humoto::config::yaml::Reader>(config_path + "wbc_parameters.yaml");
+        wbc_parameters.readConfig<humoto::config::yaml>(config_path + "wbc_parameters.yaml");
         // control problem, which is used to construct an optimization problem
         humoto::pepper_ik::WholeBodyController<MODEL_FEATURES>     wbc;
 
@@ -86,7 +84,7 @@ int main(int argc, char **argv)
 
         // options for walking
         humoto::pepper_ik::MotionParameters     motion_parameters;
-        motion_parameters.readConfig<humoto::config::yaml::Reader>(config_path + "motion_parameters.yaml");
+        motion_parameters.readConfig<humoto::config::yaml>(config_path + "motion_parameters.yaml");
 
 
         humoto::pepper_ik::GeneralizedCoordinates<MODEL_FEATURES>   generalized_coordinates;

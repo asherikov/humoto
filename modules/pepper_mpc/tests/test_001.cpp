@@ -12,8 +12,6 @@
 #include <limits>
 #include <iomanip>
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 // specific control problem (many can be included simultaneously)

@@ -9,8 +9,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 
@@ -131,8 +129,8 @@ int main()
     HUMOTO_LOG_RAW("============================================");
     humoto::rigidbody::RigidBodyState body_state;
     body_state.log();
-    body_state.writeConfig<humoto::config::yaml::Writer>("rigid_body_state.yaml", "SomeRigidBodyName");
-    body_state.readConfig<humoto::config::yaml::Reader>("rigid_body_state.yaml", "SomeRigidBodyName", false);
+    body_state.writeConfig<humoto::config::yaml>("rigid_body_state.yaml", "SomeRigidBodyName");
+    body_state.readConfig<humoto::config::yaml>("rigid_body_state.yaml", "SomeRigidBodyName");
     HUMOTO_LOG_RAW("============================================\n\n");
 
 

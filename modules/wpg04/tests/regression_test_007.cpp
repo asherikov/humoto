@@ -14,8 +14,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 // specific solver (many can be included simultaneously)
@@ -43,8 +41,8 @@ namespace humoto_tests
             protected:
                 TestFixture_2levels()
                 {
-                    reference_.solution_.readConfig<humoto::config::yaml::Reader>(g_ref_filename);
-                    reference_.state_.readConfig<humoto::config::yaml::Reader>(g_ref_filename);
+                    reference_.solution_.readConfig<humoto::config::yaml>(g_ref_filename);
+                    reference_.state_.readConfig<humoto::config::yaml>(g_ref_filename);
 
                     walk_parameters.com_velocity_ << 0.1, 0.;
                     walk_parameters.first_stance_com_velocity_ = walk_parameters.com_velocity_;
@@ -53,7 +51,7 @@ namespace humoto_tests
                     stance_fsm.setParameters(walk_parameters);
                     wpg.setParameters(wpg_parameters);
 
-                    opt_problem.readConfig<humoto::config::yaml::Reader>(g_config_path + "/hierarchies.yaml", "Hierarchy02");
+                    opt_problem.readConfig<humoto::config::yaml>(g_config_path + "/hierarchies.yaml", "Hierarchy02");
                 }
 
 
@@ -119,8 +117,8 @@ namespace humoto_tests
             protected:
                 TestFixture_3levels()
                 {
-                    reference_.solution_.readConfig<humoto::config::yaml::Reader>(g_ref_filename);
-                    reference_.state_.readConfig<humoto::config::yaml::Reader>(g_ref_filename);
+                    reference_.solution_.readConfig<humoto::config::yaml>(g_ref_filename);
+                    reference_.state_.readConfig<humoto::config::yaml>(g_ref_filename);
 
                     walk_parameters.com_velocity_ << 0.1, 0.;
                     walk_parameters.first_stance_com_velocity_ = walk_parameters.com_velocity_;
@@ -129,7 +127,7 @@ namespace humoto_tests
                     stance_fsm.setParameters(walk_parameters);
                     wpg.setParameters(wpg_parameters);
 
-                    opt_problem.readConfig<humoto::config::yaml::Reader>(g_config_path + "/hierarchies.yaml", "Hierarchy03");
+                    opt_problem.readConfig<humoto::config::yaml>(g_config_path + "/hierarchies.yaml", "Hierarchy03");
                 }
 
 

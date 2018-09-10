@@ -15,8 +15,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 // specific solver (many can be included simultaneously)
@@ -71,7 +69,7 @@ int main(int argc, char **argv)
         humoto::pepper_ik::WBCParameters           wbc_parameters;
 #else
         humoto::pepper_ik::WBCParameters           wbc_parameters;
-        wbc_parameters.readConfig<humoto::config::yaml::Reader>(config_path + "wbc_parameters.yaml");
+        wbc_parameters.readConfig<humoto::config::yaml>(config_path + "wbc_parameters.yaml");
 #endif // PERFORMANCE_TEST
         // control problem, which is used to construct an optimization problem
         humoto::pepper_ik::WholeBodyController<MODEL_FEATURES>     wbc;

@@ -28,7 +28,7 @@ function(humoto_define_test HUMOTO_MODULE TEST_ID_SOURCES DEPENDENCIES)
     set(TGT_DEPENDS             "")
 
 
-    humoto_parse_test_dependencies("${DEPENDENCIES}" "${LINK_TO_LIBRARIES}" "${TGT_DEPENDS}")
+    humoto_parse_test_dependencies("${DEPENDENCIES};ariles" "${LINK_TO_LIBRARIES}" "${TGT_DEPENDS}")
     if (MISSING_DEPENDENCY)
         return()
     endif()

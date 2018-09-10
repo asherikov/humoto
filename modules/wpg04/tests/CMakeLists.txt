@@ -6,7 +6,7 @@ if (HUMOTO_BUILD_TESTS)
     #- load parameters from yaml configuration files
     #- guess active set and solution
     #- log all data in Octave-parsable format to a given file (can be specified with a command line parameter)
-    humoto_define_test(${HUMOTO_MODULE} "000" "qpOASES;config_yaml")
+    humoto_define_test(${HUMOTO_MODULE} "000" "qpOASES")
 
     #HuMoTo demo 2
     #- LexLS
@@ -20,7 +20,7 @@ if (HUMOTO_BUILD_TESTS)
     #- hrp4
     #- guess active set and solution
     #- log all data in Octave-parsable format to a given file (can be specified with a command line parameter)
-    humoto_define_test(${HUMOTO_MODULE} "005" "qpOASES;config_yaml")
+    humoto_define_test(${HUMOTO_MODULE} "005" "qpOASES")
 
     #Performance test 1
     #- qpOASES / LexLS
@@ -51,7 +51,7 @@ if (HUMOTO_BUILD_REGRESSION_TESTS)
     #Various solvers and hotstarting options.
     #- qpOASES, LexLS, eiQuadProg, QuadProgpp
     #- compare the last solution with the reference
-    humoto_define_regression_test(${HUMOTO_MODULE} "000" "config_yaml" "qpOASES;lexls;eiquadprog;QuadProgpp;qpmad")
+    humoto_define_regression_test(${HUMOTO_MODULE} "000" "" "qpOASES;lexls;eiquadprog;QuadProgpp;qpmad")
 
     #Fixed footstep positions
     #Rotating feet
@@ -61,7 +61,7 @@ if (HUMOTO_BUILD_REGRESSION_TESTS)
     #- qpOASES
     #- load configuration parameters from a file
     #- compare the last solution with the reference
-    humoto_define_regression_test(${HUMOTO_MODULE} "001" "qpOASES;config_yaml")
+    humoto_define_regression_test(${HUMOTO_MODULE} "001" "qpOASES")
 
     #Check log format
     #- qpOASES
@@ -74,5 +74,5 @@ if (HUMOTO_BUILD_REGRESSION_TESTS)
     #- LexLS
     #- terminal constraint on the first or second level
     #- compare the last solution with the reference (output from the qpOASES solution of the same problem)
-    humoto_define_regression_test(${HUMOTO_MODULE} "007" "lexls;config_yaml")
+    humoto_define_regression_test(${HUMOTO_MODULE} "007" "lexls")
 endif()

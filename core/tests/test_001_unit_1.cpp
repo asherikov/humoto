@@ -7,9 +7,6 @@
     @brief
 */
 
-#include "humoto/config_yaml.h"
-#include "humoto/config_msgpack.h"
-
 #include "humoto/humoto.h"
 #include "humoto/qpoases.h"
 #include "humoto/qpmad.h"

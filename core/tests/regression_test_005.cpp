@@ -13,8 +13,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 
@@ -52,7 +50,7 @@ namespace humoto
             CondensingTestTimeInvariant() : timestep_(0.1), preview_horizon_length_(10)
             {
                 setDefaults();
-                readConfig<humoto::config::yaml::Reader>(g_ref_filename);
+                readConfig<humoto::config::yaml>(g_ref_filename);
             }
 
 
@@ -121,7 +119,7 @@ namespace humoto
             {
                 setDefaults();
 
-                readConfig<humoto::config::yaml::Reader>(g_ref_filename);
+                readConfig<humoto::config::yaml>(g_ref_filename);
 
                 // variable timesteps
                 timesteps_.push_back(0.10);

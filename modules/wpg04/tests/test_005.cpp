@@ -13,8 +13,6 @@
 
 #define HUMOTO_GLOBAL_LOGGER_ENABLED
 
-// Enable YAML configuration files (must be first)
-#include "humoto/config_yaml.h"
 // common & abstract classes
 #include "humoto/humoto.h"
 // specific solver (many can be included simultaneously)
@@ -50,22 +48,22 @@ int main(int argc, char **argv)
         humoto::qpoases::Solution                 solution;
         // options for walking
         humoto::wpg04::WalkParameters             walk_parameters;
-        walk_parameters.readConfig<humoto::config::yaml::Reader>(config_path + "walk_parameters__stand_still.yaml");
+        walk_parameters.readConfig<humoto::config::yaml>(config_path + "walk_parameters__stand_still.yaml");
         //FSM for walking
         humoto::walking::StanceFiniteStateMachine stance_fsm(walk_parameters);
         // model representing the controlled system
         humoto::walking::RobotFootParameters      robot_parameters;
-        robot_parameters.readConfig<humoto::config::yaml::Reader>(config_path + "robot_hrp4.yaml");
+        robot_parameters.readConfig<humoto::config::yaml>(config_path + "robot_hrp4.yaml");
         humoto::wpg04::Model                      model;
         // parameters of the control problem
         humoto::wpg04::MPCParameters              wpg_parameters;
         // control problem, which is used to construct an optimization problem
         humoto::wpg04::MPCforWPG                  wpg(wpg_parameters);
 
-        opt_problem.readConfig<humoto::config::yaml::Reader>(config_path + "/hierarchies.yaml", "Hierarchy00");
+        opt_problem.readConfig<humoto::config::yaml>(config_path + "/hierarchies.yaml", "Hierarchy00");
 
         humoto::wpg04::ModelState                 model_state;
-        model_state.readConfig<humoto::config::yaml::Reader>(config_path + "initial_state_hrp4.yaml");
+        model_state.readConfig<humoto::config::yaml>(config_path + "initial_state_hrp4.yaml");
 
         model.setFootParameters(robot_parameters);
         model.updateState(model_state);
