@@ -55,9 +55,8 @@ namespace humoto
              * @param[in] reader
              * @param[in] crash_on_missing_entry
              */
-            template <class t_Reader>
-                void readConfigEntriesTemplate( t_Reader& reader,
-                                                const ariles::ConfigurableParameters& param)
+            void readConfigEntries( ariles::ReaderBase& reader,
+                                    const ariles::ConfigurableFlags& param)
             {
                 HUMOTO_CONFIG_READ_COMPOUND_(task_class_names)
                 HUMOTO_CONFIG_READ_COMPOUND_(task_ids)
@@ -93,7 +92,7 @@ namespace humoto
                             task->setDescription(task_ids_[i][j]);
 
                             // configure tasks
-                            humoto::config::reader::readEntry(reader, *task, task_ids_[i][j], param.crash_on_missing_entry_);
+                            humoto::config::readEntry(reader, *task, task_ids_[i][j], param);
                             // push tasks into the stack/hierarchy
                             humoto::OptimizationProblem::pushTask(task, i);
                         }
@@ -104,6 +103,35 @@ namespace humoto
                     }
                 }
                 finalize();
+            }
+
+
+            /**
+             * @brief Write config entries
+             *
+             * @param[in] writer
+             */
+            void writeConfigEntries(ariles::WriterBase& writer,
+                                    const ariles::ConfigurableFlags& param) const
+            {
+                HUMOTO_CONFIG_WRITE_COMPOUND_(task_class_names)
+                HUMOTO_CONFIG_WRITE_COMPOUND_(task_ids)
+
+                if(task_class_names_.empty())
+                {
+                    HUMOTO_THROW_MSG("Enabled tasks entry empty.");
+                }
+
+                for(std::size_t i = 0;  i < getNumberOfLevels(); ++i)
+                {
+                    for (   std::list<humoto::HierarchyLevel::TaskInfo>::const_iterator it
+                                = hierarchy_[i].tasks_.begin();
+                            it != hierarchy_[i].tasks_.end();
+                            ++it)
+                    {
+                        humoto::config::writeEntry(writer, *(it->ptr_), it->ptr_->getConfigSectionID(), param);
+                    }
+                }
             }
 
 
@@ -169,38 +197,6 @@ namespace humoto
             }
 
 
-
-        private:
-            /**
-             * @brief Write config entries
-             *
-             * @param[in] writer
-             */
-            template <class t_Writer>
-                void writeConfigEntriesTemplate(t_Writer& writer,
-                                                const ariles::ConfigurableParameters& param) const
-            {
-                HUMOTO_CONFIG_WRITE_COMPOUND_(task_class_names)
-                HUMOTO_CONFIG_WRITE_COMPOUND_(task_ids)
-
-                if(task_class_names_.empty())
-                {
-                    HUMOTO_THROW_MSG("Enabled tasks entry empty.");
-                }
-
-                for(std::size_t i = 0;  i < getNumberOfLevels(); ++i)
-                {
-                    for (   std::list<humoto::HierarchyLevel::TaskInfo>::const_iterator it
-                                = hierarchy_[i].tasks_.begin();
-                            it != hierarchy_[i].tasks_.end();
-                            ++it)
-                    {
-                        humoto::config::writer::writeEntry(writer, *(it->ptr_), it->ptr_->getConfigSectionID(), param);
-                    }
-                }
-            }
-
-
             /**
              * @brief Count entries
              *
@@ -216,6 +212,11 @@ namespace humoto
                 }
 
                 return (num_entries);
+            }
+
+
+            virtual void setArilesDefaults()
+            {
             }
     };
 }
