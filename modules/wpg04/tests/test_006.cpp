@@ -50,6 +50,20 @@
 //===================================================
 
 
+//===================================================
+// qpmad
+//===================================================
+#ifdef HUMOTO_BRIDGE_qpmad
+
+#include "humoto/qpmad.h"
+#define HUMOTO_TEST_SOLVER_NAMESPACE            qpmad
+#define HUMOTO_TEST_DISABLE_HOT_STARTING
+#include "test_006_body.h"
+
+#endif
+//===================================================
+
+
 
 /**
  * @brief main
@@ -77,5 +91,9 @@ int main(int argc, char **argv)
 
 #ifdef HUMOTO_BRIDGE_lexls
     humoto_tests::wpg04::lexls::run(n_of_simulations, "");
+#endif
+
+#ifdef HUMOTO_BRIDGE_qpmad
+    humoto_tests::wpg04::qpmad::run(n_of_simulations, "");
 #endif
 }

@@ -21,3 +21,16 @@ if (exist('time_perf_qpoases.m', 'file'))
     plot(qpoases_simulation.sol_guess_no_as_guess.average_time_to_run_full_loop, 'c--')
     hold off
 end
+
+if (exist('time_perf_qpmad.m', 'file'))
+    source time_perf_qpmad.m
+    figure
+    title('qpmad')
+    hold on
+    plot(qpmad_simulation.no_hotstart.average_time_to_run_full_loop, 'b')
+    plot(qpmad_simulation.as_guess_prev_iter.average_time_to_run_full_loop, 'r--')
+    plot(qpmad_simulation.sol_guess_as_guess_prev_iter.average_time_to_run_full_loop, 'k--')
+    plot(qpmad_simulation.sol_guess_no_as_guess.average_time_to_run_full_loop, 'c--')
+    hold off
+end
+
