@@ -29,15 +29,9 @@ include(humoto_dump_variables)
 #####################################
 
 # bridges
-option (HUMOTO_ENABLE_BRIDGES_BY_DEFAULT    "If true all modules are enabled by default." OFF)
+set    (HUMOTO_BRIDGES_DEFAULT_MODE         "OFF" CACHE STRING "ON = enable, OFF = disable, BUILD = build from sources")
 option (HUMOTO_INSTALL_BRIDGES              "Install bridges on the system." OFF)
 set    (HUMOTO_BRIDGES_DIRS                 "${PROJECT_SOURCE_DIR}/bridges/" CACHE STRING "Directories to search for bridges.")
-
-# these bridges are distributed with humoto and enabled by default.
-option (HUMOTO_ENABLE_QuadProgpp           "Enable support for QuadProgpp."    ON)
-option (HUMOTO_ENABLE_qpOASES              "Enable support for qpOASES."       ON)
-option (HUMOTO_ENABLE_config_yaml          "Enable YAML config files."         ON)
-
 
 # modules
 option (HUMOTO_ENABLE_MODULES_BY_DEFAULT    "If true all modules are enabled by default." OFF)
@@ -77,7 +71,7 @@ endforeach(CACHED_VARIABLE)
 
 # Bridges
 if(HUMOTO_BUILD_REGRESSION_TESTS)
-    set(HUMOTO_BRIDGE_googletest ON)
+    set(HUMOTO_BRIDGE_googletest BUILD)
 endif()
 
 
@@ -90,12 +84,13 @@ foreach (HUMOTO_BRIDGES_DIR ${HUMOTO_BRIDGES_DIRS})
         set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_DIR  "${HUMOTO_BRIDGES_DIR}/${HUMOTO_BRIDGE}")
 
         list(REMOVE_ITEM HUMOTO_CACHED_BRIDGES "HUMOTO_BRIDGE_${HUMOTO_BRIDGE}")
-        if (HUMOTO_BRIDGE_${HUMOTO_BRIDGE})
-            option ("HUMOTO_BRIDGE_${HUMOTO_BRIDGE}"
-                    "Enable bridge '${HUMOTO_BRIDGE}'" ${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}})
+
+        if (DEFINED HUMOTO_BRIDGE_${HUMOTO_BRIDGE})
+            set    ("HUMOTO_BRIDGE_${HUMOTO_BRIDGE}" "${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}}"
+                    CACHE STRING "Bridge '${HUMOTO_BRIDGE} (ON / OFF / BUILD)")
         else()
-            option ("HUMOTO_BRIDGE_${HUMOTO_BRIDGE}"
-                    "Enable bridge '${HUMOTO_BRIDGE}'" ${HUMOTO_ENABLE_BRIDGES_BY_DEFAULT})
+            set    ("HUMOTO_BRIDGE_${HUMOTO_BRIDGE}" "${HUMOTO_BRIDGES_DEFAULT_MODE}"
+                    CACHE STRING "Bridge '${HUMOTO_BRIDGE} (ON / OFF / BUILD)")
         endif()
 
 
@@ -359,7 +354,8 @@ foreach(HUMOTO_BRIDGES_DIR ${HUMOTO_BRIDGES_DIRS})
     humoto_list_filenames("${HUMOTO_BRIDGES_DIR}"   "HUMOTO_BRIDGES_TMP" DIRS_WITH_CMAKELISTS)
 
     foreach(HUMOTO_BRIDGE ${HUMOTO_BRIDGES_TMP})
-        if (HUMOTO_BRIDGE_${HUMOTO_BRIDGE})
+        if (NOT ${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}} STREQUAL "OFF")
+            set (${HUMOTO_BRIDGE}_INTERFACE_DIR  "${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_DIR}/interface")
             add_subdirectory("${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_DIR}" "${HUMOTO_BRIDGES_BINARY_DIR}/${HUMOTO_BRIDGE}")
 
             if (HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_LIBS)
@@ -369,6 +365,10 @@ foreach(HUMOTO_BRIDGES_DIR ${HUMOTO_BRIDGES_DIRS})
             if (HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_INCLUDES)
                 list(APPEND HUMOTO_OPTIONAL_INCLUDES    "${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_INCLUDES}")
                 include_directories("${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_INCLUDES}")
+            endif()
+
+            if (HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_LIBRARY_DIRS)
+                link_directories("${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_LIBRARY_DIRS}")
             endif()
         endif()
     endforeach(HUMOTO_BRIDGE)

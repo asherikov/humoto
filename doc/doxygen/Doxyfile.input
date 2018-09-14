@@ -9,9 +9,7 @@ INPUT += \
 ../../INSTALL.md \
 ../../README.md \
 ../../bridges/QuadProgpp/interface \
-../../bridges/config_yaml/interface \
 ../../bridges/qpOASES/interface \
 ../../bridges/rbdl/interface \
 ../../bridges/qpmad/interface \
-../../bridges/config_msgpack/interface \
 
