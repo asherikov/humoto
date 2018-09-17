@@ -48,7 +48,7 @@ build:
 								${ROOT_DIR};
 	cd ${BUILD_SUBDIR}; ${MAKE} ${MAKE_FLAGS} ${TARGETS}
 
-build-tests: build
+build-test: build
 	cd ${BUILD_SUBDIR}; ${MAKE} ${MAKE_FLAGS} test
 
 # -------
@@ -69,12 +69,12 @@ fetch:
 debug-all:
 	${MAKE} build TC=${TC} TYPE=Debug OPTIONS=all TARGETS="${TARGETS}"
 
-debug-all-tests:
-	${MAKE} build-tests TC=${TC} TYPE=Debug OPTIONS=all TARGETS="${TARGETS}"
+debug-all-test:
+	${MAKE} build-test TC=${TC} TYPE=Debug OPTIONS=all TARGETS="${TARGETS}"
 
 all: debug-all
 
-tests: debug-all-tests
+test: debug-all-test
 
 debug: debug-all
 
@@ -87,8 +87,8 @@ debug: debug-all
 debug-default:
 	${MAKE} build TC=${TC} TYPE=Debug OPTIONS=default TARGETS="${TARGETS}"
 
-debug-default-tests:
-	${MAKE} build-tests TC=${TC} TYPE=Debug OPTIONS=default TARGETS="${TARGETS}"
+debug-default-test:
+	${MAKE} build-test TC=${TC} TYPE=Debug OPTIONS=default TARGETS="${TARGETS}"
 
 
 #----------------------------------------------
@@ -99,8 +99,8 @@ debug-default-tests:
 release-all:
 	${MAKE} build TC=${TC} TYPE=Release OPTIONS=all TARGETS="${TARGETS}"
 
-release-all-tests: release-all
-	${MAKE} build-tests TC=${TC} TYPE=Release OPTIONS=all TARGETS="${TARGETS}"
+release-all-test: release-all
+	${MAKE} build-test TC=${TC} TYPE=Release OPTIONS=all TARGETS="${TARGETS}"
 
 release: release-all
 
@@ -118,8 +118,8 @@ check-doc:
 
 
 as-check-build: clean
-	${MAKE}	debug-all-tests EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
-	#${MAKE}	debug-all-tests TC=gcc EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
+	${MAKE}	debug-all-test EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
+	#${MAKE}	debug-all-test TC=gcc EXTRA_CMAKE_PARAM="${EXTRA_CMAKE_PARAM} -DHUMOTO_ENABLE_THREADS_FOR_LOGGING=OFF"
 
 as-check: check-doc as-check-build
 

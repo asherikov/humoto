@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "build_config.h"
+#include "humoto/build_config.h"
 #include "export_import.h"
 
 #include <algorithm>

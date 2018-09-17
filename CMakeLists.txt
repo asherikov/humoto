@@ -409,72 +409,28 @@ endif(HUMOTO_USE_CONFIG)
 
 
 #####################################
-## Humoto headers
-#####################################
-
-# Core
-
-humoto_copy_dir_if_exists(TGT_humoto_copy_headers       "core"
-                          "${HUMOTO_CORE_DIR}/include"  "${HUMOTO_INCLUDE_DIR}")
-humoto_copy_dir_if_exists(TGT_humoto_copy_config        "core"
-                          "${HUMOTO_CORE_DIR}/config"   "${HUMOTO_CONFIG_DIR}/core")
-
-
-# Modules
-foreach(HUMOTO_MODULE ${HUMOTO_MODULES})
-    if (HUMOTO_MODULE_${HUMOTO_MODULE})
-        set(MODULE_DIR "${HUMOTO_MODULE_${HUMOTO_MODULE}_DIR}")
-
-        humoto_copy_dir_if_exists(TGT_humoto_copy_headers       "${HUMOTO_MODULE}"
-                                  "${MODULE_DIR}/include"       "${HUMOTO_INCLUDE_DIR}")
-        humoto_copy_dir_if_exists(TGT_humoto_copy_config        "${HUMOTO_MODULE}"
-                                  "${MODULE_DIR}/config"        "${HUMOTO_CONFIG_DIR}/${HUMOTO_MODULE}")
-    endif (HUMOTO_MODULE_${HUMOTO_MODULE})
-endforeach(HUMOTO_MODULE)
-
-
-# All headers are collected in one directory
-include_directories ("${PROJECT_BINARY_DIR}/include/")
-
-
-#####################################
-## Tests
+## Modules
 #####################################
 if (HUMOTO_BUILD_TESTS OR HUMOTO_BUILD_REGRESSION_TESTS)
     enable_testing()
-
-    include(humoto_copy_extra_test_files)
-    include(humoto_define_test)
-    include(humoto_define_regression_test)
-    include(humoto_parse_test_dependencies)
-
-    set (HUMOTO_MODULES_BINARY_DIR "${PROJECT_BINARY_DIR}/modules/")
-    if (HUMOTO_BUILD_WITH_QI)
-        set (HUMOTO_RUNTIME_OUTPUT_PREFIX   "${CMAKE_BINARY_DIR}/sdk/bin/")
-    else(HUMOTO_BUILD_WITH_QI)
-        set (HUMOTO_RUNTIME_OUTPUT_PREFIX   "${PROJECT_BINARY_DIR}/tests/")
-    endif(HUMOTO_BUILD_WITH_QI)
-
-
-    if (HUMOTO_ENABLE_MODULES_BY_DEFAULT)
-        set (CMAKE_RUNTIME_OUTPUT_DIRECTORY     "${HUMOTO_RUNTIME_OUTPUT_PREFIX}/core/")
-        set (HUMOTO_MODULE "core")
-        add_custom_target( "${HUMOTO_MODULE}" )
-        add_subdirectory ("${HUMOTO_CORE_DIR}/tests")
-    endif(HUMOTO_ENABLE_MODULES_BY_DEFAULT)
-
-
-    foreach(HUMOTO_MODULE ${HUMOTO_MODULES})
-        if (HUMOTO_MODULE_${HUMOTO_MODULE})
-            if (EXISTS "${HUMOTO_MODULE_${HUMOTO_MODULE}_DIR}/tests")
-                set (CMAKE_RUNTIME_OUTPUT_DIRECTORY     "${HUMOTO_RUNTIME_OUTPUT_PREFIX}/${HUMOTO_MODULE}/")
-                add_custom_target( "${HUMOTO_MODULE}" )
-                add_subdirectory (  "${HUMOTO_MODULE_${HUMOTO_MODULE}_DIR}/tests"
-                                    "${HUMOTO_MODULES_BINARY_DIR}/${HUMOTO_MODULE}")
-            endif()
-        endif (HUMOTO_MODULE_${HUMOTO_MODULE})
-    endforeach(HUMOTO_MODULE)
 endif()
+
+include_directories ("${PROJECT_BINARY_DIR}/include/")
+include(humoto_add_module)
+set(humoto_CONFIG_DIR "${HUMOTO_CONFIG_DIR}")
+set(humoto_INCLUDE_DIR "${HUMOTO_INCLUDE_DIR}")
+
+humoto_add_module(MODULE "core" MODULE_DIR "${HUMOTO_CORE_DIR}")
+include_directories("${HUMOTO_MODULE_core_INCLUDE_DIR}")
+
+foreach(HUMOTO_MODULE ${HUMOTO_MODULES})
+    if (HUMOTO_MODULE_${HUMOTO_MODULE})
+
+        humoto_add_module(MODULE "${HUMOTO_MODULE}" MODULE_DIR "${HUMOTO_MODULE_${HUMOTO_MODULE}_DIR}")
+        include_directories("${HUMOTO_MODULE_${HUMOTO_MODULE}_INCLUDE_DIR}")
+
+    endif (HUMOTO_MODULE_${HUMOTO_MODULE})
+endforeach(HUMOTO_MODULE)
 
 
 #####################################
@@ -584,3 +540,7 @@ install (FILES "${PROJECT_BINARY_DIR}/humotoConfig.cmake"
 
 install (FILES "${CMAKE_BINARY_DIR}/gnu_ld_version_script.map"
          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/")
+
+install (DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/"
+         DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/cmake/"
+         FILES_MATCHING PATTERN "humoto_*.cmake")
