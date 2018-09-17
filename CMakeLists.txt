@@ -403,9 +403,7 @@ include (humoto_detect_func_macro)
 humoto_detect_func_macro()
 
 
-if (HUMOTO_USE_CONFIG)
-    set(HUMOTO_DEFAULT_CONFIG_PREFIX "${CMAKE_INSTALL_PREFIX}/share/humoto/config/")
-endif(HUMOTO_USE_CONFIG)
+set(HUMOTO_DEFAULT_CONFIG_PREFIX "${CMAKE_INSTALL_PREFIX}/share/humoto/config/")
 
 
 #####################################
@@ -417,7 +415,7 @@ endif()
 
 include_directories ("${PROJECT_BINARY_DIR}/include/")
 include(humoto_add_module)
-set(humoto_CONFIG_DIR "${HUMOTO_CONFIG_DIR}")
+set(humoto_CONFIG_DIR "${HUMOTO_DEFAULT_CONFIG_PREFIX}")
 set(humoto_INCLUDE_DIR "${HUMOTO_INCLUDE_DIR}")
 
 humoto_add_module(MODULE "core" MODULE_DIR "${HUMOTO_CORE_DIR}")
