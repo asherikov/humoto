@@ -30,9 +30,13 @@ function(humoto_add_module)
     endif()
 
 
-    install (DIRECTORY "${HUMOTO_MODULE_DIR}/include"
-             DESTINATION "${humoto_INCLUDE_DIR}/")
+    if (EXISTS "${HUMOTO_MODULE_DIR}/include")
+        install (DIRECTORY "${HUMOTO_MODULE_DIR}/include"
+                 DESTINATION "${humoto_INCLUDE_DIR}/")
+    endif()
 
-    install (DIRECTORY "${HUMOTO_MODULE_DIR}/config"
-             DESTINATION "${humoto_CONFIG_DIR}/${HUMOTO_MODULE}/")
+    if (EXISTS "${HUMOTO_MODULE_DIR}/config")
+        install (DIRECTORY "${HUMOTO_MODULE_DIR}/config"
+                 DESTINATION "${humoto_CONFIG_DIR}/${HUMOTO_MODULE}/")
+    endif()
 endfunction(humoto_add_module)
