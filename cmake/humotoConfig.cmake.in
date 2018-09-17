@@ -2,8 +2,9 @@ set (humoto_LIBRARIES "@HUMOTO_LIBRARIES@")
 set (humoto_INCLUDE_DIRS "@HUMOTO_INCLUDES@;@CMAKE_INSTALL_PREFIX@/include/")
 
 # Those variables are for installation of modules.
-set (humoto_INCLUDE_DIR "@HUMOTO_INCLUDE_DIR@")
-set (humoto_CONFIG_DIR "@HUMOTO_CONFIG_DIR@")
+set (humoto_INCLUDE_DIR "@HUMOTO_INCLUDE_INSTALL_DIR@")
+set (humoto_CONFIG_DIR "@HUMOTO_CONFIG_INSTALL_DIR@")
+set (humoto_CMAKE_DIR "@HUMOTO_CMAKE_INSTALL_DIR@")
 
 #------------------
 # The following defines can be used to hide humoto related stuff when compiling

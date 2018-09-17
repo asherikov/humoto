@@ -162,6 +162,10 @@ set (CMAKE_RULE_MESSAGES        OFF CACHE BOOL "")
 set (HUMOTO_CORE_DIR "${PROJECT_SOURCE_DIR}/core/")
 set (HUMOTO_CONFIG_DIR "${PROJECT_BINARY_DIR}/config/")
 set (HUMOTO_INCLUDE_DIR "${PROJECT_BINARY_DIR}/include/humoto")
+set (HUMOTO_CONFIG_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/humoto/config/")
+set (HUMOTO_CMAKE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/humoto/cmake/")
+set (HUMOTO_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/include/humoto")
+
 
 
 ##
@@ -403,8 +407,6 @@ include (humoto_detect_func_macro)
 humoto_detect_func_macro()
 
 
-set(HUMOTO_DEFAULT_CONFIG_PREFIX "${CMAKE_INSTALL_PREFIX}/share/humoto/config/")
-
 
 #####################################
 ## Modules
@@ -415,8 +417,8 @@ endif()
 
 include_directories ("${PROJECT_BINARY_DIR}/include/")
 include(humoto_add_module)
-set(humoto_CONFIG_DIR "${HUMOTO_DEFAULT_CONFIG_PREFIX}")
-set(humoto_INCLUDE_DIR "${HUMOTO_INCLUDE_DIR}")
+set(humoto_CONFIG_DIR "${HUMOTO_CONFIG_INSTALL_DIR}")
+set(humoto_INCLUDE_DIR "${HUMOTO_INCLUDE_INSTALL_DIR}")
 
 humoto_add_module(MODULE "core" MODULE_DIR "${HUMOTO_CORE_DIR}")
 include_directories("${HUMOTO_MODULE_core_INCLUDE_DIR}")
@@ -472,7 +474,7 @@ set(HUMOTO_BUILD_CONFIG
 //
 //#define humoto HUMOTO_CUSTOM_NAMESPACE
 //
-#cmakedefine HUMOTO_DEFAULT_CONFIG_PREFIX \"${HUMOTO_DEFAULT_CONFIG_PREFIX}\"
+#cmakedefine HUMOTO_DEFAULT_CONFIG_PREFIX \"${HUMOTO_CONFIG_INSTALL_DIR}\"
 //
 #cmakedefine HUMOTO_USE_THREADS_FOR_LOGGING
 //
@@ -540,5 +542,5 @@ install (FILES "${CMAKE_BINARY_DIR}/gnu_ld_version_script.map"
          DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/")
 
 install (DIRECTORY "${PROJECT_SOURCE_DIR}/cmake/"
-         DESTINATION "${CMAKE_INSTALL_PREFIX}/share/humoto/cmake/"
+         DESTINATION "${HUMOTO_CMAKE_INSTALL_DIR}"
          FILES_MATCHING PATTERN "humoto_*.cmake")
