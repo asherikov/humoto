@@ -119,11 +119,13 @@ namespace humoto
                         case humoto::walking::StanceType::LSS:
                             model_state.feet_.getRight().unset();
                             model_state.feet_.setLeft(model.getFootState(LeftOrRight::LEFT));
+                            model_state.com_state_.position_.z() += model_state.feet_.getLeft().position_.z();
                             break;
 
                         case humoto::walking::StanceType::RSS:
                             model_state.feet_.getLeft().unset();
                             model_state.feet_.setRight(model.getFootState(LeftOrRight::RIGHT));
+                            model_state.com_state_.position_.z() += model_state.feet_.getRight().position_.z();
                             break;
 
                         case humoto::walking::StanceType::TDS:
@@ -153,11 +155,15 @@ namespace humoto
                                 model_state.feet_.setLeft(model.getFootState(LeftOrRight::LEFT));
                                 model_state.feet_.setRight(model.getFootState(LeftOrRight::RIGHT));
                             }
+                            model_state.com_state_.position_.z() += std::min(   model_state.feet_.getLeft().position_.z(),
+                                                                                model_state.feet_.getRight().position_.z());
                             break;
 
                         case humoto::walking::StanceType::DS:
                             model_state.feet_.setLeft(model.getFootState(LeftOrRight::LEFT));
                             model_state.feet_.setRight(model.getFootState(LeftOrRight::RIGHT));
+                            model_state.com_state_.position_.z() += std::min(   model_state.feet_.getLeft().position_.z(),
+                                                                                model_state.feet_.getRight().position_.z());
                             break;
 
                         default:
@@ -603,6 +609,29 @@ namespace humoto
                                                com_height,
                                                preceding_cstate,
                                                control);
+
+                    /// @todo Something smarter is necessary
+                    switch(model.state_.stance_type_)
+                    {
+                        case humoto::walking::StanceType::LSS:
+                            com_state.position_.z() += model.state_.feet_.getLeft().position_.z();
+                            break;
+
+                        case humoto::walking::StanceType::RSS:
+                            com_state.position_.z() += model.state_.feet_.getRight().position_.z();
+                            break;
+
+                        case humoto::walking::StanceType::TDS:
+                        case humoto::walking::StanceType::DS:
+                            com_state.position_.z() += std::min(model.state_.feet_.getLeft().position_.z(),
+                                                                model.state_.feet_.getRight().position_.z());
+                            break;
+
+                        default:
+                            HUMOTO_THROW_MSG("Unknown stance type.");
+                            break;
+                    }
+
 
                     return (com_state);
                 }
