@@ -265,6 +265,7 @@ namespace humoto
                     current_stance_.subtype_                     = StanceSubType::FIRST;
                     current_stance_.type_                        = sfsm_params_.first_stance_;
                     current_stance_.duration_ms_                 = sfsm_params_.first_stance_duration_ms_;
+                    current_stance_.total_duration_ms_           = sfsm_params_.getDurationMs(sfsm_params_.first_stance_);
 
                     switch (current_stance_.type_)
                     {
@@ -321,7 +322,7 @@ namespace humoto
                         stance_ptr->type_        = stance_fsm.current_stance_.type_;
                         stance_ptr->subtype_     = stance_fsm.current_stance_.subtype_;
                         stance_ptr->duration_ms_ = std::min(stance_fsm.current_stance_.duration_ms_ - stance_fsm.current_time_ms_, duration_ms);
-                        stance_ptr->total_duration_ms_           = stance_fsm.current_stance_.duration_ms_;
+                        stance_ptr->total_duration_ms_           = sfsm_params_.getDurationMs(stance_ptr->type_);
                         stance_ptr->previous_nonds_stance_type_  = stance_fsm.current_stance_.previous_nonds_stance_type_;
                         stance_ptr->previous_nontds_stance_type_ = stance_fsm.current_stance_.previous_nontds_stance_type_;
 
@@ -491,7 +492,6 @@ namespace humoto
                             current_stance_.previous_nonds_stance_type_  = current_stance_.type_;
                             current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
                             current_stance_.type_        = StanceType::TDS;
-                            current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
                             current_time_ms_ = 0;
                             break;
 
@@ -499,7 +499,6 @@ namespace humoto
                             current_stance_.previous_nonds_stance_type_  = current_stance_.type_;
                             current_stance_.previous_nontds_stance_type_ = current_stance_.type_;
                             current_stance_.type_        = StanceType::TDS;
-                            current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
                             current_time_ms_ = 0;
                             break;
 
@@ -510,7 +509,6 @@ namespace humoto
                             {
                                 current_stance_.subtype_     = StanceSubType::LAST;
                                 current_stance_.type_        = StanceType::DS;
-                                current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::DS);
                                 current_time_ms_ = 0;
                             }
                             else
@@ -523,13 +521,11 @@ namespace humoto
                                 if(current_stance_.previous_nonds_stance_type_ == StanceType::LSS)
                                 {
                                     current_stance_.type_        = StanceType::RSS;
-                                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::RSS);
                                     current_time_ms_ = 0;
                                 }
                                 else if(current_stance_.previous_nonds_stance_type_ == StanceType::RSS)
                                 {
                                     current_stance_.type_        = StanceType::LSS;
-                                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::LSS);
                                     current_time_ms_ = 0;
                                 }
                                 else
@@ -545,13 +541,11 @@ namespace humoto
                             if(ss_states_to_termination_ == 0)
                             {
                                 current_stance_.type_        = StanceType::DS;
-                                current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::DS);
                                 current_time_ms_ = 0;
                             }
                             else
                             {
                                 current_stance_.type_        = StanceType::TDS;
-                                current_stance_.duration_ms_ = sfsm_params_.getDurationMs(StanceType::TDS);
                                 current_time_ms_ = 0;
                             }
                             break;
@@ -559,6 +553,9 @@ namespace humoto
                         default:
                             HUMOTO_THROW_MSG("FSM is in an incorrect state.");
                     }
+
+                    current_stance_.duration_ms_ = sfsm_params_.getDurationMs(current_stance_.type_);
+                    current_stance_.total_duration_ms_ = sfsm_params_.getDurationMs(current_stance_.type_);
                 }
 
 
