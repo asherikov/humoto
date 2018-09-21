@@ -562,6 +562,12 @@ namespace humoto
                 }
 
 
+                bool isStanceStarted() const
+                {
+                    return (0 == current_time_ms_);
+                }
+
+
                 /**
                  * @brief Log
                  *

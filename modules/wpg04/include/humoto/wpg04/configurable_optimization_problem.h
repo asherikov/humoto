@@ -28,6 +28,7 @@ namespace humoto
                 humoto::TaskSharedPointer getTask(const std::string &string_id) const
                 {
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoMVelocity, string_id);
+                    HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoMAcceleration, string_id);
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPPosition, string_id);
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskCoPVelocity, string_id);
                     HUMOTO_CONFIGURABLE_HIERARCHY_GET_TASK_IF_ID_MATCHES(TaskFootstepBounds, string_id);

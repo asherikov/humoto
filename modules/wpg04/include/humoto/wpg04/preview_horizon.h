@@ -337,6 +337,9 @@ namespace humoto
                                   const humoto::walking::StanceFiniteStateMachine &stance_fsm,
                                   const WalkParameters                            &walk_parameters)
         {
+            HUMOTO_ASSERT(  mpc_params.preview_horizon_length_ * mpc_params.sampling_time_ms_ > walk_parameters.ss_duration_ms_,
+                            "SS is longer that the preview horizon.");
+
             bool preview_horizon_formed = true;
 
             // Length of the preview horizon (N)
