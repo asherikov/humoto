@@ -138,30 +138,6 @@ namespace humoto
 
 
                 /**
-                 * @brief Get CoM height
-                 *
-                 * @return CoM height
-                 */
-                double getCoMHeight() const
-                {
-                    switch (state_.stance_type_)
-                    {
-                        case humoto::walking::StanceType::DS:
-                        case humoto::walking::StanceType::TDS:
-                            // pick the lowest foot, it is safer
-                            return (state_.com_state_.position_.z() - std::min(state_.feet_.getLeft().position_.z(), state_.feet_.getRight().position_.z()));
-                        case humoto::walking::StanceType::LSS:
-                            return (state_.com_state_.position_.z() - state_.feet_.getLeft().position_.z());
-                        case humoto::walking::StanceType::RSS:
-                            return (state_.com_state_.position_.z() - state_.feet_.getRight().position_.z());
-                        default:
-                            HUMOTO_THROW_MSG("Unknown support type.");
-                            break;
-                    }
-                }
-
-
-                /**
                  * @brief Compute current CoP position
                  *
                  * @return CoP position

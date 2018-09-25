@@ -164,8 +164,40 @@ namespace humoto
 
                     stance_type_         = current_stance;
                     next_stance_type_    = humoto::walking::StanceType::UNDEFINED;
+
+                    getCoMHeight(); // check that the CoM height is feasible
                 }
 
+
+
+                /**
+                 * @brief Get CoM height
+                 *
+                 * @return CoM height
+                 */
+                double getCoMHeight() const
+                {
+                    double height = 0.0;
+                    switch (stance_type_)
+                    {
+                        case humoto::walking::StanceType::DS:
+                        case humoto::walking::StanceType::TDS:
+                            // pick the lowest foot, it is safer
+                            height = com_state_.position_.z() - std::min(feet_.getLeft().position_.z(), feet_.getRight().position_.z());
+                            break;
+                        case humoto::walking::StanceType::LSS:
+                            height = com_state_.position_.z() - feet_.getLeft().position_.z();
+                            break;
+                        case humoto::walking::StanceType::RSS:
+                            height = com_state_.position_.z() - feet_.getRight().position_.z();
+                            break;
+                        default:
+                            HUMOTO_THROW_MSG("Unknown support type.");
+                            break;
+                    }
+                    HUMOTO_ASSERT(height > 0, "CoM height is not strictly positive with respect to the feet.");
+                    return(height);
+                }
 
 
                 /**

@@ -370,7 +370,7 @@ namespace humoto
 
                 PreviewHorizonInterval  interval;
                 interval.cvel_ref_    = state.R_cvel_ref_;
-                interval.com_height_  = model.getCoMHeight();
+                interval.com_height_  = model.state_.getCoMHeight();
                 interval.omega_       = model.getOmega(interval.com_height_);
 
                 support_indices.push_back(interval_index);

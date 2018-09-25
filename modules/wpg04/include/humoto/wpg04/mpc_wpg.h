@@ -378,6 +378,7 @@ namespace humoto
                         // -----
 
                         S_.resize (number_of_state_variables, sol_structure_.getNumberOfVariables ());
+
                         S_ <<   Uu.getBlockKroneckerProduct(2) * Rh_,
                                 UuIr.getBlockKroneckerProduct(2) * R_;
 
@@ -427,6 +428,34 @@ namespace humoto
                     footpos_profile_.noalias() = Vfp_ * footpos_local + vfp_;
 
                     solution_is_parsed_ = true;
+                }
+
+
+                /**
+                 * @brief Check if previewed accelerations are feasible with given friction.
+                 *
+                 * @param[in] friction
+                 *
+                 * @return true / false
+                 */
+                bool    checkFrictionFeasibility(const humoto::wpg04::Model &model, const double friction) const
+                {
+                    HUMOTO_ASSERT(solution_is_parsed_ == true, "This function can be called only after the solution is parsed.");
+
+                    for (std::size_t i = 0; i < preview_horizon_.intervals_.size(); ++i)
+                    {
+                        if (std::abs(cstate_profile_(i*model.Nu_ + 2) > friction * humoto::g_gravitational_acceleration))
+                        {
+                            return (false);
+                        }
+
+                        if (std::abs(cstate_profile_(i*model.Nu_ + 5) > friction * humoto::g_gravitational_acceleration))
+                        {
+                            return (false);
+                        }
+                    }
+
+                    return (true);
                 }
 
 
