@@ -124,6 +124,10 @@ namespace humoto
                         case ::qpmad::Solver::MAXIMAL_NUMBER_OF_ITERATIONS:
                             solution.return_status_ = SolverStatus::MAX_ITER;
                             break;
+                        case ::qpmad::Solver::INFEASIBLE_EQUALITY:
+                        case ::qpmad::Solver::INFEASIBLE_INEQUALITY:
+                            solution.return_status_ = SolverStatus::INFEASIBLE;
+                            break;
                         default:
                             solution.return_status_ = SolverStatus::OTHER;
                             break;

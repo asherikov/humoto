@@ -269,6 +269,9 @@ namespace humoto
                         case qpOASES::RET_MAX_NWSR_REACHED:
                             solution.return_status_ = SolverStatus::MAX_ITER;
                             break;
+                        case qpOASES::RET_QP_INFEASIBLE:
+                            solution.return_status_ = SolverStatus::INFEASIBLE;
+                            break;
                         default:
                             solution.return_status_ = SolverStatus::OTHER;
                             break;

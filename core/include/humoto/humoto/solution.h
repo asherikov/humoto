@@ -19,10 +19,11 @@ namespace humoto
         public:
             enum Status
             {
-                UNDEFINED = 0,
-                OK        = 1,
-                MAX_ITER  = 2,
-                OTHER     = 3
+                UNDEFINED   = 0,
+                OK          = 1,
+                MAX_ITER    = 2,
+                INFEASIBLE  = 3,
+                OTHER       = 4
             };
     };
 
