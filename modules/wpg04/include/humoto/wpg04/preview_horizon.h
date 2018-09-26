@@ -179,6 +179,7 @@ namespace humoto
                  */
                 etools::Matrix2    getRotationMatrix(const std::size_t interval_index) const
                 {
+                    HUMOTO_ASSERT(interval_index < intervals_.size(), "Interval index is out of range.");
                     std::size_t state_index = intervals_[interval_index].state_index_;
                     return (walk_states_[state_index].rotation_);
                 }
@@ -193,6 +194,7 @@ namespace humoto
                  */
                 const WalkState & getWalkState(const std::size_t interval_index) const
                 {
+                    HUMOTO_ASSERT(interval_index < intervals_.size(), "Interval index is out of range.");
                     std::size_t state_index = intervals_[interval_index].state_index_;
                     return (walk_states_[state_index]);
                 }

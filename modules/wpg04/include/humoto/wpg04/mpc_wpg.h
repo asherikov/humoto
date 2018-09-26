@@ -241,9 +241,9 @@ namespace humoto
 
                 Eigen::MatrixXd                 Ir_;
                 Eigen::MatrixXd                 V_;
-                Eigen::MatrixXd                 V0_;
+                Eigen::VectorXd                 V0_;
                 Eigen::MatrixXd                 Vfp_;
-                Eigen::MatrixXd                 vfp_;
+                Eigen::VectorXd                 vfp_;
 
                 Eigen::MatrixXd                 S_;
                 Eigen::MatrixXd                 s_;
@@ -444,12 +444,12 @@ namespace humoto
 
                     for (std::size_t i = 0; i < preview_horizon_.intervals_.size(); ++i)
                     {
-                        if (std::abs(cstate_profile_(i*model.Nu_ + 2) > friction * humoto::g_gravitational_acceleration))
+                        if (std::abs(cstate_profile_(i*model.Ns_ + 2) > friction * humoto::g_gravitational_acceleration))
                         {
                             return (false);
                         }
 
-                        if (std::abs(cstate_profile_(i*model.Nu_ + 5) > friction * humoto::g_gravitational_acceleration))
+                        if (std::abs(cstate_profile_(i*model.Ns_ + 5) > friction * humoto::g_gravitational_acceleration))
                         {
                             return (false);
                         }
