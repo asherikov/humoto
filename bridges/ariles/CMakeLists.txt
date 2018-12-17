@@ -33,8 +33,8 @@ if(${HUMOTO_BRIDGE_${HUMOTO_BRIDGE}} STREQUAL "BUILD")
     set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_LIBS
         "${HUMOTO_BRIDGES_LIBDIR}/${CMAKE_SHARED_MODULE_PREFIX}yaml-cpp${CMAKE_STATIC_LIBRARY_SUFFIX}" PARENT_SCOPE)
 else()
-    find_package(ariles REQUIRED)
-    find_package(ariles-yaml_cpp REQUIRED)
+    find_package(ariles-core REQUIRED)
+    find_package(ariles-yaml-cpp REQUIRED)
     find_package(ariles-octave REQUIRED)
 
     set(HUMOTO_BRIDGE_${HUMOTO_BRIDGE}_INCLUDES "${ariles_INCLUDE_DIRS};${ariles-yaml_cpp_INCLUDE_DIRS};${ariles-octave_INCLUDE_DIRS}" PARENT_SCOPE)
