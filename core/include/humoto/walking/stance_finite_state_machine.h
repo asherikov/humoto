@@ -136,12 +136,19 @@ namespace humoto
                  *
                  * @return
                  */
-                std::size_t getDurationMs(const StanceType::Type stance_type) const
+                std::size_t getDurationMs(const StanceType::Type stance_type, const bool first = false) const
                 {
                     switch(stance_type)
                     {
                         case StanceType::DS:
-                            return last_stance_duration_ms_;
+                            if(true == first)
+                            {
+                                return first_stance_duration_ms_;
+                            }
+                            else
+                            {
+                                return last_stance_duration_ms_;
+                            }
                         case StanceType::TDS:
                             return tds_duration_ms_;
                         case StanceType::LSS:
@@ -265,7 +272,7 @@ namespace humoto
                     current_stance_.subtype_                     = StanceSubType::FIRST;
                     current_stance_.type_                        = sfsm_params_.first_stance_;
                     current_stance_.duration_ms_                 = sfsm_params_.first_stance_duration_ms_;
-                    current_stance_.total_duration_ms_           = sfsm_params_.getDurationMs(sfsm_params_.first_stance_);
+                    current_stance_.total_duration_ms_           = sfsm_params_.getDurationMs(sfsm_params_.first_stance_, true);
 
                     switch (current_stance_.type_)
                     {
